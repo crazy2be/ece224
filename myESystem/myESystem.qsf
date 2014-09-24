@@ -489,7 +489,6 @@ set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_RO
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
 set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
 set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
-set_global_assignment -name BDF_FILE ece324_egm.bdf
 set_global_assignment -name VERILOG_FILE ANT/timer_1.v
 set_global_assignment -name VERILOG_FILE ANT/timer_0.v
 set_global_assignment -name VERILOG_FILE ANT/sysid.v
@@ -507,10 +506,6 @@ set_global_assignment -name VERILOG_FILE ANT/pio_latency.v
 set_global_assignment -name VERILOG_FILE ANT/pio_egmreset.v
 set_global_assignment -name VERILOG_FILE ANT/pio_egmenable.v
 set_global_assignment -name VERILOG_FILE ANT/pio_dutycycle.v
-set_global_assignment -name VERILOG_FILE ANT/my_controller.v
-set_global_assignment -name SOURCE_FILE ANT/my_controller.sopcinfo
-set_global_assignment -name SOPC_FILE ANT/my_controller.sopc
-set_global_assignment -name QUARTUS_PTF_FILE ANT/my_controller.ptf
 set_global_assignment -name VERILOG_FILE ANT/led_pio.v
 set_global_assignment -name VERILOG_FILE ANT/lcd_display.v
 set_global_assignment -name VERILOG_FILE ANT/jtag_uart_0.v
@@ -522,6 +517,12 @@ set_global_assignment -name VERILOG_FILE ANT/cpu_0_jtag_debug_module_tck.v
 set_global_assignment -name VERILOG_FILE ANT/cpu_0_jtag_debug_module_sysclk.v
 set_global_assignment -name VERILOG_FILE ANT/cpu_0.v
 set_global_assignment -name VERILOG_FILE ANT/button_pio.v
+set_global_assignment -name VERILOG_FILE ANT/my_controller.v
+set_global_assignment -name VHDL_FILE ece324_pulse_generator.vhd
+set_global_assignment -name VHDL_FILE ece324_latency_tracker.vhd
+set_global_assignment -name VHDL_FILE ece324_clock_divider.vhd
+set_global_assignment -name BSF_FILE ece324_egm.bsf
+set_global_assignment -name BDF_FILE ece324_egm.bdf
 set_global_assignment -name BSF_FILE ANT/my_controller.bsf
 set_global_assignment -name BDF_FILE myESystem.bdf
 set_global_assignment -name QIP_FILE ANT/my_controller.qip

@@ -1,14 +1,14 @@
-Analysis & Synthesis Status : Failed - Wed Sep 24 15:33:06 2014
+Analysis & Synthesis Status : Successful - Wed Sep 24 15:52:03 2014
 Quartus II 64-Bit Version : 10.1 Build 197 01/19/2011 SP 1 SJ Full Version
 Revision Name : myESystem
 Top-level Entity Name : myESystem
 Family : Cyclone II
-Total logic elements : N/A until Partition Merge
-    Total combinational functions : N/A until Partition Merge
-    Dedicated logic registers : N/A until Partition Merge
-Total registers : N/A until Partition Merge
-Total pins : N/A until Partition Merge
-Total virtual pins : N/A until Partition Merge
-Total memory bits : N/A until Partition Merge
-Embedded Multiplier 9-bit elements : N/A until Partition Merge
-Total PLLs : N/A until Partition Merge
+Total logic elements : 3,503
+    Total combinational functions : 2,958
+    Dedicated logic registers : 1,924
+Total registers : 1924
+Total pins : 161
+Total virtual pins : 0
+Total memory bits : 46,720
+Embedded Multiplier 9-bit elements : 0
+Total PLLs : 1

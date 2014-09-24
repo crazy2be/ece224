@@ -20,26 +20,6 @@ VHSM_ON
 -- Start VHDL Libraries --
 -- End VHDL Libraries --
 # entity
-myESystem
-# storage
-db|myESystem.(0).cnf
-db|myESystem.(0).cnf
-# case_insensitive
-# source_file
-myesystem.bdf
-463fe56330aad270de588140805d1f55
-26
-# internal_option {
-BLOCK_DESIGN_NAMING
-AUTO
-}
-# hierarchies {
-|
-}
-# macro_sequence
-
-# end
-# entity
 sdram_pll
 # storage
 db|myESystem.(1).cnf
@@ -8581,6 +8561,303 @@ VERILOG_NON_CONSTANT_LOOP_LIMIT
 # hierarchies {
 my_controller:inst2|my_controller_reset_clk_0_domain_synch_module:my_controller_reset_clk_0_domain_synch
 }
+# macro_sequence
+
+# end
+# entity
+myESystem
+# storage
+db|myESystem.(0).cnf
+db|myESystem.(0).cnf
+# case_insensitive
+# source_file
+myesystem.bdf
+eaf0c3839ba8a3c51d4b16ba318ac58
+26
+# internal_option {
+BLOCK_DESIGN_NAMING
+AUTO
+}
+# hierarchies {
+|
+}
+# macro_sequence
+
+# end
+# entity
+ece324_pulse_generator
+# storage
+db|myESystem.(108).cnf
+db|myESystem.(108).cnf
+# logic_option {
+AUTO_RAM_RECOGNITION
+ON
+}
+# case_insensitive
+# source_file
+ece324_pulse_generator.vhd
+0d8613c7119ddaaf439cc5224742f3d
+5
+# internal_option {
+HDL_INITIAL_FANOUT_LIMIT
+OFF
+AUTO_RESOURCE_SHARING
+OFF
+AUTO_RAM_RECOGNITION
+ON
+AUTO_ROM_RECOGNITION
+ON
+}
+# hierarchies {
+ece324_egm:inst|ece324_pulse_generator:inst5
+}
+# lmf
+c:|software|altera|10.1|quartus|lmf|maxplus2.lmf
+a36c8ec425c8a2589af98b2d4daabc3
+# macro_sequence
+
+# end
+# entity
+ece324_clock_divider
+# storage
+db|myESystem.(109).cnf
+db|myESystem.(109).cnf
+# logic_option {
+AUTO_RAM_RECOGNITION
+ON
+}
+# case_insensitive
+# source_file
+ece324_clock_divider.vhd
+3c6a842923b6c1288317cef11c0ece0
+5
+# internal_option {
+HDL_INITIAL_FANOUT_LIMIT
+OFF
+AUTO_RESOURCE_SHARING
+OFF
+AUTO_RAM_RECOGNITION
+ON
+AUTO_ROM_RECOGNITION
+ON
+}
+# hierarchies {
+ece324_egm:inst|ece324_clock_divider:inst3
+}
+# lmf
+c:|software|altera|10.1|quartus|lmf|maxplus2.lmf
+a36c8ec425c8a2589af98b2d4daabc3
+# macro_sequence
+
+# end
+# entity
+ece324_latency_tracker
+# storage
+db|myESystem.(110).cnf
+db|myESystem.(110).cnf
+# logic_option {
+AUTO_RAM_RECOGNITION
+ON
+}
+# case_insensitive
+# source_file
+ece324_latency_tracker.vhd
+3b5fcf91ea156f511740fd131e632c13
+5
+# internal_option {
+HDL_INITIAL_FANOUT_LIMIT
+OFF
+AUTO_RESOURCE_SHARING
+OFF
+AUTO_RAM_RECOGNITION
+ON
+AUTO_ROM_RECOGNITION
+ON
+}
+# hierarchies {
+ece324_egm:inst|ece324_latency_tracker:inst4
+}
+# lmf
+c:|software|altera|10.1|quartus|lmf|maxplus2.lmf
+a36c8ec425c8a2589af98b2d4daabc3
+# macro_sequence
+
+# end
+# entity
+sld_hub
+# storage
+db|myESystem.(111).cnf
+db|myESystem.(111).cnf
+# logic_option {
+AUTO_RAM_RECOGNITION
+ON
+}
+# case_insensitive
+# source_file
+c:|software|altera|10.1|quartus|libraries|megafunctions|sld_hub.vhd
+7a79487a6e8170b43b1767a2ea68
+5
+# internal_option {
+IP_SHOW_ELABORATION_MESSAGES
+OFF
+HDL_INITIAL_FANOUT_LIMIT
+OFF
+AUTO_RESOURCE_SHARING
+OFF
+AUTO_RAM_RECOGNITION
+ON
+AUTO_ROM_RECOGNITION
+ON
+}
+# user_parameter {
+sld_hub_ip_version
+1
+PARAMETER_UNKNOWN
+USR
+sld_hub_ip_minor_version
+4
+PARAMETER_UNKNOWN
+USR
+sld_common_ip_version
+0
+PARAMETER_UNKNOWN
+USR
+device_family
+Cyclone II
+PARAMETER_UNKNOWN
+USR
+n_nodes
+2
+PARAMETER_UNKNOWN
+USR
+n_sel_bits
+2
+PARAMETER_UNKNOWN
+USR
+n_node_ir_bits
+5
+PARAMETER_UNKNOWN
+USR
+node_info
+0000110000000000011011100000000000011001000100000100011000000000
+PARAMETER_UNSIGNED_BIN
+USR
+compilation_mode
+1
+PARAMETER_UNKNOWN
+USR
+BROADCAST_FEATURE
+1
+PARAMETER_SIGNED_DEC
+DEF
+FORCE_IR_CAPTURE_FEATURE
+1
+PARAMETER_SIGNED_DEC
+DEF
+}
+# lmf
+c:|software|altera|10.1|quartus|lmf|maxplus2.lmf
+a36c8ec425c8a2589af98b2d4daabc3
+# macro_sequence
+
+# end
+# entity
+sld_shadow_jsm
+# storage
+db|myESystem.(112).cnf
+db|myESystem.(112).cnf
+# logic_option {
+AUTO_RAM_RECOGNITION
+ON
+}
+# case_insensitive
+# source_file
+c:|software|altera|10.1|quartus|libraries|megafunctions|sld_hub.vhd
+7a79487a6e8170b43b1767a2ea68
+5
+# internal_option {
+IP_SHOW_ELABORATION_MESSAGES
+OFF
+HDL_INITIAL_FANOUT_LIMIT
+OFF
+AUTO_RESOURCE_SHARING
+OFF
+AUTO_RAM_RECOGNITION
+ON
+AUTO_ROM_RECOGNITION
+ON
+}
+# user_parameter {
+ip_major_version
+1
+PARAMETER_SIGNED_DEC
+USR
+ip_minor_version
+4
+PARAMETER_SIGNED_DEC
+USR
+common_ip_version
+0
+PARAMETER_SIGNED_DEC
+USR
+ constraint(jtag_state)
+15 downto 0
+PARAMETER_STRING
+USR
+}
+# lmf
+c:|software|altera|10.1|quartus|lmf|maxplus2.lmf
+a36c8ec425c8a2589af98b2d4daabc3
+# macro_sequence
+
+# end
+# entity
+sld_rom_sr
+# storage
+db|myESystem.(113).cnf
+db|myESystem.(113).cnf
+# logic_option {
+AUTO_RAM_RECOGNITION
+ON
+}
+# case_insensitive
+# source_file
+c:|software|altera|10.1|quartus|libraries|megafunctions|sld_rom_sr.vhd
+c8a299171b404a8be9d59988f836b14
+5
+# internal_option {
+IP_SHOW_ELABORATION_MESSAGES
+OFF
+HDL_INITIAL_FANOUT_LIMIT
+OFF
+AUTO_RESOURCE_SHARING
+OFF
+AUTO_RAM_RECOGNITION
+ON
+AUTO_ROM_RECOGNITION
+ON
+}
+# user_parameter {
+common_ip_version
+0
+PARAMETER_SIGNED_DEC
+USR
+n_bits
+96
+PARAMETER_SIGNED_DEC
+USR
+word_size
+4
+PARAMETER_SIGNED_DEC
+USR
+ constraint(rom_data)
+95 downto 0
+PARAMETER_STRING
+USR
+}
+# lmf
+c:|software|altera|10.1|quartus|lmf|maxplus2.lmf
+a36c8ec425c8a2589af98b2d4daabc3
 # macro_sequence
 
 # end
