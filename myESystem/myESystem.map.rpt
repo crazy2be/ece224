@@ -1,0 +1,628 @@
+Analysis & Synthesis report for myESystem
+Wed Sep 24 15:33:06 2014
+Quartus II 64-Bit Version 10.1 Build 197 01/19/2011 Service Pack 1 SJ Full Version
+
+
+---------------------
+; Table of Contents ;
+---------------------
+  1. Legal Notice
+  2. Analysis & Synthesis Summary
+  3. Analysis & Synthesis Settings
+  4. Parallel Compilation
+  5. Analysis & Synthesis Messages
+  6. Analysis & Synthesis Suppressed Messages
+
+
+
+----------------
+; Legal Notice ;
+----------------
+Copyright (C) 1991-2011 Altera Corporation
+Your use of Altera Corporation's design tools, logic functions 
+and other software and tools, and its AMPP partner logic 
+functions, and any output files from any of the foregoing 
+(including device programming or simulation files), and any 
+associated documentation or information are expressly subject 
+to the terms and conditions of the Altera Program License 
+Subscription Agreement, Altera MegaCore Function License 
+Agreement, or other applicable license agreement, including, 
+without limitation, that your use is for the sole purpose of 
+programming logic devices manufactured by Altera and sold by 
+Altera or its authorized distributors.  Please refer to the 
+applicable agreement for further details.
+
+
+
++-------------------------------------------------------------------------------------+
+; Analysis & Synthesis Summary                                                        ;
++------------------------------------+------------------------------------------------+
+; Analysis & Synthesis Status        ; Failed - Wed Sep 24 15:33:06 2014              ;
+; Quartus II 64-Bit Version          ; 10.1 Build 197 01/19/2011 SP 1 SJ Full Version ;
+; Revision Name                      ; myESystem                                      ;
+; Top-level Entity Name              ; myESystem                                      ;
+; Family                             ; Cyclone II                                     ;
+; Total logic elements               ; N/A until Partition Merge                      ;
+;     Total combinational functions  ; N/A until Partition Merge                      ;
+;     Dedicated logic registers      ; N/A until Partition Merge                      ;
+; Total registers                    ; N/A until Partition Merge                      ;
+; Total pins                         ; N/A until Partition Merge                      ;
+; Total virtual pins                 ; N/A until Partition Merge                      ;
+; Total memory bits                  ; N/A until Partition Merge                      ;
+; Embedded Multiplier 9-bit elements ; N/A until Partition Merge                      ;
+; Total PLLs                         ; N/A until Partition Merge                      ;
++------------------------------------+------------------------------------------------+
+
+
++----------------------------------------------------------------------------------------------------------------------+
+; Analysis & Synthesis Settings                                                                                        ;
++----------------------------------------------------------------------------+--------------------+--------------------+
+; Option                                                                     ; Setting            ; Default Value      ;
++----------------------------------------------------------------------------+--------------------+--------------------+
+; Device                                                                     ; EP2C35F672C6       ;                    ;
+; Top-level entity name                                                      ; myESystem          ; myESystem          ;
+; Family name                                                                ; Cyclone II         ; Cyclone IV GX      ;
+; Use smart compilation                                                      ; Off                ; Off                ;
+; Enable parallel Assembler and TimeQuest Timing Analyzer during compilation ; On                 ; On                 ;
+; Enable compact report table                                                ; Off                ; Off                ;
+; Restructure Multiplexers                                                   ; Auto               ; Auto               ;
+; Create Debugging Nodes for IP Cores                                        ; Off                ; Off                ;
+; Preserve fewer node names                                                  ; On                 ; On                 ;
+; Disable OpenCore Plus hardware evaluation                                  ; Off                ; Off                ;
+; Verilog Version                                                            ; Verilog_2001       ; Verilog_2001       ;
+; VHDL Version                                                               ; VHDL_1993          ; VHDL_1993          ;
+; State Machine Processing                                                   ; Auto               ; Auto               ;
+; Safe State Machine                                                         ; Off                ; Off                ;
+; Extract Verilog State Machines                                             ; On                 ; On                 ;
+; Extract VHDL State Machines                                                ; On                 ; On                 ;
+; Ignore Verilog initial constructs                                          ; Off                ; Off                ;
+; Iteration limit for constant Verilog loops                                 ; 5000               ; 5000               ;
+; Iteration limit for non-constant Verilog loops                             ; 250                ; 250                ;
+; Add Pass-Through Logic to Inferred RAMs                                    ; On                 ; On                 ;
+; Parallel Synthesis                                                         ; On                 ; On                 ;
+; DSP Block Balancing                                                        ; Auto               ; Auto               ;
+; NOT Gate Push-Back                                                         ; On                 ; On                 ;
+; Power-Up Don't Care                                                        ; On                 ; On                 ;
+; Remove Redundant Logic Cells                                               ; Off                ; Off                ;
+; Remove Duplicate Registers                                                 ; On                 ; On                 ;
+; Ignore CARRY Buffers                                                       ; Off                ; Off                ;
+; Ignore CASCADE Buffers                                                     ; Off                ; Off                ;
+; Ignore GLOBAL Buffers                                                      ; Off                ; Off                ;
+; Ignore ROW GLOBAL Buffers                                                  ; Off                ; Off                ;
+; Ignore LCELL Buffers                                                       ; Off                ; Off                ;
+; Ignore SOFT Buffers                                                        ; On                 ; On                 ;
+; Limit AHDL Integers to 32 Bits                                             ; Off                ; Off                ;
+; Optimization Technique                                                     ; Balanced           ; Balanced           ;
+; Carry Chain Length                                                         ; 70                 ; 70                 ;
+; Auto Carry Chains                                                          ; On                 ; On                 ;
+; Auto Open-Drain Pins                                                       ; On                 ; On                 ;
+; Perform WYSIWYG Primitive Resynthesis                                      ; Off                ; Off                ;
+; Auto ROM Replacement                                                       ; On                 ; On                 ;
+; Auto RAM Replacement                                                       ; On                 ; On                 ;
+; Auto Shift Register Replacement                                            ; Auto               ; Auto               ;
+; Auto Clock Enable Replacement                                              ; On                 ; On                 ;
+; Strict RAM Replacement                                                     ; Off                ; Off                ;
+; Allow Synchronous Control Signals                                          ; On                 ; On                 ;
+; Force Use of Synchronous Clear Signals                                     ; Off                ; Off                ;
+; Auto RAM to Logic Cell Conversion                                          ; Off                ; Off                ;
+; Auto Resource Sharing                                                      ; Off                ; Off                ;
+; Allow Any RAM Size For Recognition                                         ; Off                ; Off                ;
+; Allow Any ROM Size For Recognition                                         ; Off                ; Off                ;
+; Allow Any Shift Register Size For Recognition                              ; Off                ; Off                ;
+; Use LogicLock Constraints during Resource Balancing                        ; On                 ; On                 ;
+; Ignore translate_off and synthesis_off directives                          ; Off                ; Off                ;
+; Timing-Driven Synthesis                                                    ; Off                ; Off                ;
+; Report Parameter Settings                                                  ; On                 ; On                 ;
+; Report Source Assignments                                                  ; On                 ; On                 ;
+; Report Connectivity Checks                                                 ; On                 ; On                 ;
+; Ignore Maximum Fan-Out Assignments                                         ; Off                ; Off                ;
+; Synchronization Register Chain Length                                      ; 2                  ; 2                  ;
+; PowerPlay Power Optimization                                               ; Normal compilation ; Normal compilation ;
+; HDL message level                                                          ; Level2             ; Level2             ;
+; Suppress Register Optimization Related Messages                            ; Off                ; Off                ;
+; Number of Removed Registers Reported in Synthesis Report                   ; 5000               ; 5000               ;
+; Number of Inverted Registers Reported in Synthesis Report                  ; 100                ; 100                ;
+; Clock MUX Protection                                                       ; On                 ; On                 ;
+; Auto Gated Clock Conversion                                                ; Off                ; Off                ;
+; Block Design Naming                                                        ; Auto               ; Auto               ;
+; SDC constraint protection                                                  ; Off                ; Off                ;
+; Synthesis Effort                                                           ; Auto               ; Auto               ;
+; Shift Register Replacement - Allow Asynchronous Clear Signal               ; On                 ; On                 ;
+; Analysis & Synthesis Message Level                                         ; Medium             ; Medium             ;
+; Disable Register Merging Across Hierarchies                                ; Auto               ; Auto               ;
+; Resource Aware Inference For Block RAM                                     ; On                 ; On                 ;
+; Synthesis Seed                                                             ; 1                  ; 1                  ;
++----------------------------------------------------------------------------+--------------------+--------------------+
+
+
++------------------------------------------+
+; Parallel Compilation                     ;
++----------------------------+-------------+
+; Processors                 ; Number      ;
++----------------------------+-------------+
+; Number detected on machine ; 2           ;
+; Maximum allowed            ; 2           ;
+;                            ;             ;
+; Average used               ; 1.00        ;
+; Maximum used               ; 1           ;
+;                            ;             ;
+; Usage by Processor         ; % Time Used ;
+;     1 processor            ; 100.0%      ;
+;     2 processors           ;   0.0%      ;
++----------------------------+-------------+
+
+
++-------------------------------+
+; Analysis & Synthesis Messages ;
++-------------------------------+
+Info: *******************************************************************
+Info: Running Quartus II 64-Bit Analysis & Synthesis
+    Info: Version 10.1 Build 197 01/19/2011 Service Pack 1 SJ Full Version
+    Info: Processing started: Wed Sep 24 15:32:46 2014
+Info: Command: quartus_map --read_settings_files=on --write_settings_files=off myESystem -c myESystem
+Info: Parallel compilation is enabled and will use 2 of the 2 processors detected
+Info: Found 1 design units, including 1 entities, in source file ece324_egm.bdf
+    Info: Found entity 1: ece324_egm
+Info: Found 1 design units, including 1 entities, in source file ant/timer_1.v
+    Info: Found entity 1: timer_1
+Info: Found 1 design units, including 1 entities, in source file ant/timer_0.v
+    Info: Found entity 1: timer_0
+Info: Found 1 design units, including 1 entities, in source file ant/sysid.v
+    Info: Found entity 1: sysid
+Info: Found 1 design units, including 1 entities, in source file ant/switch_pio.v
+    Info: Found entity 1: switch_pio
+Info: Found 1 design units, including 1 entities, in source file ant/seven_seg_right_pio.v
+    Info: Found entity 1: seven_seg_right_pio
+Info: Found 1 design units, including 1 entities, in source file ant/seven_seg_pio.v
+    Info: Found entity 1: seven_seg_pio
+Info: Found 1 design units, including 1 entities, in source file ant/seven_seg_middle_pio.v
+    Info: Found entity 1: seven_seg_middle_pio
+Info: Found 2 design units, including 2 entities, in source file ant/sdram_0.v
+    Info: Found entity 1: sdram_0_input_efifo_module
+    Info: Found entity 2: sdram_0
+Info: Found 1 design units, including 1 entities, in source file ant/red_led_pio.v
+    Info: Found entity 1: red_led_pio
+Info: Found 1 design units, including 1 entities, in source file ant/pio_response.v
+    Info: Found entity 1: pio_response
+Info: Found 1 design units, including 1 entities, in source file ant/pio_pulse.v
+    Info: Found entity 1: pio_pulse
+Info: Found 1 design units, including 1 entities, in source file ant/pio_period.v
+    Info: Found entity 1: pio_period
+Info: Found 1 design units, including 1 entities, in source file ant/pio_missed.v
+    Info: Found entity 1: pio_missed
+Info: Found 1 design units, including 1 entities, in source file ant/pio_latency.v
+    Info: Found entity 1: pio_latency
+Info: Found 1 design units, including 1 entities, in source file ant/pio_egmreset.v
+    Info: Found entity 1: pio_egmreset
+Info: Found 1 design units, including 1 entities, in source file ant/pio_egmenable.v
+    Info: Found entity 1: pio_egmenable
+Info: Found 1 design units, including 1 entities, in source file ant/pio_dutycycle.v
+    Info: Found entity 1: pio_dutycycle
+Info: Found 29 design units, including 29 entities, in source file ant/my_controller.v
+    Info: Found entity 1: button_pio_s1_arbitrator
+    Info: Found entity 2: cpu_0_jtag_debug_module_arbitrator
+    Info: Found entity 3: cpu_0_data_master_arbitrator
+    Info: Found entity 4: cpu_0_instruction_master_arbitrator
+    Info: Found entity 5: green_led_pio_s1_arbitrator
+    Info: Found entity 6: jtag_uart_0_avalon_jtag_slave_arbitrator
+    Info: Found entity 7: lcd_display_control_slave_arbitrator
+    Info: Found entity 8: led_pio_s1_arbitrator
+    Info: Found entity 9: pio_dutycycle_s1_arbitrator
+    Info: Found entity 10: pio_egmenable_s1_arbitrator
+    Info: Found entity 11: pio_egmreset_s1_arbitrator
+    Info: Found entity 12: pio_latency_s1_arbitrator
+    Info: Found entity 13: pio_missed_s1_arbitrator
+    Info: Found entity 14: pio_period_s1_arbitrator
+    Info: Found entity 15: pio_pulse_s1_arbitrator
+    Info: Found entity 16: pio_response_s1_arbitrator
+    Info: Found entity 17: red_led_pio_s1_arbitrator
+    Info: Found entity 18: rdv_fifo_for_cpu_0_data_master_to_sdram_0_s1_module
+    Info: Found entity 19: rdv_fifo_for_cpu_0_instruction_master_to_sdram_0_s1_module
+    Info: Found entity 20: sdram_0_s1_arbitrator
+    Info: Found entity 21: seven_seg_middle_pio_s1_arbitrator
+    Info: Found entity 22: seven_seg_pio_s1_arbitrator
+    Info: Found entity 23: seven_seg_right_pio_s1_arbitrator
+    Info: Found entity 24: switch_pio_s1_arbitrator
+    Info: Found entity 25: sysid_control_slave_arbitrator
+    Info: Found entity 26: timer_0_s1_arbitrator
+    Info: Found entity 27: timer_1_s1_arbitrator
+    Info: Found entity 28: my_controller_reset_clk_0_domain_synch_module
+    Info: Found entity 29: my_controller
+Info: Found 1 design units, including 1 entities, in source file ant/led_pio.v
+    Info: Found entity 1: led_pio
+Info: Found 1 design units, including 1 entities, in source file ant/lcd_display.v
+    Info: Found entity 1: lcd_display
+Info: Found 7 design units, including 7 entities, in source file ant/jtag_uart_0.v
+    Info: Found entity 1: jtag_uart_0_log_module
+    Info: Found entity 2: jtag_uart_0_sim_scfifo_w
+    Info: Found entity 3: jtag_uart_0_scfifo_w
+    Info: Found entity 4: jtag_uart_0_drom_module
+    Info: Found entity 5: jtag_uart_0_sim_scfifo_r
+    Info: Found entity 6: jtag_uart_0_scfifo_r
+    Info: Found entity 7: jtag_uart_0
+Info: Found 1 design units, including 1 entities, in source file ant/green_led_pio.v
+    Info: Found entity 1: green_led_pio
+Info: Found 1 design units, including 1 entities, in source file ant/cpu_0_test_bench.v
+    Info: Found entity 1: cpu_0_test_bench
+Info: Found 1 design units, including 1 entities, in source file ant/cpu_0_oci_test_bench.v
+    Info: Found entity 1: cpu_0_oci_test_bench
+Info: Found 1 design units, including 1 entities, in source file ant/cpu_0_jtag_debug_module_wrapper.v
+    Info: Found entity 1: cpu_0_jtag_debug_module_wrapper
+Info: Found 1 design units, including 1 entities, in source file ant/cpu_0_jtag_debug_module_tck.v
+    Info: Found entity 1: cpu_0_jtag_debug_module_tck
+Info: Found 1 design units, including 1 entities, in source file ant/cpu_0_jtag_debug_module_sysclk.v
+    Info: Found entity 1: cpu_0_jtag_debug_module_sysclk
+Info: Found 24 design units, including 24 entities, in source file ant/cpu_0.v
+    Info: Found entity 1: cpu_0_ic_data_module
+    Info: Found entity 2: cpu_0_ic_tag_module
+    Info: Found entity 3: cpu_0_register_bank_a_module
+    Info: Found entity 4: cpu_0_register_bank_b_module
+    Info: Found entity 5: cpu_0_nios2_oci_debug
+    Info: Found entity 6: cpu_0_ociram_lpm_dram_bdp_component_module
+    Info: Found entity 7: cpu_0_nios2_ocimem
+    Info: Found entity 8: cpu_0_nios2_avalon_reg
+    Info: Found entity 9: cpu_0_nios2_oci_break
+    Info: Found entity 10: cpu_0_nios2_oci_xbrk
+    Info: Found entity 11: cpu_0_nios2_oci_dbrk
+    Info: Found entity 12: cpu_0_nios2_oci_itrace
+    Info: Found entity 13: cpu_0_nios2_oci_td_mode
+    Info: Found entity 14: cpu_0_nios2_oci_dtrace
+    Info: Found entity 15: cpu_0_nios2_oci_compute_tm_count
+    Info: Found entity 16: cpu_0_nios2_oci_fifowp_inc
+    Info: Found entity 17: cpu_0_nios2_oci_fifocount_inc
+    Info: Found entity 18: cpu_0_nios2_oci_fifo
+    Info: Found entity 19: cpu_0_nios2_oci_pib
+    Info: Found entity 20: cpu_0_traceram_lpm_dram_bdp_component_module
+    Info: Found entity 21: cpu_0_nios2_oci_im
+    Info: Found entity 22: cpu_0_nios2_performance_monitors
+    Info: Found entity 23: cpu_0_nios2_oci
+    Info: Found entity 24: cpu_0
+Info: Found 1 design units, including 1 entities, in source file ant/button_pio.v
+    Info: Found entity 1: button_pio
+Info: Found 1 design units, including 1 entities, in source file myesystem.bdf
+    Info: Found entity 1: myESystem
+Info: Found 2 design units, including 1 entities, in source file sdram_pll.vhd
+    Info: Found design unit 1: sdram_pll-SYN
+    Info: Found entity 1: sdram_pll
+Warning (10037): Verilog HDL or VHDL warning at sdram_0.v(313): conditional expression evaluates to a constant
+Warning (10037): Verilog HDL or VHDL warning at sdram_0.v(323): conditional expression evaluates to a constant
+Warning (10037): Verilog HDL or VHDL warning at sdram_0.v(333): conditional expression evaluates to a constant
+Warning (10037): Verilog HDL or VHDL warning at sdram_0.v(677): conditional expression evaluates to a constant
+Warning (10037): Verilog HDL or VHDL warning at cpu_0.v(1654): conditional expression evaluates to a constant
+Warning (10037): Verilog HDL or VHDL warning at cpu_0.v(1656): conditional expression evaluates to a constant
+Warning (10037): Verilog HDL or VHDL warning at cpu_0.v(1806): conditional expression evaluates to a constant
+Warning (10037): Verilog HDL or VHDL warning at cpu_0.v(2704): conditional expression evaluates to a constant
+Info: Elaborating entity "myESystem" for the top level hierarchy
+Info: Elaborating entity "sdram_pll" for hierarchy "sdram_pll:inst1"
+Info: Elaborating entity "altpll" for hierarchy "sdram_pll:inst1|altpll:altpll_component"
+Info: Elaborated megafunction instantiation "sdram_pll:inst1|altpll:altpll_component"
+Info: Instantiated megafunction "sdram_pll:inst1|altpll:altpll_component" with the following parameter:
+    Info: Parameter "clk0_divide_by" = "1"
+    Info: Parameter "clk0_duty_cycle" = "50"
+    Info: Parameter "clk0_multiply_by" = "1"
+    Info: Parameter "clk0_phase_shift" = "-3000"
+    Info: Parameter "clk1_divide_by" = "1"
+    Info: Parameter "clk1_duty_cycle" = "50"
+    Info: Parameter "clk1_multiply_by" = "1"
+    Info: Parameter "clk1_phase_shift" = "0"
+    Info: Parameter "compensate_clock" = "CLK0"
+    Info: Parameter "inclk0_input_frequency" = "20000"
+    Info: Parameter "intended_device_family" = "Cyclone II"
+    Info: Parameter "lpm_hint" = "CBX_MODULE_PREFIX=sdram_pll"
+    Info: Parameter "lpm_type" = "altpll"
+    Info: Parameter "operation_mode" = "NORMAL"
+    Info: Parameter "port_activeclock" = "PORT_UNUSED"
+    Info: Parameter "port_areset" = "PORT_UNUSED"
+    Info: Parameter "port_clkbad0" = "PORT_UNUSED"
+    Info: Parameter "port_clkbad1" = "PORT_UNUSED"
+    Info: Parameter "port_clkloss" = "PORT_UNUSED"
+    Info: Parameter "port_clkswitch" = "PORT_UNUSED"
+    Info: Parameter "port_configupdate" = "PORT_UNUSED"
+    Info: Parameter "port_fbin" = "PORT_UNUSED"
+    Info: Parameter "port_inclk0" = "PORT_USED"
+    Info: Parameter "port_inclk1" = "PORT_UNUSED"
+    Info: Parameter "port_locked" = "PORT_UNUSED"
+    Info: Parameter "port_pfdena" = "PORT_UNUSED"
+    Info: Parameter "port_phasecounterselect" = "PORT_UNUSED"
+    Info: Parameter "port_phasedone" = "PORT_UNUSED"
+    Info: Parameter "port_phasestep" = "PORT_UNUSED"
+    Info: Parameter "port_phaseupdown" = "PORT_UNUSED"
+    Info: Parameter "port_pllena" = "PORT_UNUSED"
+    Info: Parameter "port_scanaclr" = "PORT_UNUSED"
+    Info: Parameter "port_scanclk" = "PORT_UNUSED"
+    Info: Parameter "port_scanclkena" = "PORT_UNUSED"
+    Info: Parameter "port_scandata" = "PORT_UNUSED"
+    Info: Parameter "port_scandataout" = "PORT_UNUSED"
+    Info: Parameter "port_scandone" = "PORT_UNUSED"
+    Info: Parameter "port_scanread" = "PORT_UNUSED"
+    Info: Parameter "port_scanwrite" = "PORT_UNUSED"
+    Info: Parameter "port_clk0" = "PORT_USED"
+    Info: Parameter "port_clk1" = "PORT_USED"
+    Info: Parameter "port_clk2" = "PORT_UNUSED"
+    Info: Parameter "port_clk3" = "PORT_UNUSED"
+    Info: Parameter "port_clk4" = "PORT_UNUSED"
+    Info: Parameter "port_clk5" = "PORT_UNUSED"
+    Info: Parameter "port_clkena0" = "PORT_UNUSED"
+    Info: Parameter "port_clkena1" = "PORT_UNUSED"
+    Info: Parameter "port_clkena2" = "PORT_UNUSED"
+    Info: Parameter "port_clkena3" = "PORT_UNUSED"
+    Info: Parameter "port_clkena4" = "PORT_UNUSED"
+    Info: Parameter "port_clkena5" = "PORT_UNUSED"
+    Info: Parameter "port_extclk0" = "PORT_UNUSED"
+    Info: Parameter "port_extclk1" = "PORT_UNUSED"
+    Info: Parameter "port_extclk2" = "PORT_UNUSED"
+    Info: Parameter "port_extclk3" = "PORT_UNUSED"
+Info: Elaborating entity "my_controller" for hierarchy "my_controller:inst2"
+Info: Elaborating entity "button_pio_s1_arbitrator" for hierarchy "my_controller:inst2|button_pio_s1_arbitrator:the_button_pio_s1"
+Info: Elaborating entity "button_pio" for hierarchy "my_controller:inst2|button_pio:the_button_pio"
+Info: Elaborating entity "cpu_0_jtag_debug_module_arbitrator" for hierarchy "my_controller:inst2|cpu_0_jtag_debug_module_arbitrator:the_cpu_0_jtag_debug_module"
+Info: Elaborating entity "cpu_0_data_master_arbitrator" for hierarchy "my_controller:inst2|cpu_0_data_master_arbitrator:the_cpu_0_data_master"
+Info: Elaborating entity "cpu_0_instruction_master_arbitrator" for hierarchy "my_controller:inst2|cpu_0_instruction_master_arbitrator:the_cpu_0_instruction_master"
+Info: Elaborating entity "cpu_0" for hierarchy "my_controller:inst2|cpu_0:the_cpu_0"
+Info: Elaborating entity "cpu_0_test_bench" for hierarchy "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_test_bench:the_cpu_0_test_bench"
+Info: Elaborating entity "cpu_0_ic_data_module" for hierarchy "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_ic_data_module:cpu_0_ic_data"
+Info: Elaborating entity "altsyncram" for hierarchy "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_ic_data_module:cpu_0_ic_data|altsyncram:the_altsyncram"
+Info: Elaborated megafunction instantiation "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_ic_data_module:cpu_0_ic_data|altsyncram:the_altsyncram"
+Info: Instantiated megafunction "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_ic_data_module:cpu_0_ic_data|altsyncram:the_altsyncram" with the following parameter:
+    Info: Parameter "address_reg_b" = "CLOCK0"
+    Info: Parameter "maximum_depth" = "0"
+    Info: Parameter "numwords_a" = "1024"
+    Info: Parameter "numwords_b" = "1024"
+    Info: Parameter "operation_mode" = "DUAL_PORT"
+    Info: Parameter "outdata_reg_b" = "UNREGISTERED"
+    Info: Parameter "ram_block_type" = "AUTO"
+    Info: Parameter "rdcontrol_reg_b" = "CLOCK0"
+    Info: Parameter "read_during_write_mode_mixed_ports" = "DONT_CARE"
+    Info: Parameter "width_a" = "32"
+    Info: Parameter "width_b" = "32"
+    Info: Parameter "widthad_a" = "10"
+    Info: Parameter "widthad_b" = "10"
+Info: Found 1 design units, including 1 entities, in source file db/altsyncram_qed1.tdf
+    Info: Found entity 1: altsyncram_qed1
+Info: Elaborating entity "altsyncram_qed1" for hierarchy "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_ic_data_module:cpu_0_ic_data|altsyncram:the_altsyncram|altsyncram_qed1:auto_generated"
+Info: Elaborating entity "cpu_0_ic_tag_module" for hierarchy "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_ic_tag_module:cpu_0_ic_tag"
+Info: Elaborating entity "altsyncram" for hierarchy "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_ic_tag_module:cpu_0_ic_tag|altsyncram:the_altsyncram"
+Info: Elaborated megafunction instantiation "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_ic_tag_module:cpu_0_ic_tag|altsyncram:the_altsyncram"
+Info: Instantiated megafunction "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_ic_tag_module:cpu_0_ic_tag|altsyncram:the_altsyncram" with the following parameter:
+    Info: Parameter "address_reg_b" = "CLOCK0"
+    Info: Parameter "maximum_depth" = "0"
+    Info: Parameter "numwords_a" = "128"
+    Info: Parameter "numwords_b" = "128"
+    Info: Parameter "operation_mode" = "DUAL_PORT"
+    Info: Parameter "outdata_reg_b" = "UNREGISTERED"
+    Info: Parameter "ram_block_type" = "AUTO"
+    Info: Parameter "rdcontrol_reg_b" = "CLOCK0"
+    Info: Parameter "read_during_write_mode_mixed_ports" = "OLD_DATA"
+    Info: Parameter "width_a" = "21"
+    Info: Parameter "width_b" = "21"
+    Info: Parameter "widthad_a" = "7"
+    Info: Parameter "widthad_b" = "7"
+Info: Found 1 design units, including 1 entities, in source file db/altsyncram_j5d1.tdf
+    Info: Found entity 1: altsyncram_j5d1
+Info: Elaborating entity "altsyncram_j5d1" for hierarchy "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_ic_tag_module:cpu_0_ic_tag|altsyncram:the_altsyncram|altsyncram_j5d1:auto_generated"
+Info: Elaborating entity "cpu_0_register_bank_a_module" for hierarchy "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_register_bank_a_module:cpu_0_register_bank_a"
+Info: Elaborating entity "altsyncram" for hierarchy "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_register_bank_a_module:cpu_0_register_bank_a|altsyncram:the_altsyncram"
+Info: Elaborated megafunction instantiation "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_register_bank_a_module:cpu_0_register_bank_a|altsyncram:the_altsyncram"
+Info: Instantiated megafunction "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_register_bank_a_module:cpu_0_register_bank_a|altsyncram:the_altsyncram" with the following parameter:
+    Info: Parameter "address_reg_b" = "CLOCK0"
+    Info: Parameter "maximum_depth" = "0"
+    Info: Parameter "numwords_a" = "32"
+    Info: Parameter "numwords_b" = "32"
+    Info: Parameter "operation_mode" = "DUAL_PORT"
+    Info: Parameter "outdata_reg_b" = "UNREGISTERED"
+    Info: Parameter "ram_block_type" = "AUTO"
+    Info: Parameter "rdcontrol_reg_b" = "CLOCK0"
+    Info: Parameter "read_during_write_mode_mixed_ports" = "OLD_DATA"
+    Info: Parameter "width_a" = "32"
+    Info: Parameter "width_b" = "32"
+    Info: Parameter "widthad_a" = "5"
+    Info: Parameter "widthad_b" = "5"
+Info: Found 1 design units, including 1 entities, in source file db/altsyncram_72d1.tdf
+    Info: Found entity 1: altsyncram_72d1
+Info: Elaborating entity "altsyncram_72d1" for hierarchy "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_register_bank_a_module:cpu_0_register_bank_a|altsyncram:the_altsyncram|altsyncram_72d1:auto_generated"
+Info: Elaborating entity "cpu_0_register_bank_b_module" for hierarchy "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_register_bank_b_module:cpu_0_register_bank_b"
+Info: Elaborating entity "cpu_0_nios2_oci" for hierarchy "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_nios2_oci:the_cpu_0_nios2_oci"
+Info: Elaborating entity "cpu_0_nios2_oci_debug" for hierarchy "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_nios2_oci:the_cpu_0_nios2_oci|cpu_0_nios2_oci_debug:the_cpu_0_nios2_oci_debug"
+Info: Elaborating entity "cpu_0_nios2_ocimem" for hierarchy "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_nios2_oci:the_cpu_0_nios2_oci|cpu_0_nios2_ocimem:the_cpu_0_nios2_ocimem"
+Info: Elaborating entity "cpu_0_ociram_lpm_dram_bdp_component_module" for hierarchy "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_nios2_oci:the_cpu_0_nios2_oci|cpu_0_nios2_ocimem:the_cpu_0_nios2_ocimem|cpu_0_ociram_lpm_dram_bdp_component_module:cpu_0_ociram_lpm_dram_bdp_component"
+Info: Elaborating entity "altsyncram" for hierarchy "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_nios2_oci:the_cpu_0_nios2_oci|cpu_0_nios2_ocimem:the_cpu_0_nios2_ocimem|cpu_0_ociram_lpm_dram_bdp_component_module:cpu_0_ociram_lpm_dram_bdp_component|altsyncram:the_altsyncram"
+Info: Elaborated megafunction instantiation "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_nios2_oci:the_cpu_0_nios2_oci|cpu_0_nios2_ocimem:the_cpu_0_nios2_ocimem|cpu_0_ociram_lpm_dram_bdp_component_module:cpu_0_ociram_lpm_dram_bdp_component|altsyncram:the_altsyncram"
+Info: Instantiated megafunction "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_nios2_oci:the_cpu_0_nios2_oci|cpu_0_nios2_ocimem:the_cpu_0_nios2_ocimem|cpu_0_ociram_lpm_dram_bdp_component_module:cpu_0_ociram_lpm_dram_bdp_component|altsyncram:the_altsyncram" with the following parameter:
+    Info: Parameter "address_aclr_a" = "NONE"
+    Info: Parameter "address_aclr_b" = "NONE"
+    Info: Parameter "address_reg_b" = "CLOCK1"
+    Info: Parameter "indata_aclr_a" = "NONE"
+    Info: Parameter "indata_aclr_b" = "NONE"
+    Info: Parameter "init_file" = "UNUSED"
+    Info: Parameter "intended_device_family" = "STRATIXIII"
+    Info: Parameter "lpm_type" = "altsyncram"
+    Info: Parameter "numwords_a" = "256"
+    Info: Parameter "numwords_b" = "256"
+    Info: Parameter "operation_mode" = "BIDIR_DUAL_PORT"
+    Info: Parameter "outdata_aclr_a" = "NONE"
+    Info: Parameter "outdata_aclr_b" = "NONE"
+    Info: Parameter "outdata_reg_a" = "UNREGISTERED"
+    Info: Parameter "outdata_reg_b" = "UNREGISTERED"
+    Info: Parameter "ram_block_type" = "AUTO"
+    Info: Parameter "read_during_write_mode_mixed_ports" = "OLD_DATA"
+    Info: Parameter "width_a" = "32"
+    Info: Parameter "width_b" = "32"
+    Info: Parameter "width_byteena_a" = "4"
+    Info: Parameter "widthad_a" = "8"
+    Info: Parameter "widthad_b" = "8"
+    Info: Parameter "wrcontrol_aclr_a" = "NONE"
+    Info: Parameter "wrcontrol_aclr_b" = "NONE"
+Info: Found 1 design units, including 1 entities, in source file db/altsyncram_cp22.tdf
+    Info: Found entity 1: altsyncram_cp22
+Info: Elaborating entity "altsyncram_cp22" for hierarchy "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_nios2_oci:the_cpu_0_nios2_oci|cpu_0_nios2_ocimem:the_cpu_0_nios2_ocimem|cpu_0_ociram_lpm_dram_bdp_component_module:cpu_0_ociram_lpm_dram_bdp_component|altsyncram:the_altsyncram|altsyncram_cp22:auto_generated"
+Info: Elaborating entity "cpu_0_nios2_avalon_reg" for hierarchy "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_nios2_oci:the_cpu_0_nios2_oci|cpu_0_nios2_avalon_reg:the_cpu_0_nios2_avalon_reg"
+Info: Elaborating entity "cpu_0_nios2_oci_break" for hierarchy "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_nios2_oci:the_cpu_0_nios2_oci|cpu_0_nios2_oci_break:the_cpu_0_nios2_oci_break"
+Info: Elaborating entity "cpu_0_nios2_oci_xbrk" for hierarchy "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_nios2_oci:the_cpu_0_nios2_oci|cpu_0_nios2_oci_xbrk:the_cpu_0_nios2_oci_xbrk"
+Info: Elaborating entity "cpu_0_nios2_oci_dbrk" for hierarchy "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_nios2_oci:the_cpu_0_nios2_oci|cpu_0_nios2_oci_dbrk:the_cpu_0_nios2_oci_dbrk"
+Info: Elaborating entity "cpu_0_nios2_oci_itrace" for hierarchy "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_nios2_oci:the_cpu_0_nios2_oci|cpu_0_nios2_oci_itrace:the_cpu_0_nios2_oci_itrace"
+Info: Elaborating entity "cpu_0_nios2_oci_dtrace" for hierarchy "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_nios2_oci:the_cpu_0_nios2_oci|cpu_0_nios2_oci_dtrace:the_cpu_0_nios2_oci_dtrace"
+Info: Elaborating entity "cpu_0_nios2_oci_td_mode" for hierarchy "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_nios2_oci:the_cpu_0_nios2_oci|cpu_0_nios2_oci_dtrace:the_cpu_0_nios2_oci_dtrace|cpu_0_nios2_oci_td_mode:cpu_0_nios2_oci_trc_ctrl_td_mode"
+Info: Elaborating entity "cpu_0_nios2_oci_fifo" for hierarchy "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_nios2_oci:the_cpu_0_nios2_oci|cpu_0_nios2_oci_fifo:the_cpu_0_nios2_oci_fifo"
+Info: Elaborating entity "cpu_0_nios2_oci_compute_tm_count" for hierarchy "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_nios2_oci:the_cpu_0_nios2_oci|cpu_0_nios2_oci_fifo:the_cpu_0_nios2_oci_fifo|cpu_0_nios2_oci_compute_tm_count:cpu_0_nios2_oci_compute_tm_count_tm_count"
+Info: Elaborating entity "cpu_0_nios2_oci_fifowp_inc" for hierarchy "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_nios2_oci:the_cpu_0_nios2_oci|cpu_0_nios2_oci_fifo:the_cpu_0_nios2_oci_fifo|cpu_0_nios2_oci_fifowp_inc:cpu_0_nios2_oci_fifowp_inc_fifowp"
+Info: Elaborating entity "cpu_0_nios2_oci_fifocount_inc" for hierarchy "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_nios2_oci:the_cpu_0_nios2_oci|cpu_0_nios2_oci_fifo:the_cpu_0_nios2_oci_fifo|cpu_0_nios2_oci_fifocount_inc:cpu_0_nios2_oci_fifocount_inc_fifocount"
+Info: Elaborating entity "cpu_0_oci_test_bench" for hierarchy "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_nios2_oci:the_cpu_0_nios2_oci|cpu_0_nios2_oci_fifo:the_cpu_0_nios2_oci_fifo|cpu_0_oci_test_bench:the_cpu_0_oci_test_bench"
+Info: Elaborating entity "cpu_0_nios2_oci_pib" for hierarchy "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_nios2_oci:the_cpu_0_nios2_oci|cpu_0_nios2_oci_pib:the_cpu_0_nios2_oci_pib"
+Info: Elaborating entity "cpu_0_nios2_oci_im" for hierarchy "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_nios2_oci:the_cpu_0_nios2_oci|cpu_0_nios2_oci_im:the_cpu_0_nios2_oci_im"
+Info: Elaborating entity "cpu_0_traceram_lpm_dram_bdp_component_module" for hierarchy "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_nios2_oci:the_cpu_0_nios2_oci|cpu_0_nios2_oci_im:the_cpu_0_nios2_oci_im|cpu_0_traceram_lpm_dram_bdp_component_module:cpu_0_traceram_lpm_dram_bdp_component"
+Info: Elaborating entity "altsyncram" for hierarchy "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_nios2_oci:the_cpu_0_nios2_oci|cpu_0_nios2_oci_im:the_cpu_0_nios2_oci_im|cpu_0_traceram_lpm_dram_bdp_component_module:cpu_0_traceram_lpm_dram_bdp_component|altsyncram:the_altsyncram"
+Info: Elaborated megafunction instantiation "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_nios2_oci:the_cpu_0_nios2_oci|cpu_0_nios2_oci_im:the_cpu_0_nios2_oci_im|cpu_0_traceram_lpm_dram_bdp_component_module:cpu_0_traceram_lpm_dram_bdp_component|altsyncram:the_altsyncram"
+Info: Instantiated megafunction "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_nios2_oci:the_cpu_0_nios2_oci|cpu_0_nios2_oci_im:the_cpu_0_nios2_oci_im|cpu_0_traceram_lpm_dram_bdp_component_module:cpu_0_traceram_lpm_dram_bdp_component|altsyncram:the_altsyncram" with the following parameter:
+    Info: Parameter "address_aclr_a" = "NONE"
+    Info: Parameter "address_aclr_b" = "NONE"
+    Info: Parameter "address_reg_b" = "CLOCK1"
+    Info: Parameter "indata_aclr_a" = "NONE"
+    Info: Parameter "indata_aclr_b" = "NONE"
+    Info: Parameter "init_file" = "UNUSED"
+    Info: Parameter "intended_device_family" = "STRATIXIII"
+    Info: Parameter "lpm_type" = "altsyncram"
+    Info: Parameter "numwords_a" = "128"
+    Info: Parameter "numwords_b" = "128"
+    Info: Parameter "operation_mode" = "BIDIR_DUAL_PORT"
+    Info: Parameter "outdata_aclr_a" = "NONE"
+    Info: Parameter "outdata_aclr_b" = "NONE"
+    Info: Parameter "outdata_reg_a" = "UNREGISTERED"
+    Info: Parameter "outdata_reg_b" = "UNREGISTERED"
+    Info: Parameter "ram_block_type" = "AUTO"
+    Info: Parameter "read_during_write_mode_mixed_ports" = "OLD_DATA"
+    Info: Parameter "width_a" = "36"
+    Info: Parameter "width_b" = "36"
+    Info: Parameter "widthad_a" = "7"
+    Info: Parameter "widthad_b" = "7"
+    Info: Parameter "wrcontrol_aclr_a" = "NONE"
+    Info: Parameter "wrcontrol_aclr_b" = "NONE"
+Info: Found 1 design units, including 1 entities, in source file db/altsyncram_e502.tdf
+    Info: Found entity 1: altsyncram_e502
+Info: Elaborating entity "altsyncram_e502" for hierarchy "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_nios2_oci:the_cpu_0_nios2_oci|cpu_0_nios2_oci_im:the_cpu_0_nios2_oci_im|cpu_0_traceram_lpm_dram_bdp_component_module:cpu_0_traceram_lpm_dram_bdp_component|altsyncram:the_altsyncram|altsyncram_e502:auto_generated"
+Info: Elaborating entity "cpu_0_jtag_debug_module_wrapper" for hierarchy "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_nios2_oci:the_cpu_0_nios2_oci|cpu_0_jtag_debug_module_wrapper:the_cpu_0_jtag_debug_module_wrapper"
+Info: Elaborating entity "cpu_0_jtag_debug_module_tck" for hierarchy "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_nios2_oci:the_cpu_0_nios2_oci|cpu_0_jtag_debug_module_wrapper:the_cpu_0_jtag_debug_module_wrapper|cpu_0_jtag_debug_module_tck:the_cpu_0_jtag_debug_module_tck"
+Info: Elaborating entity "altera_std_synchronizer" for hierarchy "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_nios2_oci:the_cpu_0_nios2_oci|cpu_0_jtag_debug_module_wrapper:the_cpu_0_jtag_debug_module_wrapper|cpu_0_jtag_debug_module_tck:the_cpu_0_jtag_debug_module_tck|altera_std_synchronizer:the_altera_std_synchronizer"
+Info: Elaborated megafunction instantiation "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_nios2_oci:the_cpu_0_nios2_oci|cpu_0_jtag_debug_module_wrapper:the_cpu_0_jtag_debug_module_wrapper|cpu_0_jtag_debug_module_tck:the_cpu_0_jtag_debug_module_tck|altera_std_synchronizer:the_altera_std_synchronizer"
+Info: Instantiated megafunction "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_nios2_oci:the_cpu_0_nios2_oci|cpu_0_jtag_debug_module_wrapper:the_cpu_0_jtag_debug_module_wrapper|cpu_0_jtag_debug_module_tck:the_cpu_0_jtag_debug_module_tck|altera_std_synchronizer:the_altera_std_synchronizer" with the following parameter:
+    Info: Parameter "depth" = "2"
+Info: Elaborating entity "cpu_0_jtag_debug_module_sysclk" for hierarchy "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_nios2_oci:the_cpu_0_nios2_oci|cpu_0_jtag_debug_module_wrapper:the_cpu_0_jtag_debug_module_wrapper|cpu_0_jtag_debug_module_sysclk:the_cpu_0_jtag_debug_module_sysclk"
+Info: Elaborating entity "sld_virtual_jtag_basic" for hierarchy "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_nios2_oci:the_cpu_0_nios2_oci|cpu_0_jtag_debug_module_wrapper:the_cpu_0_jtag_debug_module_wrapper|sld_virtual_jtag_basic:cpu_0_jtag_debug_module_phy"
+Info: Elaborated megafunction instantiation "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_nios2_oci:the_cpu_0_nios2_oci|cpu_0_jtag_debug_module_wrapper:the_cpu_0_jtag_debug_module_wrapper|sld_virtual_jtag_basic:cpu_0_jtag_debug_module_phy"
+Info: Instantiated megafunction "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_nios2_oci:the_cpu_0_nios2_oci|cpu_0_jtag_debug_module_wrapper:the_cpu_0_jtag_debug_module_wrapper|sld_virtual_jtag_basic:cpu_0_jtag_debug_module_phy" with the following parameter:
+    Info: Parameter "sld_auto_instance_index" = "YES"
+    Info: Parameter "sld_instance_index" = "0"
+    Info: Parameter "sld_ir_width" = "2"
+    Info: Parameter "sld_mfg_id" = "70"
+    Info: Parameter "sld_sim_action" = ""
+    Info: Parameter "sld_sim_n_scan" = "0"
+    Info: Parameter "sld_sim_total_length" = "0"
+    Info: Parameter "sld_type_id" = "34"
+    Info: Parameter "sld_version" = "3"
+Info: Elaborating entity "sld_virtual_jtag_impl" for hierarchy "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_nios2_oci:the_cpu_0_nios2_oci|cpu_0_jtag_debug_module_wrapper:the_cpu_0_jtag_debug_module_wrapper|sld_virtual_jtag_basic:cpu_0_jtag_debug_module_phy|sld_virtual_jtag_impl:sld_virtual_jtag_impl_inst"
+Info: Elaborated megafunction instantiation "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_nios2_oci:the_cpu_0_nios2_oci|cpu_0_jtag_debug_module_wrapper:the_cpu_0_jtag_debug_module_wrapper|sld_virtual_jtag_basic:cpu_0_jtag_debug_module_phy|sld_virtual_jtag_impl:sld_virtual_jtag_impl_inst", which is child of megafunction instantiation "my_controller:inst2|cpu_0:the_cpu_0|cpu_0_nios2_oci:the_cpu_0_nios2_oci|cpu_0_jtag_debug_module_wrapper:the_cpu_0_jtag_debug_module_wrapper|sld_virtual_jtag_basic:cpu_0_jtag_debug_module_phy"
+Info: Elaborating entity "green_led_pio_s1_arbitrator" for hierarchy "my_controller:inst2|green_led_pio_s1_arbitrator:the_green_led_pio_s1"
+Info: Elaborating entity "green_led_pio" for hierarchy "my_controller:inst2|green_led_pio:the_green_led_pio"
+Info: Elaborating entity "jtag_uart_0_avalon_jtag_slave_arbitrator" for hierarchy "my_controller:inst2|jtag_uart_0_avalon_jtag_slave_arbitrator:the_jtag_uart_0_avalon_jtag_slave"
+Info: Elaborating entity "jtag_uart_0" for hierarchy "my_controller:inst2|jtag_uart_0:the_jtag_uart_0"
+Info: Elaborating entity "jtag_uart_0_scfifo_w" for hierarchy "my_controller:inst2|jtag_uart_0:the_jtag_uart_0|jtag_uart_0_scfifo_w:the_jtag_uart_0_scfifo_w"
+Info: Elaborating entity "scfifo" for hierarchy "my_controller:inst2|jtag_uart_0:the_jtag_uart_0|jtag_uart_0_scfifo_w:the_jtag_uart_0_scfifo_w|scfifo:wfifo"
+Info: Elaborated megafunction instantiation "my_controller:inst2|jtag_uart_0:the_jtag_uart_0|jtag_uart_0_scfifo_w:the_jtag_uart_0_scfifo_w|scfifo:wfifo"
+Info: Instantiated megafunction "my_controller:inst2|jtag_uart_0:the_jtag_uart_0|jtag_uart_0_scfifo_w:the_jtag_uart_0_scfifo_w|scfifo:wfifo" with the following parameter:
+    Info: Parameter "lpm_hint" = "RAM_BLOCK_TYPE=AUTO"
+    Info: Parameter "lpm_numwords" = "64"
+    Info: Parameter "lpm_showahead" = "OFF"
+    Info: Parameter "lpm_type" = "scfifo"
+    Info: Parameter "lpm_width" = "8"
+    Info: Parameter "lpm_widthu" = "6"
+    Info: Parameter "overflow_checking" = "OFF"
+    Info: Parameter "underflow_checking" = "OFF"
+    Info: Parameter "use_eab" = "ON"
+Info: Found 1 design units, including 1 entities, in source file db/scfifo_1n21.tdf
+    Info: Found entity 1: scfifo_1n21
+Info: Elaborating entity "scfifo_1n21" for hierarchy "my_controller:inst2|jtag_uart_0:the_jtag_uart_0|jtag_uart_0_scfifo_w:the_jtag_uart_0_scfifo_w|scfifo:wfifo|scfifo_1n21:auto_generated"
+Info: Found 1 design units, including 1 entities, in source file db/a_dpfifo_8t21.tdf
+    Info: Found entity 1: a_dpfifo_8t21
+Info: Elaborating entity "a_dpfifo_8t21" for hierarchy "my_controller:inst2|jtag_uart_0:the_jtag_uart_0|jtag_uart_0_scfifo_w:the_jtag_uart_0_scfifo_w|scfifo:wfifo|scfifo_1n21:auto_generated|a_dpfifo_8t21:dpfifo"
+Info: Found 1 design units, including 1 entities, in source file db/a_fefifo_7cf.tdf
+    Info: Found entity 1: a_fefifo_7cf
+Info: Elaborating entity "a_fefifo_7cf" for hierarchy "my_controller:inst2|jtag_uart_0:the_jtag_uart_0|jtag_uart_0_scfifo_w:the_jtag_uart_0_scfifo_w|scfifo:wfifo|scfifo_1n21:auto_generated|a_dpfifo_8t21:dpfifo|a_fefifo_7cf:fifo_state"
+Info: Found 1 design units, including 1 entities, in source file db/cntr_rj7.tdf
+    Info: Found entity 1: cntr_rj7
+Info: Elaborating entity "cntr_rj7" for hierarchy "my_controller:inst2|jtag_uart_0:the_jtag_uart_0|jtag_uart_0_scfifo_w:the_jtag_uart_0_scfifo_w|scfifo:wfifo|scfifo_1n21:auto_generated|a_dpfifo_8t21:dpfifo|a_fefifo_7cf:fifo_state|cntr_rj7:count_usedw"
+Info: Found 1 design units, including 1 entities, in source file db/dpram_5h21.tdf
+    Info: Found entity 1: dpram_5h21
+Info: Elaborating entity "dpram_5h21" for hierarchy "my_controller:inst2|jtag_uart_0:the_jtag_uart_0|jtag_uart_0_scfifo_w:the_jtag_uart_0_scfifo_w|scfifo:wfifo|scfifo_1n21:auto_generated|a_dpfifo_8t21:dpfifo|dpram_5h21:FIFOram"
+Info: Found 1 design units, including 1 entities, in source file db/altsyncram_9tl1.tdf
+    Info: Found entity 1: altsyncram_9tl1
+Info: Elaborating entity "altsyncram_9tl1" for hierarchy "my_controller:inst2|jtag_uart_0:the_jtag_uart_0|jtag_uart_0_scfifo_w:the_jtag_uart_0_scfifo_w|scfifo:wfifo|scfifo_1n21:auto_generated|a_dpfifo_8t21:dpfifo|dpram_5h21:FIFOram|altsyncram_9tl1:altsyncram2"
+Info: Found 1 design units, including 1 entities, in source file db/cntr_fjb.tdf
+    Info: Found entity 1: cntr_fjb
+Info: Elaborating entity "cntr_fjb" for hierarchy "my_controller:inst2|jtag_uart_0:the_jtag_uart_0|jtag_uart_0_scfifo_w:the_jtag_uart_0_scfifo_w|scfifo:wfifo|scfifo_1n21:auto_generated|a_dpfifo_8t21:dpfifo|cntr_fjb:rd_ptr_count"
+Info: Elaborating entity "jtag_uart_0_scfifo_r" for hierarchy "my_controller:inst2|jtag_uart_0:the_jtag_uart_0|jtag_uart_0_scfifo_r:the_jtag_uart_0_scfifo_r"
+Info: Elaborating entity "alt_jtag_atlantic" for hierarchy "my_controller:inst2|jtag_uart_0:the_jtag_uart_0|alt_jtag_atlantic:jtag_uart_0_alt_jtag_atlantic"
+Info: Elaborated megafunction instantiation "my_controller:inst2|jtag_uart_0:the_jtag_uart_0|alt_jtag_atlantic:jtag_uart_0_alt_jtag_atlantic"
+Info: Instantiated megafunction "my_controller:inst2|jtag_uart_0:the_jtag_uart_0|alt_jtag_atlantic:jtag_uart_0_alt_jtag_atlantic" with the following parameter:
+    Info: Parameter "INSTANCE_ID" = "0"
+    Info: Parameter "LOG2_RXFIFO_DEPTH" = "6"
+    Info: Parameter "LOG2_TXFIFO_DEPTH" = "6"
+    Info: Parameter "SLD_AUTO_INSTANCE_INDEX" = "YES"
+Info: Elaborating entity "lcd_display_control_slave_arbitrator" for hierarchy "my_controller:inst2|lcd_display_control_slave_arbitrator:the_lcd_display_control_slave"
+Info: Elaborating entity "lcd_display" for hierarchy "my_controller:inst2|lcd_display:the_lcd_display"
+Info: Elaborating entity "led_pio_s1_arbitrator" for hierarchy "my_controller:inst2|led_pio_s1_arbitrator:the_led_pio_s1"
+Info: Elaborating entity "led_pio" for hierarchy "my_controller:inst2|led_pio:the_led_pio"
+Info: Elaborating entity "pio_dutycycle_s1_arbitrator" for hierarchy "my_controller:inst2|pio_dutycycle_s1_arbitrator:the_pio_dutycycle_s1"
+Info: Elaborating entity "pio_dutycycle" for hierarchy "my_controller:inst2|pio_dutycycle:the_pio_dutycycle"
+Info: Elaborating entity "pio_egmenable_s1_arbitrator" for hierarchy "my_controller:inst2|pio_egmenable_s1_arbitrator:the_pio_egmenable_s1"
+Info: Elaborating entity "pio_egmenable" for hierarchy "my_controller:inst2|pio_egmenable:the_pio_egmenable"
+Info: Elaborating entity "pio_egmreset_s1_arbitrator" for hierarchy "my_controller:inst2|pio_egmreset_s1_arbitrator:the_pio_egmreset_s1"
+Info: Elaborating entity "pio_egmreset" for hierarchy "my_controller:inst2|pio_egmreset:the_pio_egmreset"
+Info: Elaborating entity "pio_latency_s1_arbitrator" for hierarchy "my_controller:inst2|pio_latency_s1_arbitrator:the_pio_latency_s1"
+Info: Elaborating entity "pio_latency" for hierarchy "my_controller:inst2|pio_latency:the_pio_latency"
+Info: Elaborating entity "pio_missed_s1_arbitrator" for hierarchy "my_controller:inst2|pio_missed_s1_arbitrator:the_pio_missed_s1"
+Info: Elaborating entity "pio_missed" for hierarchy "my_controller:inst2|pio_missed:the_pio_missed"
+Info: Elaborating entity "pio_period_s1_arbitrator" for hierarchy "my_controller:inst2|pio_period_s1_arbitrator:the_pio_period_s1"
+Info: Elaborating entity "pio_period" for hierarchy "my_controller:inst2|pio_period:the_pio_period"
+Info: Elaborating entity "pio_pulse_s1_arbitrator" for hierarchy "my_controller:inst2|pio_pulse_s1_arbitrator:the_pio_pulse_s1"
+Info: Elaborating entity "pio_pulse" for hierarchy "my_controller:inst2|pio_pulse:the_pio_pulse"
+Info: Elaborating entity "pio_response_s1_arbitrator" for hierarchy "my_controller:inst2|pio_response_s1_arbitrator:the_pio_response_s1"
+Info: Elaborating entity "pio_response" for hierarchy "my_controller:inst2|pio_response:the_pio_response"
+Info: Elaborating entity "red_led_pio_s1_arbitrator" for hierarchy "my_controller:inst2|red_led_pio_s1_arbitrator:the_red_led_pio_s1"
+Info: Elaborating entity "red_led_pio" for hierarchy "my_controller:inst2|red_led_pio:the_red_led_pio"
+Info: Elaborating entity "sdram_0_s1_arbitrator" for hierarchy "my_controller:inst2|sdram_0_s1_arbitrator:the_sdram_0_s1"
+Info: Elaborating entity "rdv_fifo_for_cpu_0_data_master_to_sdram_0_s1_module" for hierarchy "my_controller:inst2|sdram_0_s1_arbitrator:the_sdram_0_s1|rdv_fifo_for_cpu_0_data_master_to_sdram_0_s1_module:rdv_fifo_for_cpu_0_data_master_to_sdram_0_s1"
+Info: Elaborating entity "rdv_fifo_for_cpu_0_instruction_master_to_sdram_0_s1_module" for hierarchy "my_controller:inst2|sdram_0_s1_arbitrator:the_sdram_0_s1|rdv_fifo_for_cpu_0_instruction_master_to_sdram_0_s1_module:rdv_fifo_for_cpu_0_instruction_master_to_sdram_0_s1"
+Info: Elaborating entity "sdram_0" for hierarchy "my_controller:inst2|sdram_0:the_sdram_0"
+Info: Elaborating entity "sdram_0_input_efifo_module" for hierarchy "my_controller:inst2|sdram_0:the_sdram_0|sdram_0_input_efifo_module:the_sdram_0_input_efifo_module"
+Info: Elaborating entity "seven_seg_middle_pio_s1_arbitrator" for hierarchy "my_controller:inst2|seven_seg_middle_pio_s1_arbitrator:the_seven_seg_middle_pio_s1"
+Info: Elaborating entity "seven_seg_middle_pio" for hierarchy "my_controller:inst2|seven_seg_middle_pio:the_seven_seg_middle_pio"
+Info: Elaborating entity "seven_seg_pio_s1_arbitrator" for hierarchy "my_controller:inst2|seven_seg_pio_s1_arbitrator:the_seven_seg_pio_s1"
+Info: Elaborating entity "seven_seg_pio" for hierarchy "my_controller:inst2|seven_seg_pio:the_seven_seg_pio"
+Info: Elaborating entity "seven_seg_right_pio_s1_arbitrator" for hierarchy "my_controller:inst2|seven_seg_right_pio_s1_arbitrator:the_seven_seg_right_pio_s1"
+Info: Elaborating entity "seven_seg_right_pio" for hierarchy "my_controller:inst2|seven_seg_right_pio:the_seven_seg_right_pio"
+Info: Elaborating entity "switch_pio_s1_arbitrator" for hierarchy "my_controller:inst2|switch_pio_s1_arbitrator:the_switch_pio_s1"
+Info: Elaborating entity "switch_pio" for hierarchy "my_controller:inst2|switch_pio:the_switch_pio"
+Info: Elaborating entity "sysid_control_slave_arbitrator" for hierarchy "my_controller:inst2|sysid_control_slave_arbitrator:the_sysid_control_slave"
+Info: Elaborating entity "sysid" for hierarchy "my_controller:inst2|sysid:the_sysid"
+Info: Elaborating entity "timer_0_s1_arbitrator" for hierarchy "my_controller:inst2|timer_0_s1_arbitrator:the_timer_0_s1"
+Info: Elaborating entity "timer_0" for hierarchy "my_controller:inst2|timer_0:the_timer_0"
+Info: Elaborating entity "timer_1_s1_arbitrator" for hierarchy "my_controller:inst2|timer_1_s1_arbitrator:the_timer_1_s1"
+Info: Elaborating entity "timer_1" for hierarchy "my_controller:inst2|timer_1:the_timer_1"
+Info: Elaborating entity "my_controller_reset_clk_0_domain_synch_module" for hierarchy "my_controller:inst2|my_controller_reset_clk_0_domain_synch_module:my_controller_reset_clk_0_domain_synch"
+Info: Elaborating entity "ece324_egm" for hierarchy "ece324_egm:inst"
+Error: Node instance "inst5" instantiates undefined entity "ece324_pulse_generator"
+Error: Node instance "inst3" instantiates undefined entity "ece324_clock_divider"
+Error: Node instance "inst4" instantiates undefined entity "ece324_latency_tracker"
+Info: Generated suppressed messages file N:/ece224/myESystem/myESystem.map.smsg
+Error: Quartus II 64-Bit Analysis & Synthesis was unsuccessful. 3 errors, 8 warnings
+    Error: Peak virtual memory: 428 megabytes
+    Error: Processing ended: Wed Sep 24 15:33:07 2014
+    Error: Elapsed time: 00:00:21
+    Error: Total CPU time (on all processors): 00:00:04
+
+
++------------------------------------------+
+; Analysis & Synthesis Suppressed Messages ;
++------------------------------------------+
+The suppressed messages can be found in N:/ece224/myESystem/myESystem.map.smsg.
+
+
