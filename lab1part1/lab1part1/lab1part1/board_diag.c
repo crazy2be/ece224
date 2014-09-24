@@ -538,19 +538,15 @@ static void TestButtons( void )
           }
           break;
         case 0x4:
-          if (buttons_tested & 0x4)
-          {
+          if (buttons_tested & 0x4) {
             continue;
-          }
-          else
-          {
+          } else {
             printf("\nButton 3 (SW2) Pressed.\n");
             buttons_tested = buttons_tested | 0x4;
           }
           break;
         case 0x8:
-          if (buttons_tested & 0x8)
-          {
+          if (buttons_tested & 0x8) {
             continue;
           }
           else
@@ -758,7 +754,7 @@ static void UARTReceiveChars(void)
 
 #endif
 
-int main()
+int main2()
 {
   /* Declare variable for received character. */
   int ch;

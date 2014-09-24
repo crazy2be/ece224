@@ -8,6 +8,7 @@
 C_SRCS += \
 ${addprefix ,\
 board_diag.c \
+lab1phase1.c \
 }
 
 CXX_SRCS += \
