@@ -436,7 +436,7 @@ static void init_button_pio()
   alt_ic_isr_register(BUTTON_PIO_IRQ_INTERRUPT_CONTROLLER_ID, BUTTON_PIO_IRQ, 
     handle_button_interrupts, edge_capture_ptr, 0x0);
 #else
-  alt_irq_register( BUTTON_PIO_IRQ, edge_capture_ptr, 
+  alt_irq_register(BUTTON_PIO_IRQ, edge_capture_ptr, 
     handle_button_interrupts);
 #endif
 }

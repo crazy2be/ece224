@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
+		<item value="275" key="DIALOG_WIDTH"/>
 		<item value="262" key="DIALOG_Y_ORIGIN"/>
+		<item value="401" key="DIALOG_HEIGHT"/>
 		<item value="1269" key="DIALOG_X_ORIGIN"/>
+		<item value="1|Segoe UI|8.830189|0|WINDOWS|1|-13|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI" key="DIALOG_FONT_NAME"/>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="true" key="wrap"/>
@@ -10,16 +13,16 @@
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="false" key="wholeword"/>
-		<item value=", alt_u32 id" key="selection"/>
+		<item value="" key="selection"/>
 		<list key="findhistory">
+			<item value="LED"/>
+			<item value="GREEN"/>
+			<item value="irq"/>
+			<item value="main"/>
 			<item value="wait"/>
 			<item value="time"/>
 			<item value="edge_capture"/>
 			<item value="handle_button_interrupts"/>
-			<item value="button"/>
-			<item value="init_button_pio"/>
-			<item value="BUTTON"/>
-			<item value="BUTTON_PIO_NAME"/>
 		</list>
 		<list key="replacehistory">
 		</list>
