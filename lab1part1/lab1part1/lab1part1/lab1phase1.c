@@ -48,39 +48,33 @@ void init_button_interrupts(volatile int *ret) {
 volatile static int timer_counter = 0;
 void timer_interrupt_handler(void *context, alt_u32 id) {
     timer_counter--;
-    inc_red_leds();
-    //(*(volatile int*) context)--;
-    
-   // clear timer interrupt bit in status register   
-   IOWR_ALTERA_AVALON_TIMER_STATUS(TIMER_0_BASE, 0x0);
+    // inc_red_leds();
+    // clear timer interrupt bit in status register   
+    IOWR_ALTERA_AVALON_TIMER_STATUS(TIMER_0_BASE, 0x0);
 }
 
 void wait(int ms_to_wait) {
-    timer_counter = ms_to_wait;
-    while (timer_counter > 0) {
-        inc_green_leds();
-    }
-}
+    int timerPeriod = ALT_CPU_FREQ / 1000 * ms_to_wait;
 
-void wait_init() {
-   int timerPeriod = ALT_CPU_FREQ / 1000;
+    // initialize timer period
+    IOWR_ALTERA_AVALON_TIMER_PERIODL(TIMER_0_BASE, (alt_u16)timerPeriod);
+    IOWR_ALTERA_AVALON_TIMER_PERIODH(TIMER_0_BASE, (alt_u16)(timerPeriod >> 16));
 
-   // initialize timer period
-   IOWR_ALTERA_AVALON_TIMER_PERIODL(TIMER_0_BASE, (alt_u16)timerPeriod);
-   IOWR_ALTERA_AVALON_TIMER_PERIODH(TIMER_0_BASE, (alt_u16)(timerPeriod >> 16));
+    // clear timer interrupt bit in status register   
+    IOWR_ALTERA_AVALON_TIMER_STATUS(TIMER_0_BASE, 0x0);
 
-   // clear timer interrupt bit in status register   
-   IOWR_ALTERA_AVALON_TIMER_STATUS(TIMER_0_BASE, 0x0);
+    // initialize timer interrupt vector
+    alt_irq_register(TIMER_0_IRQ, (void*)0, timer_interrupt_handler); 
 
-   // initialize timer interrupt vector
-   alt_irq_register(TIMER_0_IRQ, (void*)0, timer_interrupt_handler); 
-
-   // initialize timer control - start timer, run continuously, enable interrupts
-   IOWR_ALTERA_AVALON_TIMER_CONTROL(TIMER_0_BASE,
+    // initialize timer control - start timer, run continuously, enable interrupts
+    IOWR_ALTERA_AVALON_TIMER_CONTROL(TIMER_0_BASE,
         ALTERA_AVALON_TIMER_CONTROL_ITO_MSK |
         ALTERA_AVALON_TIMER_CONTROL_CONT_MSK |
         ALTERA_AVALON_TIMER_CONTROL_START_MSK);
-    
+        
+    timer_counter = 1;
+    while (timer_counter > 0);
+    IOWR_ALTERA_AVALON_TIMER_CONTROL(TIMER_0_BASE, 0);
 }
 
 int main(void) {
@@ -88,7 +82,6 @@ int main(void) {
     //volatile int button_edge_value = 0;
     //init_button_interrupts(&button_edge_value);
     int i = 1;
-    wait_init();
     
     while (1) {
         //while (button_edge_value == 0);
