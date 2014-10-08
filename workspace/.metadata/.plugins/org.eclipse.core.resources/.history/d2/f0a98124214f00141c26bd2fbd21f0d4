@@ -110,7 +110,9 @@ int main(void) {
     IOWR_ALTERA_AVALON_PIO_DATA(GREEN_LED_PIO_BASE, 0);
     IOWR_ALTERA_AVALON_PIO_DATA(SEVEN_SEG_RIGHT_PIO_BASE, seven_seg_digits[2]);
     IOWR_ALTERA_AVALON_PIO_DATA(SEVEN_SEG_MIDDLE_PIO_BASE, 0xffff);
-    IOWR_ALTERA_AVALON_PIO_DATA(SEVEN_SEG_PIO_BASE, 0xffff);          
+    IOWR_ALTERA_AVALON_PIO_DATA(SEVEN_SEG_PIO_BASE, 0xffff);
+    
+                
     
     init_button_interrupts(&button_edge_value);
     init_wait(1000);

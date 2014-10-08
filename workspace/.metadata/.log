@@ -798,3 +798,132 @@ java.lang.NullPointerException
 	at org.eclipse.debug.core.DebugPlugin$EventNotifier.dispatch(DebugPlugin.java:1108)
 	at org.eclipse.debug.core.DebugPlugin$EventDispatchJob.run(DebugPlugin.java:344)
 	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+!SESSION 2014-10-08 15:04:05.842 -----------------------------------------------
+eclipse.buildId=M20060629-1905
+java.version=1.6.0_14
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_CA
+Command-line arguments:  -os win32 -ws win32 -arch x86
+
+!ENTRY com.altera.ide.core 1 0 2014-10-08 15:04:23.220
+!MESSAGE C:\Software\altera\10.1\quartus\bin\cygwin\bin/cygpath --unix --file - 
+
+!ENTRY org.eclipse.core.resources 2 1 2014-10-08 15:04:30.708
+!MESSAGE Skipping builder org.eclipse.cdt.managedbuilder.core.ScannerConfigBuilder for project lab1part1_syslib. Either the builder is missing from the install, or it belongs to a project nature that is missing or disabled.
+
+!ENTRY org.eclipse.core.resources 2 1 2014-10-08 15:04:42.658
+!MESSAGE Skipping builder org.eclipse.cdt.managedbuilder.core.ScannerConfigBuilder for project lab1part1. Either the builder is missing from the install, or it belongs to a project nature that is missing or disabled.
+
+!ENTRY org.eclipse.osgi 4 0 2014-10-08 15:13:51.514
+!MESSAGE Error while stopping "com.altera.nj.launch_10.1.0.201101192339".
+!STACK 0
+org.osgi.framework.BundleException: Exception in com.altera.nj.launch.internal.ui.LaunchUIPlugin.stop() of bundle com.altera.nj.launch.
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.stop(BundleContextImpl.java:1048)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.stopWorker(BundleHost.java:396)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.stop(AbstractBundle.java:400)
+	at org.eclipse.core.runtime.internal.adaptor.BundleStopper.basicStopBundles(BundleStopper.java:86)
+	at org.eclipse.core.runtime.internal.adaptor.BundleStopper.stopBundles(BundleStopper.java:73)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAdaptorHook.frameworkStopping(EclipseAdaptorHook.java:156)
+	at org.eclipse.osgi.baseadaptor.BaseAdaptor.frameworkStopping(BaseAdaptor.java:288)
+	at org.eclipse.osgi.framework.internal.core.Framework.shutdown(Framework.java:529)
+	at org.eclipse.osgi.framework.internal.core.Framework.close(Framework.java:440)
+	at org.eclipse.osgi.framework.internal.core.OSGi.close(OSGi.java:41)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.shutdown(EclipseStarter.java:423)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:193)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.eclipse.core.launcher.Main.invokeFramework(Main.java:336)
+	at org.eclipse.core.launcher.Main.basicRun(Main.java:280)
+	at org.eclipse.core.launcher.Main.run(Main.java:977)
+	at org.eclipse.core.launcher.Main.main(Main.java:952)
+Caused by: org.eclipse.core.runtime.CoreException: Problems terminating debug session: please terminate debug session manually before exiting the Nios II IDE
+	at com.altera.nj.launch.internal.ui.LaunchUIPlugin.stop(LaunchUIPlugin.java:224)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl$3.run(BundleContextImpl.java:1032)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.stop(BundleContextImpl.java:1028)
+	... 19 more
+Root exception:
+org.eclipse.core.runtime.CoreException: Problems terminating debug session: please terminate debug session manually before exiting the Nios II IDE
+	at com.altera.nj.launch.internal.ui.LaunchUIPlugin.stop(LaunchUIPlugin.java:224)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl$3.run(BundleContextImpl.java:1032)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.stop(BundleContextImpl.java:1028)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.stopWorker(BundleHost.java:396)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.stop(AbstractBundle.java:400)
+	at org.eclipse.core.runtime.internal.adaptor.BundleStopper.basicStopBundles(BundleStopper.java:86)
+	at org.eclipse.core.runtime.internal.adaptor.BundleStopper.stopBundles(BundleStopper.java:73)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAdaptorHook.frameworkStopping(EclipseAdaptorHook.java:156)
+	at org.eclipse.osgi.baseadaptor.BaseAdaptor.frameworkStopping(BaseAdaptor.java:288)
+	at org.eclipse.osgi.framework.internal.core.Framework.shutdown(Framework.java:529)
+	at org.eclipse.osgi.framework.internal.core.Framework.close(Framework.java:440)
+	at org.eclipse.osgi.framework.internal.core.OSGi.close(OSGi.java:41)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.shutdown(EclipseStarter.java:423)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:193)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.eclipse.core.launcher.Main.invokeFramework(Main.java:336)
+	at org.eclipse.core.launcher.Main.basicRun(Main.java:280)
+	at org.eclipse.core.launcher.Main.run(Main.java:977)
+	at org.eclipse.core.launcher.Main.main(Main.java:952)
+
+!ENTRY org.eclipse.debug.core 4 2 2014-10-08 15:13:51.874
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.debug.core".
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.debug.core.Launch.getLaunchManager(Launch.java:504)
+	at org.eclipse.debug.core.Launch.fireTerminate(Launch.java:400)
+	at org.eclipse.debug.core.Launch.handleDebugEvents(Launch.java:571)
+	at org.eclipse.debug.core.DebugPlugin$EventNotifier.run(DebugPlugin.java:1076)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.debug.core.DebugPlugin$EventNotifier.dispatch(DebugPlugin.java:1108)
+	at org.eclipse.debug.core.DebugPlugin$EventDispatchJob.run(DebugPlugin.java:344)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+
+!ENTRY org.eclipse.core.jobs 4 2 2014-10-08 15:13:51.889
+!MESSAGE An internal error occurred during: "Debug Event Dispatch".
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.debug.core.DebugPlugin.log(DebugPlugin.java:860)
+	at org.eclipse.debug.core.DebugPlugin$EventNotifier.handleException(DebugPlugin.java:1062)
+	at org.eclipse.core.runtime.SafeRunner.handleException(SafeRunner.java:68)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:39)
+	at org.eclipse.debug.core.DebugPlugin$EventNotifier.dispatch(DebugPlugin.java:1108)
+	at org.eclipse.debug.core.DebugPlugin$EventDispatchJob.run(DebugPlugin.java:344)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+!SESSION 2014-10-08 15:14:10.925 -----------------------------------------------
+eclipse.buildId=M20060629-1905
+java.version=1.6.0_14
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_CA
+Command-line arguments:  -os win32 -ws win32 -arch x86
+
+!ENTRY com.altera.ide.core 1 0 2014-10-08 15:14:42.249
+!MESSAGE C:\Software\altera\10.1\quartus\bin\cygwin\bin/cygpath --unix --file - 
+
+!ENTRY org.eclipse.core.resources 2 1 2014-10-08 15:14:49.113
+!MESSAGE Skipping builder org.eclipse.cdt.managedbuilder.core.ScannerConfigBuilder for project lab1part1_syslib. Either the builder is missing from the install, or it belongs to a project nature that is missing or disabled.
+
+!ENTRY org.eclipse.core.resources 2 1 2014-10-08 15:14:57.365
+!MESSAGE Skipping builder org.eclipse.cdt.managedbuilder.core.ScannerConfigBuilder for project lab1part1. Either the builder is missing from the install, or it belongs to a project nature that is missing or disabled.
+!SESSION 2014-10-08 15:21:17.018 -----------------------------------------------
+eclipse.buildId=M20060629-1905
+java.version=1.6.0_14
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_CA
+Command-line arguments:  -os win32 -ws win32 -arch x86
+
+!ENTRY org.eclipse.core.resources 2 10035 2014-10-08 15:21:18.017
+!MESSAGE A workspace crash was detected. The previous session did not exit normally.
+
+!ENTRY com.altera.ide.core 1 0 2014-10-08 15:22:10.105
+!MESSAGE C:\Software\altera\10.1\quartus\bin\cygwin\bin/cygpath --unix --file - 
+
+!ENTRY org.eclipse.core.resources 2 1 2014-10-08 15:22:17.406
+!MESSAGE Skipping builder org.eclipse.cdt.managedbuilder.core.ScannerConfigBuilder for project lab1part1_syslib. Either the builder is missing from the install, or it belongs to a project nature that is missing or disabled.
+
+!ENTRY org.eclipse.core.resources 2 1 2014-10-08 15:22:28.420
+!MESSAGE Skipping builder org.eclipse.cdt.managedbuilder.core.ScannerConfigBuilder for project lab1part1. Either the builder is missing from the install, or it belongs to a project nature that is missing or disabled.

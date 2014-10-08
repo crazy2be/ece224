@@ -77,7 +77,7 @@ void init_wait(int ms_to_wait) {
 }
 
 enum mode_t { LED, SEVEN_SEG, OFF };
-const unsigned seven_seg_digits[] = { 0xffffff81, 0xffffffcf, 0xffffffff };
+const unsigned seven_seg_digits[] = { 0xffffff81, 0xffffffcf, 0xfffffff };
 
 void display(int value, mode_t mode) {
     short bit = 0x1 & value;
@@ -108,9 +108,11 @@ int main(void) {
     IOWR_ALTERA_AVALON_PIO_DATA(LED_PIO_BASE, 0);
     IOWR_ALTERA_AVALON_PIO_DATA(RED_LED_PIO_BASE, 0);
     IOWR_ALTERA_AVALON_PIO_DATA(GREEN_LED_PIO_BASE, 0);
-    IOWR_ALTERA_AVALON_PIO_DATA(SEVEN_SEG_RIGHT_PIO_BASE, seven_seg_digits[2]);
+    IOWR_ALTERA_AVALON_PIO_DATA(SEVEN_SEG_RIGHT_PIO_BASE, 0xffffffff);
     IOWR_ALTERA_AVALON_PIO_DATA(SEVEN_SEG_MIDDLE_PIO_BASE, 0xffff);
-    IOWR_ALTERA_AVALON_PIO_DATA(SEVEN_SEG_PIO_BASE, 0xffff);          
+    IOWR_ALTERA_AVALON_PIO_DATA(SEVEN_SEG_PIO_BASE, 0xffff);
+    
+                
     
     init_button_interrupts(&button_edge_value);
     init_wait(1000);
