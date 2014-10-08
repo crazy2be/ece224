@@ -18,41 +18,24 @@
 <coolItem id="group.nav" itemType="typeGroupMarker"/>
 <coolItem id="org.eclipse.ui.workbench.navigate" itemType="typeToolBarContribution" x="198" y="22"/>
 <coolItem id="group.editor" itemType="typeGroupMarker"/>
+<coolItem id="org.eclipse.ui.DefaultTextEditor" itemType="typePlaceholder" x="-1" y="-1"/>
 <coolItem id="org.eclipse.cdt.ui.editor.CEditor" itemType="typeToolBarContribution" x="-1" y="-1"/>
 <coolItem id="group.help" itemType="typeGroupMarker"/>
 <coolItem id="org.eclipse.ui.workbench.help" itemType="typeToolBarContribution" x="-1" y="-1"/>
 </coolbarLayout>
-<page aggregateWorkingSetId="Aggregate for window 1412171346556" focus="true" label="Workspace - Nios II">
+<page aggregateWorkingSetId="Aggregate for window 1412171346556" focus="true" label="Workspace - Nios II C/C++">
 <editors>
 <editorArea activeWorkbook="DefaultEditorWorkbook">
 <info part="DefaultEditorWorkbook">
 <folder appearance="1" expanded="2">
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
 <part id="0"/>
-<part id="1"/>
-<part id="2"/>
-<part id="3"/>
-<part id="4"/>
 </presentation>
 </folder>
 </info>
 </editorArea>
-<editor id="org.eclipse.cdt.ui.editor.CEditor" name="board_diag.c" partName="board_diag.c" path="N:/ece224/lab1part1/lab1part1/lab1part1/board_diag.c" title="board_diag.c" tooltip="lab1part1/board_diag.c" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/lab1part1/board_diag.c"/>
-</editor>
-<editor activePart="true" focus="true" id="org.eclipse.cdt.ui.editor.CEditor" name="lab1phase1.c" partName="lab1phase1.c" path="N:/ece224/lab1part1/lab1part1/lab1part1/lab1phase1.c" title="lab1phase1.c" tooltip="lab1part1/lab1phase1.c" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/lab1part1/lab1phase1.c"/>
-</editor>
-<editor id="org.eclipse.cdt.ui.editor.CEditor" name="board_diag.h" partName="board_diag.h" path="N:/ece224/lab1part1/lab1part1/lab1part1/board_diag.h" title="board_diag.h" tooltip="lab1part1/board_diag.h" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/lab1part1/board_diag.h"/>
-</editor>
-<editor id="org.eclipse.cdt.ui.editor.CEditor" name="altera_avalon_pio_regs.h" partName="altera_avalon_pio_regs.h" path="C:/Software/altera/10.1/ip/altera/sopc_builder_ip/altera_avalon_pio/inc/altera_avalon_pio_regs.h" title="altera_avalon_pio_regs.h" tooltip="altera.components/IP Device Drivers/altera/sopc_builder_ip/altera_avalon_pio/inc/altera_avalon_pio_regs.h" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/altera.components/IP Device Drivers/altera/sopc_builder_ip/altera_avalon_pio/inc/altera_avalon_pio_regs.h"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="2387" selectionTopPixel="570"/>
-</editor>
-<editor id="org.eclipse.cdt.ui.editor.CEditor" name="salib-701.c" partName="salib-701.c" path="C:/Software/altera/10.1/nios2eds/bin/nios2-gnutools/src/newlib/libgloss/sparc/salib-701.c" title="salib-701.c" tooltip="altera.components/Newlib C Library/src/newlib/libgloss/sparc/salib-701.c" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/altera.components/Newlib C Library/src/newlib/libgloss/sparc/salib-701.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="7" selectionOffset="6208" selectionTopPixel="4104"/>
+<editor activePart="true" focus="true" id="org.eclipse.cdt.ui.editor.CEditor" name="ece224_egm.c" partName="ece224_egm.c" path="N:/ece224/lab1part2/lab1part2/ece224_egm.c" title="ece224_egm.c" tooltip="lab1part2/ece224_egm.c" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/lab1part2/ece224_egm.c"/>
 </editor>
 </editors>
 <views>
@@ -60,11 +43,18 @@
 <viewState CommonNavigator.LINKING_ENABLED="0" org.eclipse.ui.navigator.resources.workingSets.showTopLevelWorkingSets="0"/>
 </view>
 <view id="org.eclipse.ui.views.PropertySheet" partName="Properties"/>
+<view id="org.eclipse.ui.views.ResourceNavigator" partName="Navigator">
+<viewState LINK_NAVIGATOR_TO_EDITOR="0" sorter="1">
+<filters>
+<filter element=".*" isEnabled="false"/>
+</filters>
+</viewState>
+</view>
 <view id="org.eclipse.cdt.make.ui.views.MakeView" partName="Make Targets">
 <viewState/>
 </view>
 <view id="org.eclipse.ui.views.ProblemView" partName="Problems">
-<viewState columnWidth0="253" columnWidth1="78" columnWidth2="153" columnWidth3="63" columnWidth4="0" horizontalPosition="0" verticalPosition="0">
+<viewState columnWidth0="259" columnWidth1="84" columnWidth2="159" columnWidth3="69" columnWidth4="0" horizontalPosition="0" verticalPosition="0">
 <columnOrder columnOrderIndex="0"/>
 <columnOrder columnOrderIndex="1"/>
 <columnOrder columnOrderIndex="2"/>
@@ -74,6 +64,25 @@
 </view>
 <view id="org.eclipse.ui.console.ConsoleView" partName="Console">
 <viewState/>
+</view>
+<view id="com.altera.nj.ui.Nios2CView" partName="Nios II C/C++ Projects">
+<viewState horizontalPosition="0" verticalPosition="0">
+<selection>
+<element path="N:/ece224/lab1part2/lab1part2"/>
+</selection>
+<customFilters userDefinedPatternsEnabled="false">
+<xmlDefinedFilters>
+<child filterId="com.altera.nj.ui.Nios2CView_patternFilterId_.*" isEnabled="true"/>
+<child filterId="com.altera.nj.ui.Nios2CView.ExecutableFilter" isEnabled="false"/>
+<child filterId="com.altera.nj.ui.Nios2CView.SharedFilter" isEnabled="false"/>
+<child filterId="com.altera.nj.ui.Nios2CView.ClosedProjectFilter" isEnabled="false"/>
+<child filterId="com.altera.nj.ui.Nios2CView.NonCElementFilter" isEnabled="false"/>
+<child filterId="com.altera.nj.ui.Nios2CView.ObjectFilter" isEnabled="false"/>
+<child filterId="com.altera.nj.ui.Nios2CView.ArchiveFilter" isEnabled="false"/>
+<child filterId="com.altera.nj.ui.Nios2CView.NonCProjectsFilter" isEnabled="false"/>
+</xmlDefinedFilters>
+</customFilters>
+</viewState>
 </view>
 <view id="org.eclipse.ui.views.TaskList" partName="Tasks">
 <viewState PRIMARY_SORT_FIELD="org.eclipse.ui.ide.completionField" categoryGroup="none" markerContentGenerator="org.eclipse.ui.ide.tasksGenerator" partName="Tasks">
@@ -91,7 +100,7 @@
 <viewState/>
 </view>
 </views>
-<perspectives activePart="org.eclipse.cdt.ui.editor.CEditor" activePerspective="com.altera.sbtgui.ui.cPerspective">
+<perspectives activePart="org.eclipse.cdt.ui.editor.CEditor" activePerspective="com.altera.nj.ui.CPerspective">
 <perspective editorAreaTrimState="2" editorAreaVisible="1" fixed="0" version="0.016">
 <descriptor descriptor="com.altera.nj.ui.CPerspective" id="&lt;Nios_II_C/C++&gt;" label="&lt;Nios II C/C++&gt;"/>
 <alwaysOnActionSet id="org.eclipse.ui.cheatsheets.actionSet"/>
@@ -210,26 +219,19 @@
 <view id="org.eclipse.ui.views.PropertySheet"/>
 <view id="org.eclipse.ui.views.ContentOutline"/>
 <view id="org.eclipse.ui.navigator.ProjectExplorer"/>
-<layout>
-<mainWindow>
-<info part="org.eclipse.ui.editorss"/>
-<info folder="true" part="stickyFolderRight" ratio="0.75" ratioLeft="1434" ratioRight="478" relationship="2" relative="org.eclipse.ui.editorss">
-<folder appearance="2" expanded="2">
-<page content="org.eclipse.help.ui.HelpView" label="LabelNotFound"/>
+<layout>&#x0A;<mainWindow>&#x0A;<info part="org.eclipse.ui.editorss"/>
+<info folder="true" part="stickyFolderRight" ratio="0.75" ratioLeft="1434" ratioRight="478" relationship="2" relative="org.eclipse.ui.editorss">&#x0A;<folder appearance="2" expanded="2">&#x0A;<page content="org.eclipse.help.ui.HelpView" label="LabelNotFound"/>
 <page content="org.eclipse.ui.internal.introview" label="LabelNotFound"/>
 <page content="org.eclipse.ui.cheatsheets.views.CheatSheetView" label="LabelNotFound"/>
 </folder>
 </info>
-<info folder="true" part="bottom" ratio="0.7409041" ratioLeft="672" ratioRight="235" relationship="4" relative="org.eclipse.ui.editorss">
-<folder activePageID="org.eclipse.ui.console.ConsoleView" appearance="2" expanded="2">
-<page content="org.eclipse.ui.views.ProblemView" label="Problems"/>
+<info folder="true" part="bottom" ratio="0.7409041" ratioLeft="672" ratioRight="235" relationship="4" relative="org.eclipse.ui.editorss">&#x0A;<folder activePageID="org.eclipse.ui.console.ConsoleView" appearance="2" expanded="2">&#x0A;<page content="org.eclipse.ui.views.ProblemView" label="Problems"/>
 <page content="org.eclipse.ui.views.TaskList" label="Tasks"/>
 <page content="org.eclipse.ui.console.ConsoleView" label="Console"/>
 <page content="org.eclipse.ui.views.PropertySheet" label="Properties"/>
 <page content="com.altera.sbtgui.launch.hardware.ByteStreamConsoleView:*" label="LabelNotFound"/>
 <page content="com.altera.sbtgui.launch.hardware.ByteStreamConsoleView" label="LabelNotFound"/>
-<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
-<part id="0"/>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">&#x0A;<part id="0"/>
 <part id="1"/>
 <part id="2"/>
 <part id="3"/>
@@ -239,12 +241,107 @@
 <info part="org.eclipse.cdt.ui.CView" ratio="0.49924126" ratioLeft="329" ratioRight="330" relationship="2" relative="bottom"/>
 <info part="org.eclipse.ui.views.ResourceNavigator" ratio="0.49924126" ratioLeft="329" ratioRight="330" relationship="2" relative="bottom"/>
 <info part="org.eclipse.ui.views.BookmarkView" ratio="0.49924126" ratioLeft="329" ratioRight="330" relationship="2" relative="bottom"/>
-<info folder="true" part="topRight" ratio="0.8861439" ratioLeft="825" ratioRight="106" relationship="2" relative="org.eclipse.ui.editorss">
-<folder activePageID="org.eclipse.ui.navigator.ProjectExplorer" appearance="2" expanded="0">
-<page content="org.eclipse.ui.views.ContentOutline" label="Outline"/>
+<info folder="true" part="topRight" ratio="0.8861439" ratioLeft="825" ratioRight="106" relationship="2" relative="org.eclipse.ui.editorss">&#x0A;<folder activePageID="org.eclipse.ui.navigator.ProjectExplorer" appearance="2" expanded="0">&#x0A;<page content="org.eclipse.ui.views.ContentOutline" label="Outline"/>
 <page content="org.eclipse.ui.navigator.ProjectExplorer" label="Project Explorer"/>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">&#x0A;<part id="1"/>
+<part id="0"/>
+</presentation>
+</folder>
+</info>
+</mainWindow>
+</layout>
+</perspective>
+<perspective editorAreaVisible="1" fixed="0" version="0.016">
+<descriptor class="com.altera.nj.ui.Nios2CPerspectiveFactory" id="com.altera.nj.ui.CPerspective" label="Nios II C/C++"/>
+<alwaysOnActionSet id="com.altera.nj.doc.user.NiosIIDocumentation"/>
+<alwaysOnActionSet id="com.altera.nj.launch.NiosIIToolsMenuActionSet"/>
+<alwaysOnActionSet id="com.altera.nj.ui.actionSet"/>
+<alwaysOnActionSet id="org.eclipse.ui.cheatsheets.actionSet"/>
+<alwaysOnActionSet id="org.eclipse.search.searchActionSet"/>
+<alwaysOnActionSet id="org.eclipse.ui.edit.text.actionSet.openExternalFile"/>
+<alwaysOnActionSet id="org.eclipse.ui.edit.text.actionSet.annotationNavigation"/>
+<alwaysOnActionSet id="org.eclipse.ui.edit.text.actionSet.navigation"/>
+<alwaysOnActionSet id="org.eclipse.ui.edit.text.actionSet.convertLineDelimitersTo"/>
+<alwaysOnActionSet id="org.eclipse.ui.externaltools.ExternalToolsSet"/>
+<alwaysOnActionSet id="org.eclipse.ui.actionSet.keyBindings"/>
+<alwaysOnActionSet id="org.eclipse.ui.WorkingSetActionSet"/>
+<alwaysOnActionSet id="org.eclipse.update.ui.softwareUpdates"/>
+<alwaysOnActionSet id="org.eclipse.cdt.ui.SearchActionSet"/>
+<alwaysOnActionSet id="org.eclipse.cdt.ui.CElementCreationActionSet"/>
+<alwaysOnActionSet id="org.eclipse.ui.NavigateActionSet"/>
+<alwaysOnActionSet id="org.eclipse.debug.ui.launchActionSet"/>
+<show_view_action id="org.eclipse.ui.console.ConsoleView"/>
+<show_view_action id="org.eclipse.search.ui.views.SearchView"/>
+<show_view_action id="org.eclipse.ui.views.ContentOutline"/>
+<show_view_action id="org.eclipse.ui.views.ProblemView"/>
+<show_view_action id="com.altera.nj.ui.Nios2CView"/>
+<show_view_action id="org.eclipse.ui.views.ResourceNavigator"/>
+<show_view_action id="org.eclipse.ui.views.PropertySheet"/>
+<show_view_action id="org.eclipse.pde.runtime.LogView"/>
+<show_view_action id="com.altera.ide.chac.views.ChacView"/>
+<new_wizard_action id="com.altera.nj.ui.wizards.ManagedNJWizard"/>
+<new_wizard_action id="com.altera.nj.ui.wizards.ManagedSDKCWizard"/>
+<new_wizard_action id="com.altera.nj.ui.wizards.NJDIYWizard"/>
+<new_wizard_action id="com.altera.nj.ui.wizards.ManagedLibWizard"/>
+<new_wizard_action id="org.eclipse.cdt.ui.wizards.NewSourceFolderCreationWizard"/>
+<new_wizard_action id="org.eclipse.cdt.ui.wizards.NewSourceFileCreationWizard"/>
+<new_wizard_action id="org.eclipse.cdt.ui.wizards.NewHeaderFileCreationWizard"/>
+<new_wizard_action id="org.eclipse.cdt.ui.wizards.NewClassCreationWizard"/>
+<perspective_action id="org.eclipse.debug.ui.DebugPerspective"/>
+<perspective_action id="org.eclipse.team.ui.TeamSynchronizingPerspective"/>
+<perspective_action id="com.altera.ide.gprof.ui.GprofPerspective"/>
+<view id="com.altera.nj.ui.Nios2CView"/>
+<view id="org.eclipse.ui.views.ProblemView"/>
+<view id="org.eclipse.ui.console.ConsoleView"/>
+<view id="org.eclipse.ui.views.PropertySheet"/>
+<view id="org.eclipse.ui.views.ResourceNavigator"/>
+<view id="org.eclipse.ui.views.ContentOutline"/>
+<view id="org.eclipse.cdt.make.ui.views.MakeView"/>
+<layout>
+<mainWindow>
+<info folder="true" part="topLeft">
+<folder activePageID="com.altera.nj.ui.Nios2CView" appearance="2" expanded="2">
+<page content="com.altera.nj.ui.Nios2CView" label="Nios II C/C++ Projects"/>
+<page content="org.eclipse.ui.views.BookmarkView" label="LabelNotFound"/>
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
+<part id="0"/>
+</presentation>
+</folder>
+</info>
+<info folder="true" part="stickyFolderRight" ratio="0.7497382" ratioLeft="1432" ratioRight="478" relationship="2" relative="topLeft">
+<folder appearance="2" expanded="2">
+<page content="org.eclipse.help.ui.HelpView" label="LabelNotFound"/>
+<page content="org.eclipse.ui.internal.introview" label="LabelNotFound"/>
+<page content="org.eclipse.ui.cheatsheets.views.CheatSheetView" label="LabelNotFound"/>
+</folder>
+</info>
+<info part="org.eclipse.ui.editorss" ratio="0.24973822" ratioLeft="477" ratioRight="1433" relationship="2" relative="topLeft"/>
+<info folder="true" part="bottom" ratio="0.749736" ratioLeft="710" ratioRight="237" relationship="4" relative="org.eclipse.ui.editorss">
+<folder activePageID="org.eclipse.ui.console.ConsoleView" appearance="2" expanded="2">
+<page content="org.eclipse.ui.views.ProblemView" label="Problems"/>
+<page content="org.eclipse.ui.console.ConsoleView" label="Console"/>
+<page content="org.eclipse.ui.views.PropertySheet" label="Properties"/>
+<page content="org.eclipse.ui.views.ResourceNavigator" label="Navigator"/>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
+<part id="0"/>
 <part id="1"/>
+<part id="2"/>
+<part id="3"/>
+</presentation>
+</folder>
+</info>
+<info folder="true" part="topRight" ratio="0.7494766" ratioLeft="1074" ratioRight="359" relationship="2" relative="org.eclipse.ui.editorss">
+<folder activePageID="org.eclipse.ui.views.ContentOutline" appearance="2" expanded="2">
+<page content="org.eclipse.ui.views.ContentOutline" label="Outline"/>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
+<part id="0"/>
+</presentation>
+</folder>
+</info>
+<info folder="true" part="org.eclipse.ui.internal.ViewStack@1acc1c2" ratio="0.5" ratioLeft="355" ratioRight="355" relationship="4" relative="topRight">
+<folder activePageID="org.eclipse.cdt.make.ui.views.MakeView" appearance="2" expanded="2">
+<page content="org.eclipse.cdt.make.ui.views.MakeView" label="Make Targets"/>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
 <part id="0"/>
 </presentation>
 </folder>
@@ -258,53 +355,21 @@
 <editors>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/lab1part1/board_diag.c"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/lab1part1/lab1phase1.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/altera.components/IP Device Drivers/altera/sopc_builder_ip/altera_avalon_pio/inc/altera_avalon_pio_regs.h"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/lab1part1/board_diag.c"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/altera.components/IP Device Drivers/altera/sopc_builder_ip/altera_avalon_pio/inc/altera_avalon_pio_regs.h"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/lab1part1/board_diag.h"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/altera.components/Newlib C Library/src/newlib/libgloss/sparc/salib-701.c"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/lab1part1/board_diag.c"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/lab1part1/board_diag.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/lab1part2/hello_world.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.ui.DefaultTextEditor" path="/lab1part2/hello_world.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/lab1part2/ece224_egm.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/lab1part1/board_diag.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/lab1part1/lab1phase1.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/lab1part1/board_diag.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/altera.components/IP Device Drivers/altera/sopc_builder_ip/altera_avalon_pio/inc/altera_avalon_pio_regs.h"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/altera.components/Newlib C Library/src/newlib/libgloss/sparc/salib-701.c"/>
 </editors>
-<item historyLabel="altera_avalon_pio_regs.h" index="2">
-<position info="not_deleted" x="3323" y="31"/>
-</item>
-<item historyLabel="board_diag.c" index="0">
-<position info="not_deleted" x="11951" y="0"/>
-</item>
-<item historyLabel="lab1phase1.c" index="1">
-<position info="not_deleted" x="1466" y="0"/>
-</item>
-<item historyLabel="board_diag.c" index="0">
-<position info="not_deleted" x="11951" y="0"/>
-</item>
-<item historyLabel="lab1phase1.c" index="1">
-<position info="not_deleted" x="1466" y="0"/>
-</item>
-<item historyLabel="board_diag.c" index="0">
-<position info="not_deleted" x="11951" y="0"/>
-</item>
-<item historyLabel="lab1phase1.c" index="1">
-<position info="not_deleted" x="689" y="0"/>
-</item>
-<item historyLabel="board_diag.c" index="0">
-<position info="not_deleted" x="11951" y="0"/>
-</item>
-<item historyLabel="lab1phase1.c" index="1">
-<position info="not_deleted" x="689" y="0"/>
-</item>
-<item historyLabel="board_diag.c" index="0">
-<position info="not_deleted" x="11467" y="409"/>
-</item>
-<item historyLabel="lab1phase1.c" index="1">
-<position info="not_deleted" x="967" y="0"/>
-</item>
-<item historyLabel="board_diag.c" index="0">
-<position info="not_deleted" x="11467" y="409"/>
-</item>
-<item historyLabel="lab1phase1.c" index="1">
-<position info="not_deleted" x="967" y="0"/>
-</item>
 <item historyLabel="board_diag.c" index="0">
 <position info="not_deleted" x="12145" y="794"/>
 </item>
@@ -326,58 +391,58 @@
 <item historyLabel="lab1phase1.c" index="1">
 <position info="not_deleted" x="2070" y="0"/>
 </item>
-<item historyLabel="board_diag.c" index="3">
+<item historyLabel="board_diag.c" index="2">
 <position info="not_deleted" x="21199" y="0"/>
 </item>
-<item historyLabel="board_diag.c" index="3">
+<item historyLabel="board_diag.c" index="2">
 <position info="not_deleted" x="6384" y="7"/>
 </item>
-<item historyLabel="board_diag.c" index="3">
+<item historyLabel="board_diag.c" index="2">
 <position info="not_deleted" x="6502" y="0"/>
 </item>
-<item historyLabel="board_diag.c" index="3">
+<item historyLabel="board_diag.c" index="2">
 <position info="not_deleted" x="2606" y="9"/>
 </item>
 <item historyLabel="lab1phase1.c" index="1">
 <position info="not_deleted" x="2617" y="0"/>
 </item>
-<item historyLabel="board_diag.c" index="3">
+<item historyLabel="board_diag.c" index="2">
 <position info="not_deleted" x="12709" y="135"/>
 </item>
 <item historyLabel="lab1phase1.c" index="1">
 <position/>
 </item>
-<item historyLabel="board_diag.c" index="3">
+<item historyLabel="board_diag.c" index="2">
 <position info="not_deleted" x="12709" y="135"/>
 </item>
 <item historyLabel="lab1phase1.c" index="1">
 <position/>
 </item>
-<item historyLabel="board_diag.c" index="3">
+<item historyLabel="board_diag.c" index="2">
 <position info="not_deleted" x="12709" y="135"/>
 </item>
 <item historyLabel="lab1phase1.c" index="1">
 <position/>
 </item>
-<item historyLabel="board_diag.c" index="3">
+<item historyLabel="board_diag.c" index="2">
 <position info="not_deleted" x="12709" y="135"/>
 </item>
 <item historyLabel="lab1phase1.c" index="1">
 <position/>
 </item>
-<item historyLabel="board_diag.c" index="3">
+<item historyLabel="board_diag.c" index="2">
 <position info="not_deleted" x="12100" y="199"/>
 </item>
 <item historyLabel="lab1phase1.c" index="1">
 <position info="not_deleted" x="1159" y="0"/>
 </item>
-<item historyLabel="board_diag.c" index="3">
+<item historyLabel="board_diag.c" index="2">
 <position info="not_deleted" x="11463" y="180"/>
 </item>
 <item historyLabel="lab1phase1.c" index="1">
 <position info="not_deleted" x="1427" y="0"/>
 </item>
-<item historyLabel="board_diag.c" index="3">
+<item historyLabel="board_diag.c" index="2">
 <position info="not_deleted" x="11823" y="53"/>
 </item>
 <item historyLabel="lab1phase1.c" index="1">
@@ -386,10 +451,10 @@
 <item historyLabel="lab1phase1.c" index="1">
 <position info="not_deleted" x="2510" y="0"/>
 </item>
-<item historyLabel="altera_avalon_pio_regs.h" index="4">
+<item historyLabel="altera_avalon_pio_regs.h" index="3">
 <position info="not_deleted" x="2387" y="0"/>
 </item>
-<item historyLabel="board_diag.h" index="5">
+<item historyLabel="board_diag.h" index="4">
 <position info="not_deleted" x="0" y="0"/>
 </item>
 <item historyLabel="lab1phase1.c" index="1">
@@ -398,26 +463,67 @@
 <item historyLabel="lab1phase1.c" index="1">
 <position info="not_deleted" x="205" y="0"/>
 </item>
-<item historyLabel="salib-701.c" index="6">
+<item historyLabel="salib-701.c" index="5">
 <position info="not_deleted" x="6208" y="7"/>
 </item>
 <item historyLabel="lab1phase1.c" index="1">
 <position info="not_deleted" x="205" y="0"/>
 </item>
-<item historyLabel="board_diag.c" index="7">
+<item historyLabel="board_diag.c" index="6">
 <position/>
 </item>
 <item historyLabel="lab1phase1.c" index="1">
 <position info="not_deleted" x="4170" y="0"/>
 </item>
-<item historyLabel="board_diag.h" index="8">
+<item historyLabel="board_diag.h" index="7">
 <position/>
 </item>
-<item active="true" historyLabel="lab1phase1.c" index="1">
+<item historyLabel="lab1phase1.c" index="1">
 <position info="not_deleted" x="4170" y="0"/>
 </item>
+<item historyLabel="hello_world.c" index="8">
+<position/>
+</item>
+<item historyLabel="lab1phase1.c" index="1">
+<position info="not_deleted" x="4364" y="0"/>
+</item>
+<item historyLabel="hello_world.c" index="9">
+<position/>
+</item>
+<item historyLabel="lab1phase1.c" index="1">
+<position info="not_deleted" x="4364" y="0"/>
+</item>
+<item historyLabel="hello_world.c" index="8">
+<position/>
+</item>
+<item historyLabel="lab1phase1.c" index="1">
+<position info="not_deleted" x="4364" y="0"/>
+</item>
+<item historyLabel="ece224_egm.c" index="10">
+<position/>
+</item>
+<item historyLabel="board_diag.c" index="11">
+<position/>
+</item>
+<item historyLabel="lab1phase1.c" index="12">
+<position/>
+</item>
+<item historyLabel="board_diag.h" index="13">
+<position/>
+</item>
+<item historyLabel="altera_avalon_pio_regs.h" index="14">
+<position/>
+</item>
+<item historyLabel="salib-701.c" index="15">
+<position/>
+</item>
+<item active="true" historyLabel="ece224_egm.c" index="10">
+<position/>
+</item>
 </navigationHistory>
-<stickyState/>
+<stickyState>
+<perspective IMemento.internal.id="com.altera.nj.ui.CPerspective"/>
+</stickyState>
 <input factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/" type="8"/>
 </page>
 <workbenchWindowAdvisor/>
@@ -434,6 +540,9 @@
 </trimLayout>
 </window>
 <mruList>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="ece224_egm.c" tooltip="lab1part2/ece224_egm.c">
+<persistable path="/lab1part2/ece224_egm.c"/>
+</file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="salib-701.c" tooltip="altera.components/Newlib C Library/src/newlib/libgloss/sparc/salib-701.c">
 <persistable path="/altera.components/Newlib C Library/src/newlib/libgloss/sparc/salib-701.c"/>
 </file>

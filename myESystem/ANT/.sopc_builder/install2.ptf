@@ -1,7 +1,7 @@
 PACKAGE install2 
 {
    # This file informs the Nios II IDE of non-legacy component paths.
-   # Generated 2014.09.24.16:04:01
+   # Generated 2014.10.08.16:43:52
    COMPONENT Altera_UP_Flash_Memory_IP_Core_Avalon_Interface 
    {
       VERSION 1.0 
