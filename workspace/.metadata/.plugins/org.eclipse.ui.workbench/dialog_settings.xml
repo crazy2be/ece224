@@ -7,5 +7,9 @@
 	<section name="NewWizardAction">
 	</section>
 	<section name="ImportExportAction">
+		<item value="com.altera.nj.ui.wizards.AlteraNios2ProjectImportWizard" key="ImportExportPage.STORE_SELECTED_IMPORT_WIZARD_ID"/>
+		<list key="ImportExportPage.STORE_EXPANDED_IMPORT_CATEGORIES">
+			<item value="com.altera.nj.ui.import"/>
+		</list>
 	</section>
 </section>
