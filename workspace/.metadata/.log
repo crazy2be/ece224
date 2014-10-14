@@ -1224,3 +1224,28 @@ org.eclipse.jface.resource.DeviceResourceException: Unable to create resource UR
 
 !ENTRY com.altera.ide.core 1 0 2014-10-14 11:44:24.616
 !MESSAGE C:\Software\altera\10.1\quartus\bin\cygwin\bin/cygpath --unix --file - 
+
+!ENTRY org.eclipse.debug.core 4 2 2014-10-14 12:05:58.858
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.debug.core".
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.debug.core.Launch.getLaunchManager(Launch.java:504)
+	at org.eclipse.debug.core.Launch.fireTerminate(Launch.java:400)
+	at org.eclipse.debug.core.Launch.handleDebugEvents(Launch.java:571)
+	at org.eclipse.debug.core.DebugPlugin$EventNotifier.run(DebugPlugin.java:1076)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.debug.core.DebugPlugin$EventNotifier.dispatch(DebugPlugin.java:1108)
+	at org.eclipse.debug.core.DebugPlugin$EventDispatchJob.run(DebugPlugin.java:344)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+
+!ENTRY org.eclipse.core.jobs 4 2 2014-10-14 12:05:58.864
+!MESSAGE An internal error occurred during: "Debug Event Dispatch".
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.debug.core.DebugPlugin.log(DebugPlugin.java:860)
+	at org.eclipse.debug.core.DebugPlugin$EventNotifier.handleException(DebugPlugin.java:1062)
+	at org.eclipse.core.runtime.SafeRunner.handleException(SafeRunner.java:68)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:39)
+	at org.eclipse.debug.core.DebugPlugin$EventNotifier.dispatch(DebugPlugin.java:1108)
+	at org.eclipse.debug.core.DebugPlugin$EventDispatchJob.run(DebugPlugin.java:344)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
