@@ -45,17 +45,16 @@ void init_button_interrupts(volatile int *ret) {
                      button_interrupt_handler);
 }
 
-volatile static int timer_counter = 0;
 void timer_interrupt_handler(void *context, alt_u32 id) {
-    timer_counter--;
+    volatile int *timer_counter = (volatile int*) context;
+    (*timer_counter)--;
     // inc_red_leds();
     // clear timer interrupt bit in status register   
     IOWR_ALTERA_AVALON_TIMER_STATUS(TIMER_0_BASE, 0x0);
 }
 
-void init_wait(int ms_to_wait) {
+void init_wait(int ms_to_wait, volatile int *timer_counter) {
     int timerPeriod = ALT_CPU_FREQ / 1000 * ms_to_wait;
-    timer_counter = 1;
 
     // initialize timer period
     IOWR_ALTERA_AVALON_TIMER_PERIODL(TIMER_0_BASE, (alt_u16)timerPeriod);
@@ -65,7 +64,7 @@ void init_wait(int ms_to_wait) {
     IOWR_ALTERA_AVALON_TIMER_STATUS(TIMER_0_BASE, 0x0);
 
     // initialize timer interrupt vector
-    alt_irq_register(TIMER_0_IRQ, (void*)0, timer_interrupt_handler); 
+    alt_irq_register(TIMER_0_IRQ, (void*) timer_counter, timer_interrupt_handler); 
 
     // initialize timer control - start timer, run continuously, enable interrupts
     IOWR_ALTERA_AVALON_TIMER_CONTROL(TIMER_0_BASE,
@@ -102,6 +101,7 @@ int main(void) {
     int counter = 0;
     enum mode_t mode;
     int button_edge_value;
+    volatile int timer_counter = 1;
     
     // explicitly turn off any leds or seven seg displays
     
@@ -113,31 +113,29 @@ int main(void) {
     IOWR_ALTERA_AVALON_PIO_DATA(SEVEN_SEG_PIO_BASE, 0xffff);          
     
     init_button_interrupts(&button_edge_value);
-    init_wait(1000);
+    //init_wait(1000);
    
     while (1) {
-        IOWR_ALTERA_AVALON_PIO_DATA(RED_LED_PIO_BASE, value);
-        if (button_edge_value == 0x1) {
+        if (button_edge_value == 0x1 || button_edge_value == 0x2) {
+            mode = (button_edge_value == 0x1) ? LED : SEVEN_SEG;
             button_edge_value = 0;
             value = IORD_ALTERA_AVALON_PIO_DATA(SWITCH_PIO_BASE);
-            mode = LED;
             counter = 0;
             display(0, OFF);
-        } else if (button_edge_value == 0x2) {
-            button_edge_value = 0;
-            value = IORD_ALTERA_AVALON_PIO_DATA(SWITCH_PIO_BASE);
-            mode = SEVEN_SEG;
-            counter = 0;
-            display(0, OFF);
+            timer_counter = 1;
+            init_wait(1000, &timer_counter);
         } else if (mode != OFF && timer_counter <= 0) {
-            if (counter >= 8) {
+            if (counter >= 7) {
+                // we just finished looping over all 8 bits
                 mode = OFF;
             } else {
+                // reset the timer, and display the next bit
                 timer_counter = 1;
                 value >>= 1;
                 counter++;
             }
         } else {
+            // don't update the display if nothing happened
             continue;
         }
         display(value, mode);
