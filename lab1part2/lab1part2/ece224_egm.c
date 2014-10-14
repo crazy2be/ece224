@@ -135,7 +135,7 @@ int background(int grainSize)
 }
 
 // BEGIN OUR CODE
-#define USE_INTERRUPT_SYNCRONIZATION
+//#define USE_INTERRUPT_SYNCRONIZATION
 
 #define MAX_PULSE_COUNT 100
 #define UNUSED(exp) (void) (exp)
@@ -158,10 +158,13 @@ static volatile int pulse_count = 0;
 
 void pulse_interrupt_handler(void *context, alt_u32 id) {
     // context is unused, and probably NULL
-    UNUSED(context);
-    UNUSED(id);
+    // UNUSED(context);
+    // UNUSED(id);
+    // IOWR(GREEN_LED_PIO_BASE, 0, 0xff);
     
-    int level = IORD(PIO_PULSE_BASE, 3);
+    // get the edge of the pulse, so we know what to respond
+    int edge = IORD(PIO_PULSE_BASE, 0);
+    
     /* Reset the Button's edge capture register. */
     IOWR(PIO_PULSE_BASE, 3, 0);
   
@@ -172,27 +175,28 @@ void pulse_interrupt_handler(void *context, alt_u32 id) {
      */
     // IORD_ALTERA_AVALON_PIO_EDGE_CAP(PIO_PULSE_BASE);
 
-    IOWR(PIO_RESPONSE_BASE, 0, !level);
+    IOWR(PIO_RESPONSE_BASE, 0, edge);
     
     pulse_count++;
-    IOWR(GREEN_LED_PIO_BASE, 0, 0xff);
 }
 
 void init_pulse_interrupts(void) {
     IOWR(PIO_PULSE_BASE, 2, 0xf);
     IOWR(PIO_PULSE_BASE, 3, 0x0);
 
-    alt_irq_register(BUTTON_PIO_IRQ, NULL, pulse_interrupt_handler);
+    alt_irq_register(PIO_PULSE_IRQ, NULL, pulse_interrupt_handler);
 }
 
 void interrupt_main(void) {
-    const int grainSize = 20;
+    const int grainSize = 100;
+
+    IOWR(GREEN_LED_PIO_BASE, 0, 0xf0);
 
 	init_pulse_interrupts();
+    
+    IOWR(GREEN_LED_PIO_BASE, 0, 0xf);
 
     while (pulse_count < MAX_PULSE_COUNT) {
-        //IOWR(GREEN_LED_PIO_BASE, 0, pulse_count);
-        // the interrupt will increment pulse_count
         background(grainSize);
     }
 }
