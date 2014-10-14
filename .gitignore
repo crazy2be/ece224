@@ -1,5 +1,2 @@
 *.flock
-*.d
-*.o
-.metadata
 
