@@ -2,13 +2,15 @@
 <workbench version="2.0">
 <workbenchAdvisor/>
 <window height="1050" maximized="true" width="960" x="866" y="0">
-<fastViewData fastViewLocation="1024"/>
+<fastViewData fastViewLocation="1024">
+<orientation position="512" view="com.altera.nj.ui.Nios2CView"/>
+</fastViewData>
 <perspectiveBar>
 <itemSize x="160"/>
 </perspectiveBar>
 <coolbarLayout locked="0">
 <coolItem id="group.file" itemType="typeGroupMarker"/>
-<coolItem id="org.eclipse.ui.workbench.file" itemType="typeToolBarContribution" x="101" y="22"/>
+<coolItem id="org.eclipse.ui.workbench.file" itemType="typeToolBarContribution" x="132" y="22"/>
 <coolItem id="additions" itemType="typeGroupMarker"/>
 <coolItem id="org.eclipse.cdt.ui.CElementCreationActionSet" itemType="typeToolBarContribution" x="175" y="22"/>
 <coolItem id="org.eclipse.debug.ui.launchActionSet" itemType="typeToolBarContribution" x="135" y="22"/>
@@ -30,17 +32,28 @@
 <folder appearance="1" expanded="2">
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
 <part id="0"/>
+<part id="1"/>
+<part id="2"/>
 </presentation>
 </folder>
 </info>
 </editorArea>
-<editor focus="true" id="org.eclipse.cdt.ui.editor.CEditor" name="ece224_egm.c" partName="ece224_egm.c" title="ece224_egm.c" tooltip="lab1part2/ece224_egm.c" workbook="DefaultEditorWorkbook">
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="ece224_egm.c" partName="ece224_egm.c" path="N:/ece224/lab1part2/lab1part2/ece224_egm.c" title="ece224_egm.c" tooltip="lab1part2/ece224_egm.c" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/lab1part2/ece224_egm.c"/>
+</editor>
+<editor focus="true" id="org.eclipse.cdt.ui.editor.CEditor" name="lab1phase1.c" partName="lab1phase1.c" path="N:/ece224/lab1part1/lab1part1/lab1part1/lab1phase1.c" title="lab1phase1.c" tooltip="lab1part1/lab1phase1.c" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/lab1part1/lab1phase1.c"/>
+</editor>
+<editor id="org.eclipse.cdt.ui.editor.CEditor" name="altera_avalon_pio_regs.h" partName="altera_avalon_pio_regs.h" path="C:/Software/altera/10.1/ip/altera/sopc_builder_ip/altera_avalon_pio/inc/altera_avalon_pio_regs.h" title="altera_avalon_pio_regs.h" tooltip="altera.components/IP Device Drivers/altera/sopc_builder_ip/altera_avalon_pio/inc/altera_avalon_pio_regs.h" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/altera.components/IP Device Drivers/altera/sopc_builder_ip/altera_avalon_pio/inc/altera_avalon_pio_regs.h"/>
 </editor>
 </editors>
 <views>
 <view id="org.eclipse.ui.navigator.ProjectExplorer" partName="Project Explorer">
 <viewState CommonNavigator.LINKING_ENABLED="0" org.eclipse.ui.navigator.resources.workingSets.showTopLevelWorkingSets="0"/>
+</view>
+<view id="org.eclipse.ui.views.ProgressView" partName="Progress">
+<viewState/>
 </view>
 <view id="org.eclipse.ui.views.PropertySheet" partName="Properties"/>
 <view id="org.eclipse.ui.views.ResourceNavigator" partName="Navigator">
@@ -53,7 +66,7 @@
 <viewState/>
 </view>
 <view id="org.eclipse.ui.views.ProblemView" partName="Problems">
-<viewState columnWidth0="262" columnWidth1="87" columnWidth2="162" columnWidth3="72" columnWidth4="0" horizontalPosition="0" verticalPosition="0">
+<viewState columnWidth0="265" columnWidth1="90" columnWidth2="165" columnWidth3="75" columnWidth4="0" horizontalPosition="0" verticalPosition="0">
 <columnOrder columnOrderIndex="0"/>
 <columnOrder columnOrderIndex="1"/>
 <columnOrder columnOrderIndex="2"/>
@@ -68,7 +81,13 @@
 <viewState horizontalPosition="0" verticalPosition="0">
 <expanded>
 <element path="N:\ece224\workspace\altera.components"/>
+<element path="N:\ece224\lab1part1\lab1part1\lab1part1"/>
+<element path="N:\ece224\lab1part2\lab1part2"/>
+<element path="N:\ece224\lab1part2\lab1part2\ece224_egm.c"/>
 </expanded>
+<selection>
+<element path="N:/ece224/lab1part2/lab1part2"/>
+</selection>
 <customFilters userDefinedPatternsEnabled="false">
 <xmlDefinedFilters>
 <child filterId="com.altera.nj.ui.Nios2CView_patternFilterId_.*" isEnabled="true"/>
@@ -99,7 +118,7 @@
 <viewState/>
 </view>
 </views>
-<perspectives activePart="com.altera.nj.ui.Nios2CView" activePerspective="com.altera.nj.ui.CPerspective">
+<perspectives activePart="org.eclipse.ui.console.ConsoleView" activePerspective="com.altera.nj.ui.CPerspective">
 <perspective editorAreaTrimState="2" editorAreaVisible="1" fixed="0" version="0.016">
 <descriptor descriptor="com.altera.nj.ui.CPerspective" id="&lt;Nios_II_C/C++&gt;" label="&lt;Nios II C/C++&gt;"/>
 <alwaysOnActionSet id="org.eclipse.ui.cheatsheets.actionSet"/>
@@ -289,13 +308,14 @@
 <perspective_action id="org.eclipse.debug.ui.DebugPerspective"/>
 <perspective_action id="org.eclipse.team.ui.TeamSynchronizingPerspective"/>
 <perspective_action id="com.altera.ide.gprof.ui.GprofPerspective"/>
-<view id="com.altera.nj.ui.Nios2CView"/>
 <view id="org.eclipse.ui.views.ProblemView"/>
 <view id="org.eclipse.ui.console.ConsoleView"/>
 <view id="org.eclipse.ui.views.PropertySheet"/>
 <view id="org.eclipse.ui.views.ResourceNavigator"/>
+<view id="org.eclipse.ui.views.ProgressView"/>
 <view id="org.eclipse.ui.views.ContentOutline"/>
 <view id="org.eclipse.cdt.make.ui.views.MakeView"/>
+<view id="com.altera.nj.ui.Nios2CView"/>
 <layout>
 <mainWindow>
 <info folder="true" part="topLeft">
@@ -321,11 +341,13 @@
 <page content="org.eclipse.ui.console.ConsoleView" label="Console"/>
 <page content="org.eclipse.ui.views.PropertySheet" label="Properties"/>
 <page content="org.eclipse.ui.views.ResourceNavigator" label="Navigator"/>
+<page content="org.eclipse.ui.views.ProgressView" label="Progress"/>
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
 <part id="0"/>
 <part id="1"/>
 <part id="2"/>
 <part id="3"/>
+<part id="4"/>
 </presentation>
 </folder>
 </info>
@@ -352,7 +374,6 @@
 <workingSets/>
 <navigationHistory>
 <editors>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/lab1part1/board_diag.c"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/lab1part1/lab1phase1.c"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/lab1part1/board_diag.c"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/altera.components/IP Device Drivers/altera/sopc_builder_ip/altera_avalon_pio/inc/altera_avalon_pio_regs.h"/>
@@ -368,156 +389,158 @@
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/lab1part1/board_diag.h"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/altera.components/IP Device Drivers/altera/sopc_builder_ip/altera_avalon_pio/inc/altera_avalon_pio_regs.h"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/altera.components/Newlib C Library/src/newlib/libgloss/sparc/salib-701.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/lab1part1/lab1phase1.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/altera.components/IP Device Drivers/altera/sopc_builder_ip/altera_avalon_pio/inc/altera_avalon_pio_regs.h"/>
 </editors>
-<item historyLabel="lab1phase1.c" index="1">
-<position info="not_deleted" x="1848" y="0"/>
-</item>
-<item historyLabel="board_diag.c" index="0">
-<position info="not_deleted" x="11162" y="12"/>
-</item>
-<item historyLabel="lab1phase1.c" index="1">
-<position info="not_deleted" x="1066" y="0"/>
-</item>
-<item historyLabel="board_diag.c" index="0">
-<position info="not_deleted" x="11162" y="12"/>
-</item>
-<item historyLabel="lab1phase1.c" index="1">
-<position info="not_deleted" x="1066" y="0"/>
-</item>
-<item historyLabel="lab1phase1.c" index="1">
-<position info="not_deleted" x="2070" y="0"/>
-</item>
-<item historyLabel="board_diag.c" index="2">
-<position info="not_deleted" x="21199" y="0"/>
-</item>
-<item historyLabel="board_diag.c" index="2">
-<position info="not_deleted" x="6384" y="7"/>
-</item>
-<item historyLabel="board_diag.c" index="2">
-<position info="not_deleted" x="6502" y="0"/>
-</item>
-<item historyLabel="board_diag.c" index="2">
-<position info="not_deleted" x="2606" y="9"/>
-</item>
-<item historyLabel="lab1phase1.c" index="1">
-<position info="not_deleted" x="2617" y="0"/>
-</item>
-<item historyLabel="board_diag.c" index="2">
-<position info="not_deleted" x="12709" y="135"/>
-</item>
-<item historyLabel="lab1phase1.c" index="1">
+<item historyLabel="lab1phase1.c" index="0">
 <position/>
 </item>
-<item historyLabel="board_diag.c" index="2">
+<item historyLabel="board_diag.c" index="1">
 <position info="not_deleted" x="12709" y="135"/>
 </item>
-<item historyLabel="lab1phase1.c" index="1">
+<item historyLabel="lab1phase1.c" index="0">
 <position/>
 </item>
-<item historyLabel="board_diag.c" index="2">
+<item historyLabel="board_diag.c" index="1">
 <position info="not_deleted" x="12709" y="135"/>
 </item>
-<item historyLabel="lab1phase1.c" index="1">
+<item historyLabel="lab1phase1.c" index="0">
 <position/>
 </item>
-<item historyLabel="board_diag.c" index="2">
+<item historyLabel="board_diag.c" index="1">
 <position info="not_deleted" x="12709" y="135"/>
 </item>
-<item historyLabel="lab1phase1.c" index="1">
+<item historyLabel="lab1phase1.c" index="0">
 <position/>
 </item>
-<item historyLabel="board_diag.c" index="2">
+<item historyLabel="board_diag.c" index="1">
 <position info="not_deleted" x="12100" y="199"/>
 </item>
-<item historyLabel="lab1phase1.c" index="1">
+<item historyLabel="lab1phase1.c" index="0">
 <position info="not_deleted" x="1159" y="0"/>
 </item>
-<item historyLabel="board_diag.c" index="2">
+<item historyLabel="board_diag.c" index="1">
 <position info="not_deleted" x="11463" y="180"/>
 </item>
-<item historyLabel="lab1phase1.c" index="1">
+<item historyLabel="lab1phase1.c" index="0">
 <position info="not_deleted" x="1427" y="0"/>
 </item>
-<item historyLabel="board_diag.c" index="2">
+<item historyLabel="board_diag.c" index="1">
 <position info="not_deleted" x="11823" y="53"/>
 </item>
-<item historyLabel="lab1phase1.c" index="1">
+<item historyLabel="lab1phase1.c" index="0">
 <position info="not_deleted" x="2510" y="0"/>
 </item>
-<item historyLabel="lab1phase1.c" index="1">
+<item historyLabel="lab1phase1.c" index="0">
 <position info="not_deleted" x="2510" y="0"/>
 </item>
-<item historyLabel="altera_avalon_pio_regs.h" index="3">
+<item historyLabel="altera_avalon_pio_regs.h" index="2">
 <position info="not_deleted" x="2387" y="0"/>
 </item>
-<item historyLabel="board_diag.h" index="4">
+<item historyLabel="board_diag.h" index="3">
 <position info="not_deleted" x="0" y="0"/>
 </item>
-<item historyLabel="lab1phase1.c" index="1">
+<item historyLabel="lab1phase1.c" index="0">
 <position info="not_deleted" x="0" y="0"/>
 </item>
-<item historyLabel="lab1phase1.c" index="1">
+<item historyLabel="lab1phase1.c" index="0">
 <position info="not_deleted" x="205" y="0"/>
 </item>
-<item historyLabel="salib-701.c" index="5">
+<item historyLabel="salib-701.c" index="4">
 <position info="not_deleted" x="6208" y="7"/>
 </item>
-<item historyLabel="lab1phase1.c" index="1">
+<item historyLabel="lab1phase1.c" index="0">
 <position info="not_deleted" x="205" y="0"/>
 </item>
-<item historyLabel="board_diag.c" index="6">
+<item historyLabel="board_diag.c" index="5">
 <position/>
 </item>
-<item historyLabel="lab1phase1.c" index="1">
+<item historyLabel="lab1phase1.c" index="0">
 <position info="not_deleted" x="4170" y="0"/>
 </item>
-<item historyLabel="board_diag.h" index="7">
+<item historyLabel="board_diag.h" index="6">
 <position/>
 </item>
-<item historyLabel="lab1phase1.c" index="1">
+<item historyLabel="lab1phase1.c" index="0">
 <position info="not_deleted" x="4170" y="0"/>
 </item>
-<item historyLabel="hello_world.c" index="8">
+<item historyLabel="hello_world.c" index="7">
 <position/>
 </item>
-<item historyLabel="lab1phase1.c" index="1">
-<position info="not_deleted" x="4364" y="0"/>
-</item>
-<item historyLabel="hello_world.c" index="9">
-<position/>
-</item>
-<item historyLabel="lab1phase1.c" index="1">
+<item historyLabel="lab1phase1.c" index="0">
 <position info="not_deleted" x="4364" y="0"/>
 </item>
 <item historyLabel="hello_world.c" index="8">
 <position/>
 </item>
-<item historyLabel="lab1phase1.c" index="1">
+<item historyLabel="lab1phase1.c" index="0">
 <position info="not_deleted" x="4364" y="0"/>
 </item>
-<item historyLabel="ece224_egm.c" index="10">
+<item historyLabel="hello_world.c" index="7">
 <position/>
 </item>
-<item historyLabel="board_diag.c" index="11">
+<item historyLabel="lab1phase1.c" index="0">
+<position info="not_deleted" x="4364" y="0"/>
+</item>
+<item historyLabel="ece224_egm.c" index="9">
 <position/>
 </item>
-<item historyLabel="lab1phase1.c" index="12">
+<item historyLabel="board_diag.c" index="10">
 <position/>
 </item>
-<item historyLabel="board_diag.h" index="13">
+<item historyLabel="lab1phase1.c" index="11">
 <position/>
 </item>
-<item historyLabel="altera_avalon_pio_regs.h" index="14">
+<item historyLabel="board_diag.h" index="12">
 <position/>
 </item>
-<item historyLabel="salib-701.c" index="15">
+<item historyLabel="altera_avalon_pio_regs.h" index="13">
 <position/>
 </item>
-<item historyLabel="ece224_egm.c" index="10">
+<item historyLabel="salib-701.c" index="14">
 <position/>
 </item>
-<item active="true" historyLabel="ece224_egm.c" index="10">
-<position info="not_deleted" x="4765" y="0"/>
+<item historyLabel="ece224_egm.c" index="9">
+<position/>
+</item>
+<item historyLabel="ece224_egm.c" index="9">
+<position/>
+</item>
+<item historyLabel="lab1phase1.c" index="15">
+<position/>
+</item>
+<item historyLabel="ece224_egm.c" index="9">
+<position/>
+</item>
+<item historyLabel="lab1phase1.c" index="15">
+<position info="not_deleted" x="4113" y="0"/>
+</item>
+<item historyLabel="ece224_egm.c" index="9">
+<position/>
+</item>
+<item historyLabel="lab1phase1.c" index="15">
+<position info="not_deleted" x="590" y="807"/>
+</item>
+<item historyLabel="ece224_egm.c" index="9">
+<position/>
+</item>
+<item historyLabel="lab1phase1.c" index="15">
+<position/>
+</item>
+<item historyLabel="altera_avalon_pio_regs.h" index="16">
+<position info="not_deleted" x="3253" y="31"/>
+</item>
+<item historyLabel="lab1phase1.c" index="15">
+<position info="not_deleted" x="1196" y="0"/>
+</item>
+<item historyLabel="altera_avalon_pio_regs.h" index="16">
+<position info="not_deleted" x="3087" y="31"/>
+</item>
+<item historyLabel="ece224_egm.c" index="9">
+<position/>
+</item>
+<item active="true" historyLabel="lab1phase1.c" index="15">
+<position info="not_deleted" x="1196" y="0"/>
 </item>
 </navigationHistory>
 <stickyState>
@@ -539,20 +562,20 @@
 </trimLayout>
 </window>
 <mruList>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="ece224_egm.c" tooltip="lab1part2/ece224_egm.c">
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="altera_avalon_pio_regs.h" tooltip="altera.components/IP Device Drivers/altera/sopc_builder_ip/altera_avalon_pio/inc/altera_avalon_pio_regs.h">
+<persistable path="/altera.components/IP Device Drivers/altera/sopc_builder_ip/altera_avalon_pio/inc/altera_avalon_pio_regs.h"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.ui.systemExternalEditor" name="lab1phase1.c" tooltip="lab1part1/lab1phase1.c">
+<persistable path="/lab1part1/lab1phase1.c"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.ui.systemExternalEditor" name="ece224_egm.c" tooltip="lab1part2/ece224_egm.c">
 <persistable path="/lab1part2/ece224_egm.c"/>
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="salib-701.c" tooltip="altera.components/Newlib C Library/src/newlib/libgloss/sparc/salib-701.c">
 <persistable path="/altera.components/Newlib C Library/src/newlib/libgloss/sparc/salib-701.c"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="altera_avalon_pio_regs.h" tooltip="altera.components/IP Device Drivers/altera/sopc_builder_ip/altera_avalon_pio/inc/altera_avalon_pio_regs.h">
-<persistable path="/altera.components/IP Device Drivers/altera/sopc_builder_ip/altera_avalon_pio/inc/altera_avalon_pio_regs.h"/>
-</file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="board_diag.h" tooltip="lab1part1/board_diag.h">
 <persistable path="/lab1part1/board_diag.h"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="lab1phase1.c" tooltip="lab1part1/lab1phase1.c">
-<persistable path="/lab1part1/lab1phase1.c"/>
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="board_diag.c" tooltip="lab1part1/board_diag.c">
 <persistable path="/lab1part1/board_diag.c"/>
