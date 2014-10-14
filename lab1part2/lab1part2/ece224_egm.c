@@ -135,7 +135,10 @@ int background(int grainSize)
 }
 
 // BEGIN OUR CODE
-const bool USE_INTERRUPT_SYNCRONIZATION = true;
+#define USE_INTERRUPT_SYNCRONIZATION
+
+#define MAX_PULSE_COUNT 100
+#define UNUSED(exp) (void) (exp)
 
 void occasional_polling_main(void) {
     int pulses;
@@ -150,9 +153,15 @@ void occasional_polling_main(void) {
         IOWR(PIO_RESPONSE_BASE, 0, state);
     }
 }
+
+static volatile int pulse_count = 0;
+
 void pulse_interrupt_handler(void *context, alt_u32 id) {
-    volatile int *ret = (volatile int*) context;
-    *ret = IORD(PIO_PULSE_BASE, 3);
+    // context is unused, and probably NULL
+    UNUSED(context);
+    UNUSED(id);
+    
+    int level = IORD(PIO_PULSE_BASE, 3);
     /* Reset the Button's edge capture register. */
     IOWR(PIO_PULSE_BASE, 3, 0);
   
@@ -163,34 +172,38 @@ void pulse_interrupt_handler(void *context, alt_u32 id) {
      */
     // IORD_ALTERA_AVALON_PIO_EDGE_CAP(PIO_PULSE_BASE);
 
-    IOWR(PIO_RESPONSE_BASE, 0, *ret);
+    IOWR(PIO_RESPONSE_BASE, 0, !level);
+    
+    pulse_count++;
+    IOWR(GREEN_LED_PIO_BASE, 0, 0xff);
 }
 
-void init_pulse_interrupts(volatile int *ret) {
+void init_pulse_interrupts(void) {
     IOWR(PIO_PULSE_BASE, 2, 0xf);
     IOWR(PIO_PULSE_BASE, 3, 0x0);
 
-    alt_irq_register(BUTTON_PIO_IRQ, (void*) ret, 
-                     pulse_interrupt_handler);
+    alt_irq_register(BUTTON_PIO_IRQ, NULL, pulse_interrupt_handler);
 }
+
 void interrupt_main(void) {
-	volatile int interrupt_context = 0;
     const int grainSize = 20;
-	int pulses = 0;
 
-	init_pulse_interrupts(&interrupt_context);
+	init_pulse_interrupts();
 
-    for (pulses = 0; pulses < 100; pulses++) {
-            background(grainSize);
+    while (pulse_count < MAX_PULSE_COUNT) {
+        //IOWR(GREEN_LED_PIO_BASE, 0, pulse_count);
+        // the interrupt will increment pulse_count
+        background(grainSize);
     }
 }
+
 int main(void) {
     init(6, 8);
-    if (USE_INTERRUPT_SYNCRONIZATION) {
-        interrupt_main();
-    } else {
-        occasional_polling_main();
-    }
+#ifdef USE_INTERRUPT_SYNCRONIZATION
+    interrupt_main();
+#else
+    occasional_polling_main();
+#endif
     finalize();
     return 0;
 }
