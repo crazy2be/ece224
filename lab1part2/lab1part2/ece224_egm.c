@@ -12,6 +12,9 @@
 #include <io.h>
 #include <stdbool.h>
 
+#include "sys/alt_irq.h"
+#include "altera_avalon_pio_regs.h"
+
 typedef volatile struct
 {
 	int np_piodata;          // read/write, up to 32 bits
@@ -147,18 +150,38 @@ void occasional_polling_main(void) {
         IOWR(PIO_RESPONSE_BASE, 0, state);
     }
 }
+void pulse_interrupt_handler(void *context, alt_u32 id) {
+    volatile int *ret = (volatile int*) context;
+    *ret = IORD(PIO_PULSE_BASE, 3);
+    /* Reset the Button's edge capture register. */
+    IOWR(PIO_PULSE_BASE, 3, 0);
+  
+    /* 
+     * Read the PIO to delay ISR exit. This is done to prevent a spurious
+     * interrupt in systems with high processor -> pio latency and fast
+     * interrupts.
+     */
+    // IORD_ALTERA_AVALON_PIO_EDGE_CAP(PIO_PULSE_BASE);
+
+    IOWR(PIO_RESPONSE_BASE, 0, *ret);
+}
+
+void init_pulse_interrupts(volatile int *ret) {
+    IOWR(PIO_PULSE_BASE, 2, 0xf);
+    IOWR(PIO_PULSE_BASE, 3, 0x0);
+
+    alt_irq_register(BUTTON_PIO_IRQ, (void*) ret, 
+                     pulse_interrupt_handler);
+}
 void interrupt_main(void) {
-    int pulses;
-    int state = 0;
+	volatile int interrupt_context = 0;
     const int grainSize = 20;
+	int pulses = 0;
+
+	init_pulse_interrupts(&interrupt_context);
 
     for (pulses = 0; pulses < 100; pulses++) {
-        // TODO: interrupts
-        while (IORD(PIO_PULSE_BASE, 0) == state) {
             background(grainSize);
-        }
-        state = !state;
-        IOWR(PIO_RESPONSE_BASE, 0, state);
     }
 }
 int main(void) {
