@@ -53,8 +53,11 @@ void init(int in_period, int in_dutyCycle)
 	nResolution = nPeriod * 1000 / 1024;
 
 	// print out some friendly data for the user
+    #if 0
 	printf("Beginning test.\n");
 	printf("Test specifications:\n  period = %d microseconds\n  duty cycle = %d%%\n  latency resolution = %d nanoseconds\n\n", nPeriod, nDutyCycle, nResolution);
+    #endif
+    printf("%d, %d, %d, ", nPeriod, nDutyCycle, nResolution);
 
 	// make sure the 324EGM is disabled before we attempt to set it up
 	IOWR(PIO_EGMENABLE_BASE, 0, 0);
@@ -102,6 +105,7 @@ void finalize(void)
 	nLatency_ms = nLatency * (g_period + 1) * 3 / 25;
 
 	// print the results
+    #if 0
 	printf("Test complete.\n");
 	printf("Results:\n");
 	printf("  missed = %d pulse(s)\n", nMissed);
@@ -109,6 +113,8 @@ void finalize(void)
 	printf("  max latency = %d microsecond(s)\n", nLatency_ms);
 	printf("  task units processed = %d units\n\n", g_taskProcessed);
 	printf("Exiting...\n");
+    #endif
+    printf("%d, %d, %d, %d\n", nMissed, nLatency, nLatency_ms, g_taskProcessed);
 
 	// this tells the program that we're done
 	// removed to allow looping.
