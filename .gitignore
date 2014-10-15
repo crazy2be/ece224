@@ -3,3 +3,7 @@
 workspace
 Debug/*
 .cdtproject
+*report/*.out
+*report/*.log
+*report/*.aux
+*report/*.pdf
