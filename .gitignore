@@ -2,3 +2,7 @@
 *.d
 workspace
 Debug/*
+*report/*.out
+*report/*.log
+*report/*.aux
+*report/*.pdf
