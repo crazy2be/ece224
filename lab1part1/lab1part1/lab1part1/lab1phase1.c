@@ -2,27 +2,12 @@
 
 #include "alt_types.h"
 #include <stdio.h>
-//#include <inttypes.h>
-//#include <unistd.h>
-//#include "system.h"
 #include "sys/alt_irq.h"
 #include "altera_avalon_pio_regs.h"
 #include "altera_avalon_timer_regs.h"
 
 #define ALT_CPU_FREQ 50000000
 
-void inc_green_leds() {
-    static unsigned cur = 0;
-    IOWR_ALTERA_AVALON_PIO_DATA(GREEN_LED_PIO_BASE, cur++);
-    volatile int i = 1000;
-    while (i--) {}
-}
-void inc_red_leds() {
-    static unsigned cur = 0;
-    IOWR_ALTERA_AVALON_PIO_DATA(RED_LED_PIO_BASE, cur++);
-    volatile int i = 1000;
-    while (i--) {}
-}
 void button_interrupt_handler(void *context, alt_u32 id) {
     volatile int *ret = (volatile int*) context;
     *ret = IORD_ALTERA_AVALON_PIO_EDGE_CAP(BUTTON_PIO_BASE);
@@ -48,7 +33,6 @@ void init_button_interrupts(volatile int *ret) {
 void timer_interrupt_handler(void *context, alt_u32 id) {
     volatile int *timer_counter = (volatile int*) context;
     (*timer_counter)--;
-    // inc_red_leds();
     // clear timer interrupt bit in status register   
     IOWR_ALTERA_AVALON_TIMER_STATUS(TIMER_0_BASE, 0x0);
 }
@@ -97,13 +81,14 @@ void display(int value, mode_t mode) {
 } 
 
 int main(void) {
-    int value = 0;
-    int counter = 0;
-    enum mode_t mode;
-    int button_edge_value;
+    enum mode_t mode = OFF;
+    int value;
+    int counter;
+    volatile int button_edge_value;
     volatile int timer_counter = 1;
     
-    // explicitly turn off any leds or seven seg displays
+    /* explicitly turn off any leds or seven seg displays,
+     * since they retain whatever state they were in when the program starts */
     
     IOWR_ALTERA_AVALON_PIO_DATA(LED_PIO_BASE, 0);
     IOWR_ALTERA_AVALON_PIO_DATA(RED_LED_PIO_BASE, 0);
@@ -113,15 +98,27 @@ int main(void) {
     IOWR_ALTERA_AVALON_PIO_DATA(SEVEN_SEG_PIO_BASE, 0xffff);          
     
     init_button_interrupts(&button_edge_value);
-    //init_wait(1000);
    
-    while (1) {
+    for (;;) {
+        /* Note: we don't care about bouncing, since if we detect two presses,
+         * we'll just restart the cycle very quickly.
+         * This is too fast to be discernable, so we don't need to worry about this. */
         if (button_edge_value == 0x1 || button_edge_value == 0x2) {
+            /* find the mode from the button press, then reset the button press */
             mode = (button_edge_value == 0x1) ? LED : SEVEN_SEG;
             button_edge_value = 0;
+            
             value = IORD_ALTERA_AVALON_PIO_DATA(SWITCH_PIO_BASE);
             counter = 0;
+            
+            /* clear out the display before displaying new data.
+             * this will ensure that leds and 7seg aren't both on at the
+             * same time */
             display(0, OFF);
+            
+            /* reset the timer, otherwise the first bit will be displayed
+             * for less than a single second, since this event likely occurs
+             * partway through a timer period */
             timer_counter = 1;
             init_wait(1000, &timer_counter);
         } else if (mode != OFF && timer_counter <= 0) {

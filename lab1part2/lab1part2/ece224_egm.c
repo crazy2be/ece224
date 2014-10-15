@@ -4,16 +4,12 @@
 
 //int nr_printf(const char *fmt,...);
 
-//#include "alt_types.h"
 #include <stdio.h>
 #include <unistd.h>
-#include "system.h"
-//#include "sys/alt_irq.h"
 #include <io.h>
-#include <stdbool.h>
 
 #include "sys/alt_irq.h"
-#include "altera_avalon_pio_regs.h"
+//#include "altera_avalon_pio_regs.h"
 
 typedef volatile struct
 {
@@ -132,82 +128,4 @@ int background(int grainSize)
 		g_taskProcessed++;
 	}
 	return x;
-}
-
-// BEGIN OUR CODE
-//#define USE_INTERRUPT_SYNCRONIZATION
-
-#define MAX_PULSE_COUNT 100
-#define UNUSED(exp) (void) (exp)
-
-void occasional_polling_main(void) {
-    int pulses;
-    int state = 0;
-    const int grainSize = 20;
-
-    for (pulses = 0; pulses < 100; pulses++) {
-        while (IORD(PIO_PULSE_BASE, 0) == state) {
-            background(grainSize);
-        }
-        state = !state;
-        IOWR(PIO_RESPONSE_BASE, 0, state);
-    }
-}
-
-static volatile int pulse_count = 0;
-
-void pulse_interrupt_handler(void *context, alt_u32 id) {
-    // context is unused, and probably NULL
-    // UNUSED(context);
-    // UNUSED(id);
-    // IOWR(GREEN_LED_PIO_BASE, 0, 0xff);
-    
-    // get the edge of the pulse, so we know what to respond
-    int edge = IORD(PIO_PULSE_BASE, 0);
-    
-    /* Reset the Button's edge capture register. */
-    IOWR(PIO_PULSE_BASE, 3, 0);
-  
-    /* 
-     * Read the PIO to delay ISR exit. This is done to prevent a spurious
-     * interrupt in systems with high processor -> pio latency and fast
-     * interrupts.
-     */
-    // IORD_ALTERA_AVALON_PIO_EDGE_CAP(PIO_PULSE_BASE);
-
-    IOWR(PIO_RESPONSE_BASE, 0, edge);
-    
-    pulse_count++;
-}
-
-void init_pulse_interrupts(void) {
-    IOWR(PIO_PULSE_BASE, 2, 0xf);
-    IOWR(PIO_PULSE_BASE, 3, 0x0);
-
-    alt_irq_register(PIO_PULSE_IRQ, NULL, pulse_interrupt_handler);
-}
-
-void interrupt_main(void) {
-    const int grainSize = 100;
-
-    IOWR(GREEN_LED_PIO_BASE, 0, 0xf0);
-
-	init_pulse_interrupts();
-    
-    IOWR(GREEN_LED_PIO_BASE, 0, 0xf);
-
-    while (pulse_count < MAX_PULSE_COUNT) {
-        background(grainSize);
-    }
-}
-
-int main(void) {
-    init(6, 8);
-#ifdef USE_INTERRUPT_SYNCRONIZATION
-    interrupt_main();
-#else
-    occasional_polling_main();
-#endif
-    finalize();
-    return 0;
 }
