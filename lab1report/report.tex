@@ -2,6 +2,7 @@
 \usepackage{setspace}
 \usepackage{alltt}
 \usepackage{tikz}
+\usepackage{graphicx}
 \usetikzlibrary{arrows}
 \usepackage[margin=1in]{geometry}
 
@@ -108,6 +109,58 @@ The coding error itself was trivial to correct after it was noticed - it
 simply meant stopping when \texttt{count = 7}, not \texttt{count = 8}
 (bearing in mind that count begins at 0).
 
+\newpage
+\section{Phase II}
+The two different synchronization techniques were written using different
+functions, each one setting up any state it needed, and tearing down any
+state it had mutated when it was done. This allowed us to easily switch
+between the two techniques when testing, and allowed us to create our
+measured results very quickly as well.
+
+\subsection{Occasional Polling}
+Our approach for the occasional polling technique was very simple, effectively
+just the busy-loop approach, but with the addition of doing work \emph{inside}
+the busy-loop, allowing us gain some efficiency, at the cost of increased
+latency proportional to the grain size given. Note that the inner loop used
+to create the following charts was the grain size, which caused some pretty
+significant ossicalations for the occasional polling solution.
+
+\begin{alltt}
+state \(\gets\) LOW
+LOOP 200 TIMES
+    WHILE pulse flag has not changed
+        run background task with grain size
+    state \(\gets\) !state
+    respond to the pulse with state
+\end{alltt}
+\includegraphics[width=\textwidth]{polling_max_latency.png}
+\includegraphics[width=\textwidth]{polling_missed_pulses.png}
+\includegraphics[width=\textwidth]{polling_units_processed.png}
+
+\subsection{Interrupts}
+For our interrupt-based approach, we ran the background task directly, in what
+appears to be a never-ending loop. However, interrupts will interrupt this
+endless loop, respond to the EGM immediately, and update the pulse\_count
+variable which the main thread uses to eventually exit. This approach had very
+low latency and predictable performance, regardless of parameters provided.
+
+\begin{alltt}
+pulse_count \(\gets\) 0
+while pulse_count < 200
+    run background task with grain size
+
+ON pulse INTERRUPT
+    state \(\gets\) current level
+    reset the pulse edge capture register
+    respond to the pulse with state
+    pulse_count \(\gets\) pulse_count + 1
+\end{alltt}
+
+\includegraphics[width=\textwidth]{interrupts_max_latency.png}
+\includegraphics[width=\textwidth]{interrupts_missed_pulses.png}
+\includegraphics[width=\textwidth]{interrupts_units_processed.png}
+
+\newpage
 \section{Contribution and Reflection}
 Peter Raboud:
 
@@ -124,4 +177,13 @@ interrupt handler code far more than I had done in the past.
 The resulting code used interrupts as the primary form of control flow, with
 very little logic being handled synchronously.
 This was useful practice for writing event-driven programs.
+
+Justin McGirr:
+
+I was responsible for writing the part of this lab report pertaining to Phase II.
+Peter and I equally shared the responsibility for writing the actually software
+of the lab. The most useful things I learned were that Nios is flacky, and
+will break if you aren't careful with it, as well as re-iterating why interrupts
+are most typically used for listening for events (as opposed to any kind of
+polling).
 \end{document}
