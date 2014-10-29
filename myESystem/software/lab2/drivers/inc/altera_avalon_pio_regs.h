@@ -1,67 +1,8 @@
-/*************************************************************************
-* Copyright (c) 2006 Altera Corporation, San Jose, California, USA.      *
-* All rights reserved. All use of this software and documentation is     *
-* subject to the License Agreement located at the end of this file below.*
-*************************************************************************/
-
-/* Includes */
-
-#include "alt_types.h"
-#include <stdio.h>
-#include <unistd.h>
-#include "system.h"
-#include "sys/alt_irq.h"
-#include "altera_avalon_pio_regs.h"
-
-/*  Macros to clear the LCD screen. */
-
-#define ESC 27
-#define CLEAR_LCD_STRING "[2J"
-
-/* One nice define for going to menu entry functions. */
-
-#define MenuCase(letter,proc) case letter:proc(); break;
-
-/* Board Diagnositics Peripheral Function prototypes */
-
-/* UART Related Prototypes */
-#ifdef JTAG_UART_NAME
-static void UARTSendLots( void );
-static void UARTReceiveChars( void );
-#endif
-
-/* Seven Segment Related Prototypes */
-#ifdef SEVEN_SEG_PIO_NAME
-static void SevenSegCount( void );
-static void SevenSegControl( void );
-#endif
-
-/* LED Related Prototype */
-#ifdef LED_PIO_NAME
-static void TestLEDs( void );
-#endif
-
-/* Button/Switch (SW0-SW3) Related Prototype */
-#ifdef BUTTON_PIO_NAME
-static void TestButtons( void );
-#endif
-
-/* LCD Related Prototype */
-#ifdef LCD_DISPLAY_NAME
-static void TestLCD( void );
-#endif
-
-/* Define the EOT character to terminate nios2-terminal
- * upon exiting the Main Menu.
- */
-
-#define EOT 0x4
-
 /******************************************************************************
 *                                                                             *
 * License Agreement                                                           *
 *                                                                             *
-* Copyright (c) 2006 Altera Corporation, San Jose, California, USA.           *
+* Copyright (c) 2003 Altera Corporation, San Jose, California, USA.           *
 * All rights reserved.                                                        *
 *                                                                             *
 * Permission is hereby granted, free of charge, to any person obtaining a     *
@@ -84,6 +25,43 @@ static void TestLCD( void );
 *                                                                             *
 * This agreement shall be governed in all respects by the laws of the State   *
 * of California and by the laws of the United States of America.              *
-* Altera does not recommend, suggest or require that this reference design    *
-* file be used in conjunction or combination with any other product.          *
+*                                                                             *
 ******************************************************************************/
+
+#ifndef __ALTERA_AVALON_PIO_REGS_H__
+#define __ALTERA_AVALON_PIO_REGS_H__
+
+#include <io.h>
+
+#define IOADDR_ALTERA_AVALON_PIO_DATA(base)           __IO_CALC_ADDRESS_NATIVE(base, 0)
+#define IORD_ALTERA_AVALON_PIO_DATA(base)             IORD(base, 0) 
+#define IOWR_ALTERA_AVALON_PIO_DATA(base, data)       IOWR(base, 0, data)
+
+#define IOADDR_ALTERA_AVALON_PIO_DIRECTION(base)      __IO_CALC_ADDRESS_NATIVE(base, 1)
+#define IORD_ALTERA_AVALON_PIO_DIRECTION(base)        IORD(base, 1) 
+#define IOWR_ALTERA_AVALON_PIO_DIRECTION(base, data)  IOWR(base, 1, data)
+
+#define IOADDR_ALTERA_AVALON_PIO_IRQ_MASK(base)       __IO_CALC_ADDRESS_NATIVE(base, 2)
+#define IORD_ALTERA_AVALON_PIO_IRQ_MASK(base)         IORD(base, 2) 
+#define IOWR_ALTERA_AVALON_PIO_IRQ_MASK(base, data)   IOWR(base, 2, data)
+
+#define IOADDR_ALTERA_AVALON_PIO_EDGE_CAP(base)       __IO_CALC_ADDRESS_NATIVE(base, 3)
+#define IORD_ALTERA_AVALON_PIO_EDGE_CAP(base)         IORD(base, 3) 
+#define IOWR_ALTERA_AVALON_PIO_EDGE_CAP(base, data)   IOWR(base, 3, data)
+
+
+#define IOADDR_ALTERA_AVALON_PIO_SET_BIT(base)       __IO_CALC_ADDRESS_NATIVE(base, 4)
+#define IORD_ALTERA_AVALON_PIO_SET_BITS(base)         IORD(base, 4) 
+#define IOWR_ALTERA_AVALON_PIO_SET_BITS(base, data)   IOWR(base, 4, data)
+    
+#define IOADDR_ALTERA_AVALON_PIO_CLEAR_BITS(base)       __IO_CALC_ADDRESS_NATIVE(base, 5)
+#define IORD_ALTERA_AVALON_PIO_CLEAR_BITS(base)         IORD(base, 5) 
+#define IOWR_ALTERA_AVALON_PIO_CLEAR_BITS(base, data)   IOWR(base, 5, data)
+     
+
+ 
+/* Defintions for direction-register operation with bi-directional PIOs */
+#define ALTERA_AVALON_PIO_DIRECTION_INPUT  0
+#define ALTERA_AVALON_PIO_DIRECTION_OUTPUT 1
+
+#endif /* __ALTERA_AVALON_PIO_REGS_H__ */
