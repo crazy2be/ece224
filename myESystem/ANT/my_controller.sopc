@@ -2,11 +2,43 @@
 <system name="my_controller">
  <parameter name="bonusData"><![CDATA[bonusData 
 {
+   element aud_full
+   {
+      datum _sortIndex
+      {
+         value = "17";
+         type = "int";
+      }
+   }
+   element audio_0
+   {
+      datum _sortIndex
+      {
+         value = "16";
+         type = "int";
+      }
+   }
    element jtag_uart_0.avalon_jtag_slave
    {
       datum baseAddress
       {
          value = "16781656";
+         type = "long";
+      }
+   }
+   element open_i2c_0.avalon_slave_0
+   {
+      datum baseAddress
+      {
+         value = "32";
+         type = "long";
+      }
+   }
+   element audio_0.avalon_slave_0
+   {
+      datum baseAddress
+      {
+         value = "0";
          type = "long";
       }
    }
@@ -103,67 +135,11 @@
    element my_controller
    {
    }
-   element pio_dutycycle
-   {
-      datum _sortIndex
-      {
-         value = "19";
-         type = "int";
-      }
-   }
-   element pio_egmenable
-   {
-      datum _sortIndex
-      {
-         value = "22";
-         type = "int";
-      }
-   }
-   element pio_egmreset
-   {
-      datum _sortIndex
-      {
-         value = "23";
-         type = "int";
-      }
-   }
-   element pio_latency
-   {
-      datum _sortIndex
-      {
-         value = "17";
-         type = "int";
-      }
-   }
-   element pio_missed
+   element open_i2c_0
    {
       datum _sortIndex
       {
          value = "18";
-         type = "int";
-      }
-   }
-   element pio_period
-   {
-      datum _sortIndex
-      {
-         value = "20";
-         type = "int";
-      }
-   }
-   element pio_pulse
-   {
-      datum _sortIndex
-      {
-         value = "16";
-         type = "int";
-      }
-   }
-   element pio_response
-   {
-      datum _sortIndex
-      {
-         value = "21";
          type = "int";
       }
    }
@@ -173,46 +149,6 @@
       {
          value = "9";
          type = "int";
-      }
-   }
-   element red_led_pio.s1
-   {
-      datum baseAddress
-      {
-         value = "16781456";
-         type = "long";
-      }
-   }
-   element pio_dutycycle.s1
-   {
-      datum baseAddress
-      {
-         value = "16781568";
-         type = "long";
-      }
-   }
-   element pio_egmenable.s1
-   {
-      datum baseAddress
-      {
-         value = "16781616";
-         type = "long";
-      }
-   }
-   element timer_0.s1
-   {
-      datum baseAddress
-      {
-         value = "16781312";
-         type = "long";
-      }
-   }
-   element pio_period.s1
-   {
-      datum baseAddress
-      {
-         value = "16781584";
-         type = "long";
       }
    }
    element sdram_0.s1
@@ -231,14 +167,6 @@
          type = "long";
       }
    }
-   element pio_latency.s1
-   {
-      datum baseAddress
-      {
-         value = "16781536";
-         type = "long";
-      }
-   }
    element seven_seg_pio.s1
    {
       datum baseAddress
@@ -247,59 +175,27 @@
          type = "long";
       }
    }
-   element seven_seg_right_pio.s1
+   element aud_full.s1
    {
       datum baseAddress
       {
-         value = "16781488";
+         value = "16";
          type = "long";
       }
    }
-   element green_led_pio.s1
+   element sd_dat.s1
    {
       datum baseAddress
       {
-         value = "16781440";
+         value = "64";
          type = "long";
       }
    }
-   element pio_egmreset.s1
+   element timer_0.s1
    {
       datum baseAddress
       {
-         value = "16781632";
-         type = "long";
-      }
-   }
-   element seven_seg_middle_pio.s1
-   {
-      datum baseAddress
-      {
-         value = "16781472";
-         type = "long";
-      }
-   }
-   element pio_response.s1
-   {
-      datum baseAddress
-      {
-         value = "16781600";
-         type = "long";
-      }
-   }
-   element pio_pulse.s1
-   {
-      datum baseAddress
-      {
-         value = "16781520";
-         type = "long";
-      }
-   }
-   element timer_1.s1
-   {
-      datum baseAddress
-      {
-         value = "16781344";
+         value = "16781312";
          type = "long";
       }
    }
@@ -311,6 +207,30 @@
          type = "long";
       }
    }
+   element green_led_pio.s1
+   {
+      datum baseAddress
+      {
+         value = "16781440";
+         type = "long";
+      }
+   }
+   element sd_cmd.s1
+   {
+      datum baseAddress
+      {
+         value = "80";
+         type = "long";
+      }
+   }
+   element red_led_pio.s1
+   {
+      datum baseAddress
+      {
+         value = "16781456";
+         type = "long";
+      }
+   }
    element button_pio.s1
    {
       datum baseAddress
@@ -319,12 +239,60 @@
          type = "long";
       }
    }
-   element pio_missed.s1
+   element seven_seg_middle_pio.s1
    {
       datum baseAddress
       {
-         value = "16781552";
+         value = "16781472";
          type = "long";
+      }
+   }
+   element sd_clk.s1
+   {
+      datum baseAddress
+      {
+         value = "96";
+         type = "long";
+      }
+   }
+   element timer_1.s1
+   {
+      datum baseAddress
+      {
+         value = "16781344";
+         type = "long";
+      }
+   }
+   element seven_seg_right_pio.s1
+   {
+      datum baseAddress
+      {
+         value = "16781488";
+         type = "long";
+      }
+   }
+   element sd_clk
+   {
+      datum _sortIndex
+      {
+         value = "21";
+         type = "int";
+      }
+   }
+   element sd_cmd
+   {
+      datum _sortIndex
+      {
+         value = "20";
+         type = "int";
+      }
+   }
+   element sd_dat
+   {
+      datum _sortIndex
+      {
+         value = "19";
+         type = "int";
       }
    }
    element sdram_0
@@ -408,8 +376,8 @@
  <parameter name="maxAdditionalLatency" value="0" />
  <parameter name="projectName" value="" />
  <parameter name="sopcBorderPoints" value="true" />
- <parameter name="systemHash" value="54661824967" />
- <parameter name="timeStamp" value="1410966644678" />
+ <parameter name="systemHash" value="27687049205" />
+ <parameter name="timeStamp" value="1414173665446" />
  <module kind="clock_source" version="10.1" enabled="1" name="clk_0">
   <parameter name="clockFrequency" value="50000000" />
   <parameter name="clockFrequencyKnown" value="true" />
@@ -484,7 +452,7 @@
   <parameter name="mmu_TLBMissExcSlave" value="" />
   <parameter name="mmu_TLBMissExcOffset" value="0" />
   <parameter name="manuallyAssignCpuID" value="false" />
-  <parameter name="internalIrqMaskSystemInfo" value="17188257811" />
+  <parameter name="internalIrqMaskSystemInfo" value="2155872263" />
   <parameter name="instSlaveMapParam"><![CDATA[<address-map><slave name='sdram_0.s1' start='0x800000' end='0x1000000' /><slave name='cpu_0.jtag_debug_module' start='0x1000800' end='0x1001000' /></address-map>]]></parameter>
   <parameter name="instAddrWidth" value="25" />
   <parameter name="impl" value="Small" />
@@ -509,7 +477,7 @@
   <parameter name="dcache_numTCDM" value="_0" />
   <parameter name="dcache_lineSize" value="_32" />
   <parameter name="dcache_bursts" value="false" />
-  <parameter name="dataSlaveMapParam"><![CDATA[<address-map><slave name='sdram_0.s1' start='0x800000' end='0x1000000' /><slave name='cpu_0.jtag_debug_module' start='0x1000800' end='0x1001000' /><slave name='timer_0.s1' start='0x1001000' end='0x1001020' /><slave name='timer_1.s1' start='0x1001020' end='0x1001040' /><slave name='lcd_display.control_slave' start='0x1001040' end='0x1001050' /><slave name='led_pio.s1' start='0x1001050' end='0x1001060' /><slave name='seven_seg_pio.s1' start='0x1001060' end='0x1001070' /><slave name='button_pio.s1' start='0x1001070' end='0x1001080' /><slave name='green_led_pio.s1' start='0x1001080' end='0x1001090' /><slave name='red_led_pio.s1' start='0x1001090' end='0x10010A0' /><slave name='seven_seg_middle_pio.s1' start='0x10010A0' end='0x10010B0' /><slave name='seven_seg_right_pio.s1' start='0x10010B0' end='0x10010C0' /><slave name='switch_pio.s1' start='0x10010C0' end='0x10010D0' /><slave name='pio_pulse.s1' start='0x10010D0' end='0x10010E0' /><slave name='pio_latency.s1' start='0x10010E0' end='0x10010F0' /><slave name='pio_missed.s1' start='0x10010F0' end='0x1001100' /><slave name='pio_dutycycle.s1' start='0x1001100' end='0x1001110' /><slave name='pio_period.s1' start='0x1001110' end='0x1001120' /><slave name='pio_response.s1' start='0x1001120' end='0x1001130' /><slave name='pio_egmenable.s1' start='0x1001130' end='0x1001140' /><slave name='pio_egmreset.s1' start='0x1001140' end='0x1001150' /><slave name='sysid.control_slave' start='0x1001150' end='0x1001158' /><slave name='jtag_uart_0.avalon_jtag_slave' start='0x1001158' end='0x1001160' /></address-map>]]></parameter>
+  <parameter name="dataSlaveMapParam"><![CDATA[<address-map><slave name='audio_0.avalon_slave_0' start='0x0' end='0x4' /><slave name='aud_full.s1' start='0x10' end='0x20' /><slave name='open_i2c_0.avalon_slave_0' start='0x20' end='0x40' /><slave name='sd_dat.s1' start='0x40' end='0x50' /><slave name='sd_cmd.s1' start='0x50' end='0x60' /><slave name='sd_clk.s1' start='0x60' end='0x70' /><slave name='sdram_0.s1' start='0x800000' end='0x1000000' /><slave name='cpu_0.jtag_debug_module' start='0x1000800' end='0x1001000' /><slave name='timer_0.s1' start='0x1001000' end='0x1001020' /><slave name='timer_1.s1' start='0x1001020' end='0x1001040' /><slave name='lcd_display.control_slave' start='0x1001040' end='0x1001050' /><slave name='led_pio.s1' start='0x1001050' end='0x1001060' /><slave name='seven_seg_pio.s1' start='0x1001060' end='0x1001070' /><slave name='button_pio.s1' start='0x1001070' end='0x1001080' /><slave name='green_led_pio.s1' start='0x1001080' end='0x1001090' /><slave name='red_led_pio.s1' start='0x1001090' end='0x10010A0' /><slave name='seven_seg_middle_pio.s1' start='0x10010A0' end='0x10010B0' /><slave name='seven_seg_right_pio.s1' start='0x10010B0' end='0x10010C0' /><slave name='switch_pio.s1' start='0x10010C0' end='0x10010D0' /><slave name='sysid.control_slave' start='0x1001150' end='0x1001158' /><slave name='jtag_uart_0.avalon_jtag_slave' start='0x1001158' end='0x1001160' /></address-map>]]></parameter>
   <parameter name="dataAddrWidth" value="25" />
   <parameter name="customInstSlavesSystemInfo" value="&lt;info/&gt;" />
   <parameter name="cpuReset" value="false" />
@@ -727,25 +695,7 @@
   <parameter name="registerDataIn" value="true" />
   <parameter name="rowWidth" value="12" />
  </module>
- <module kind="altera_avalon_pio" version="10.1" enabled="1" name="pio_pulse">
-  <parameter name="bitClearingEdgeCapReg" value="false" />
-  <parameter name="bitModifyingOutReg" value="false" />
-  <parameter name="captureEdge" value="true" />
-  <parameter name="clockRate" value="50000000" />
-  <parameter name="direction" value="Input" />
-  <parameter name="edgeType" value="ANY" />
-  <parameter name="generateIRQ" value="true" />
-  <parameter name="irqType" value="EDGE" />
-  <parameter name="resetValue" value="0" />
-  <parameter name="simDoTestBenchWiring" value="false" />
-  <parameter name="simDrivenValue" value="0" />
-  <parameter name="width" value="1" />
- </module>
- <module
-   kind="altera_avalon_pio"
-   version="10.1"
-   enabled="1"
-   name="pio_latency">
+ <module kind="altera_avalon_pio" version="10.1" enabled="1" name="aud_full">
   <parameter name="bitClearingEdgeCapReg" value="false" />
   <parameter name="bitModifyingOutReg" value="false" />
   <parameter name="captureEdge" value="false" />
@@ -757,64 +707,20 @@
   <parameter name="resetValue" value="0" />
   <parameter name="simDoTestBenchWiring" value="false" />
   <parameter name="simDrivenValue" value="0" />
-  <parameter name="width" value="16" />
+  <parameter name="width" value="1" />
  </module>
- <module kind="altera_avalon_pio" version="10.1" enabled="1" name="pio_missed">
+ <module kind="open_i2c" version="1.0.1" enabled="1" name="open_i2c_0">
+  <parameter name="AUTO_AVALON_SLAVE_0_CLOCK_CLOCK_RATE" value="50000000" />
+ </module>
+ <module kind="audio" version="1.0.1" enabled="1" name="audio_0">
+  <parameter name="AUTO_AVALON_SLAVE_0_CLOCK_CLOCK_RATE" value="50000000" />
+ </module>
+ <module kind="altera_avalon_pio" version="10.1" enabled="1" name="sd_dat">
   <parameter name="bitClearingEdgeCapReg" value="false" />
   <parameter name="bitModifyingOutReg" value="false" />
   <parameter name="captureEdge" value="false" />
   <parameter name="clockRate" value="50000000" />
-  <parameter name="direction" value="Input" />
-  <parameter name="edgeType" value="RISING" />
-  <parameter name="generateIRQ" value="false" />
-  <parameter name="irqType" value="LEVEL" />
-  <parameter name="resetValue" value="0" />
-  <parameter name="simDoTestBenchWiring" value="false" />
-  <parameter name="simDrivenValue" value="0" />
-  <parameter name="width" value="16" />
- </module>
- <module
-   kind="altera_avalon_pio"
-   version="10.1"
-   enabled="1"
-   name="pio_dutycycle">
-  <parameter name="bitClearingEdgeCapReg" value="false" />
-  <parameter name="bitModifyingOutReg" value="false" />
-  <parameter name="captureEdge" value="false" />
-  <parameter name="clockRate" value="50000000" />
-  <parameter name="direction" value="Output" />
-  <parameter name="edgeType" value="RISING" />
-  <parameter name="generateIRQ" value="false" />
-  <parameter name="irqType" value="LEVEL" />
-  <parameter name="resetValue" value="0" />
-  <parameter name="simDoTestBenchWiring" value="false" />
-  <parameter name="simDrivenValue" value="0" />
-  <parameter name="width" value="4" />
- </module>
- <module kind="altera_avalon_pio" version="10.1" enabled="1" name="pio_period">
-  <parameter name="bitClearingEdgeCapReg" value="false" />
-  <parameter name="bitModifyingOutReg" value="false" />
-  <parameter name="captureEdge" value="false" />
-  <parameter name="clockRate" value="50000000" />
-  <parameter name="direction" value="Output" />
-  <parameter name="edgeType" value="RISING" />
-  <parameter name="generateIRQ" value="false" />
-  <parameter name="irqType" value="LEVEL" />
-  <parameter name="resetValue" value="0" />
-  <parameter name="simDoTestBenchWiring" value="false" />
-  <parameter name="simDrivenValue" value="0" />
-  <parameter name="width" value="4" />
- </module>
- <module
-   kind="altera_avalon_pio"
-   version="10.1"
-   enabled="1"
-   name="pio_response">
-  <parameter name="bitClearingEdgeCapReg" value="false" />
-  <parameter name="bitModifyingOutReg" value="false" />
-  <parameter name="captureEdge" value="false" />
-  <parameter name="clockRate" value="50000000" />
-  <parameter name="direction" value="Output" />
+  <parameter name="direction" value="Bidir" />
   <parameter name="edgeType" value="RISING" />
   <parameter name="generateIRQ" value="false" />
   <parameter name="irqType" value="LEVEL" />
@@ -823,16 +729,12 @@
   <parameter name="simDrivenValue" value="0" />
   <parameter name="width" value="1" />
  </module>
- <module
-   kind="altera_avalon_pio"
-   version="10.1"
-   enabled="1"
-   name="pio_egmenable">
+ <module kind="altera_avalon_pio" version="10.1" enabled="1" name="sd_cmd">
   <parameter name="bitClearingEdgeCapReg" value="false" />
   <parameter name="bitModifyingOutReg" value="false" />
   <parameter name="captureEdge" value="false" />
   <parameter name="clockRate" value="50000000" />
-  <parameter name="direction" value="Output" />
+  <parameter name="direction" value="Bidir" />
   <parameter name="edgeType" value="RISING" />
   <parameter name="generateIRQ" value="false" />
   <parameter name="irqType" value="LEVEL" />
@@ -841,11 +743,7 @@
   <parameter name="simDrivenValue" value="0" />
   <parameter name="width" value="1" />
  </module>
- <module
-   kind="altera_avalon_pio"
-   version="10.1"
-   enabled="1"
-   name="pio_egmreset">
+ <module kind="altera_avalon_pio" version="10.1" enabled="1" name="sd_clk">
   <parameter name="bitClearingEdgeCapReg" value="false" />
   <parameter name="bitModifyingOutReg" value="false" />
   <parameter name="captureEdge" value="false" />
@@ -1038,83 +936,73 @@
   <parameter name="arbitrationPriority" value="1" />
   <parameter name="baseAddress" value="0x00800000" />
  </connection>
- <connection kind="clock" version="10.1" start="clk_0.clk" end="pio_pulse.clk" />
+ <connection kind="clock" version="10.1" start="clk_0.clk" end="aud_full.clk" />
  <connection
    kind="avalon"
    version="10.1"
    start="cpu_0.data_master"
-   end="pio_pulse.s1">
+   end="aud_full.s1">
   <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x010010d0" />
+  <parameter name="baseAddress" value="0x0010" />
+ </connection>
+ <connection
+   kind="clock"
+   version="10.1"
+   start="clk_0.clk"
+   end="open_i2c_0.avalon_slave_0_clock" />
+ <connection
+   kind="avalon"
+   version="10.1"
+   start="cpu_0.data_master"
+   end="open_i2c_0.avalon_slave_0">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x0020" />
  </connection>
  <connection
    kind="interrupt"
    version="10.1"
    start="cpu_0.d_irq"
-   end="pio_pulse.irq">
-  <parameter name="irqNumber" value="4" />
+   end="open_i2c_0.avalon_slave_0_irq">
+  <parameter name="irqNumber" value="2" />
  </connection>
- <connection kind="clock" version="10.1" start="clk_0.clk" end="pio_latency.clk" />
+ <connection
+   kind="clock"
+   version="10.1"
+   start="clk_0.clk"
+   end="audio_0.avalon_slave_0_clock" />
  <connection
    kind="avalon"
    version="10.1"
    start="cpu_0.data_master"
-   end="pio_latency.s1">
+   end="audio_0.avalon_slave_0">
   <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x010010e0" />
+  <parameter name="baseAddress" value="0x0000" />
  </connection>
- <connection kind="clock" version="10.1" start="clk_0.clk" end="pio_missed.clk" />
+ <connection kind="clock" version="10.1" start="clk_0.clk" end="sd_dat.clk" />
  <connection
    kind="avalon"
    version="10.1"
    start="cpu_0.data_master"
-   end="pio_missed.s1">
+   end="sd_dat.s1">
   <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x010010f0" />
+  <parameter name="baseAddress" value="0x0040" />
  </connection>
- <connection kind="clock" version="10.1" start="clk_0.clk" end="pio_dutycycle.clk" />
+ <connection kind="clock" version="10.1" start="clk_0.clk" end="sd_cmd.clk" />
  <connection
    kind="avalon"
    version="10.1"
    start="cpu_0.data_master"
-   end="pio_dutycycle.s1">
+   end="sd_cmd.s1">
   <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x01001100" />
+  <parameter name="baseAddress" value="0x0050" />
  </connection>
- <connection kind="clock" version="10.1" start="clk_0.clk" end="pio_period.clk" />
+ <connection kind="clock" version="10.1" start="clk_0.clk" end="sd_clk.clk" />
  <connection
    kind="avalon"
    version="10.1"
    start="cpu_0.data_master"
-   end="pio_period.s1">
+   end="sd_clk.s1">
   <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x01001110" />
- </connection>
- <connection kind="clock" version="10.1" start="clk_0.clk" end="pio_response.clk" />
- <connection
-   kind="avalon"
-   version="10.1"
-   start="cpu_0.data_master"
-   end="pio_response.s1">
-  <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x01001120" />
- </connection>
- <connection kind="clock" version="10.1" start="clk_0.clk" end="pio_egmenable.clk" />
- <connection
-   kind="avalon"
-   version="10.1"
-   start="cpu_0.data_master"
-   end="pio_egmenable.s1">
-  <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x01001130" />
- </connection>
- <connection kind="clock" version="10.1" start="clk_0.clk" end="pio_egmreset.clk" />
- <connection
-   kind="avalon"
-   version="10.1"
-   start="cpu_0.data_master"
-   end="pio_egmreset.s1">
-  <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x01001140" />
+  <parameter name="baseAddress" value="0x0060" />
  </connection>
 </system>

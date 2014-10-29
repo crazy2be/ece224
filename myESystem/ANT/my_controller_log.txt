@@ -3,128 +3,116 @@ Copyright (c) 1999-2009 Altera Corporation.  All rights reserved.
 
 
 No .sopc_builder configuration file(!)
-# 2014.09.17 11:13:02 (*) mk_custom_sdk starting
-# 2014.09.17 11:13:02 (*) Reading project N:/ece224/myESystem/ANT/my_controller.ptf.
+# 2014.10.24 14:03:31 (*) mk_custom_sdk starting
+# 2014.10.24 14:03:31 (*) Reading project N:/ece224/myESystem/ANT/my_controller.ptf.
 
-# 2014.09.17 11:13:02 (*) Finding all CPUs
-# 2014.09.17 11:13:02 (*) Finding all available components
+# 2014.10.24 14:03:31 (*) Finding all CPUs
+# 2014.10.24 14:03:31 (*) Finding all available components
 
-# 2014.09.17 11:13:02 (*) Reading N:/ece224/myESystem/ANT/.sopc_builder/install.ptf
+# 2014.10.24 14:03:31 (*) Reading N:/ece224/myESystem/ANT/.sopc_builder/install.ptf
 
-# 2014.09.17 11:13:02 (*) Found 63 components
+# 2014.10.24 14:03:31 (*) Found 63 components
 
-# 2014.09.17 11:13:02 (*) Finding all peripherals
+# 2014.10.24 14:03:32 (*) Finding all peripherals
 
-# 2014.09.17 11:13:03 (*) Finding software components
+# 2014.10.24 14:03:32 (*) Finding software components
 
-# 2014.09.17 11:13:03 (*) (Legacy SDK Generation Skipped)
-# 2014.09.17 11:13:03 (*) (All TCL Script Generation Skipped)
-# 2014.09.17 11:13:03 (*) (No Libraries Built)
-# 2014.09.17 11:13:03 (*) (Contents Generation Skipped)
-# 2014.09.17 11:13:03 (*) mk_custom_sdk finishing
-# 2014.09.17 11:13:03 (*) Starting generation for system: my_controller.
+# 2014.10.24 14:03:32 (*) (Legacy SDK Generation Skipped)
+# 2014.10.24 14:03:32 (*) (All TCL Script Generation Skipped)
+# 2014.10.24 14:03:32 (*) (No Libraries Built)
+# 2014.10.24 14:03:32 (*) (Contents Generation Skipped)
+# 2014.10.24 14:03:32 (*) mk_custom_sdk finishing
+# 2014.10.24 14:03:32 (*) Starting generation for system: my_controller.
 
 .
 .
 .
 .
+........
 ..
-.
 .....
-..
-......
-.
-..
 
-# 2014.09.17 11:13:05 (*) Running Generator Program for cpu_0
+# 2014.10.24 14:03:34 (*) Running Generator Program for cpu_0
 
-# 2014.09.17 11:13:06 (*) Starting Nios II generation
-# 2014.09.17 11:13:06 (*)   Checking for plaintext license.
-# 2014.09.17 11:13:06 (*)   Couldn't query license setup in Quartus directory c:/software/altera/10.1/quartus
-# 2014.09.17 11:13:06 (*)   Defaulting to contents of LM_LICENSE_FILE environment variable
-# 2014.09.17 11:13:07 (*)   Plaintext license not found.
-# 2014.09.17 11:13:07 (*)   Checking for encrypted license (non-evaluation).
-# 2014.09.17 11:13:08 (*)   Couldn't query license setup in Quartus directory c:/software/altera/10.1/quartus
+# 2014.10.24 14:03:36 (*) Starting Nios II generation
+# 2014.10.24 14:03:36 (*)   Checking for plaintext license.
+# 2014.10.24 14:03:37 (*)   Couldn't query license setup in Quartus directory c:/software/altera/10.1/quartus
+# 2014.10.24 14:03:37 (*)   Defaulting to contents of LM_LICENSE_FILE environment variable
+# 2014.10.24 14:03:38 (*)   Plaintext license not found.
+# 2014.10.24 14:03:38 (*)   Checking for encrypted license (non-evaluation).
+# 2014.10.24 14:03:38 (*)   Couldn't query license setup in Quartus directory c:/software/altera/10.1/quartus
 
-# 2014.09.17 11:13:08 (*)   Defaulting to contents of LM_LICENSE_FILE environment variable
-# 2014.09.17 11:13:09 (*)   Encrypted license found.  SOF will not be time-limited.
-# 2014.09.17 11:13:09 (*)   Getting CPU configuration settings
-# 2014.09.17 11:13:09 (*)   Elaborating CPU configuration settings
-# 2014.09.17 11:13:09 (*)   Creating all objects for CPU
-# 2014.09.17 11:13:10 (*)     Pipeline frontend
-# 2014.09.17 11:13:11 (*)   Generating HDL from CPU objects
-# 2014.09.17 11:13:13 (*)   Creating encrypted HDL
+# 2014.10.24 14:03:38 (*)   Defaulting to contents of LM_LICENSE_FILE environment variable
+# 2014.10.24 14:03:40 (*)   Encrypted license found.  SOF will not be time-limited.
+# 2014.10.24 14:03:40 (*)   Getting CPU configuration settings
+# 2014.10.24 14:03:40 (*)   Elaborating CPU configuration settings
+# 2014.10.24 14:03:40 (*)   Creating all objects for CPU
+# 2014.10.24 14:03:41 (*)     Pipeline frontend
+# 2014.10.24 14:03:42 (*)   Generating HDL from CPU objects
+# 2014.10.24 14:03:44 (*)   Creating encrypted HDL
 
-# 2014.09.17 11:13:14 (*) Done Nios II generation
+# 2014.10.24 14:03:45 (*) Done Nios II generation
 
-# 2014.09.17 11:13:15 (*) Running Generator Program for sysid
+# 2014.10.24 14:03:46 (*) Running Generator Program for sysid
 
-# 2014.09.17 11:13:15 (*) Running Generator Program for jtag_uart_0
+# 2014.10.24 14:03:46 (*) Running Generator Program for jtag_uart_0
 
-# 2014.09.17 11:13:17 (*) Running Generator Program for lcd_display
+# 2014.10.24 14:03:48 (*) Running Generator Program for lcd_display
 
-# 2014.09.17 11:13:17 (*) Running Generator Program for led_pio
+# 2014.10.24 14:03:49 (*) Running Generator Program for led_pio
 
-# 2014.09.17 11:13:18 (*) Running Generator Program for seven_seg_pio
+# 2014.10.24 14:03:50 (*) Running Generator Program for seven_seg_pio
 
-# 2014.09.17 11:13:19 (*) Running Generator Program for button_pio
+# 2014.10.24 14:03:50 (*) Running Generator Program for button_pio
 
-# 2014.09.17 11:13:20 (*) Running Generator Program for green_led_pio
+# 2014.10.24 14:03:51 (*) Running Generator Program for green_led_pio
 
-# 2014.09.17 11:13:21 (*) Running Generator Program for red_led_pio
+# 2014.10.24 14:03:52 (*) Running Generator Program for red_led_pio
 
-# 2014.09.17 11:13:22 (*) Running Generator Program for seven_seg_middle_pio
+# 2014.10.24 14:03:53 (*) Running Generator Program for seven_seg_middle_pio
 
-# 2014.09.17 11:13:23 (*) Running Generator Program for seven_seg_right_pio
+# 2014.10.24 14:03:54 (*) Running Generator Program for seven_seg_right_pio
 
-# 2014.09.17 11:13:24 (*) Running Generator Program for switch_pio
+# 2014.10.24 14:03:55 (*) Running Generator Program for switch_pio
 
-# 2014.09.17 11:13:25 (*) Running Generator Program for timer_0
+# 2014.10.24 14:03:56 (*) Running Generator Program for timer_0
 
-# 2014.09.17 11:13:25 (*) Running Generator Program for timer_1
+# 2014.10.24 14:03:57 (*) Running Generator Program for timer_1
 
-# 2014.09.17 11:13:27 (*) Running Generator Program for sdram_0
+# 2014.10.24 14:03:58 (*) Running Generator Program for sdram_0
 
-# 2014.09.17 11:13:28 (*) Running Generator Program for pio_pulse
+# 2014.10.24 14:03:59 (*) Running Generator Program for aud_full
 
-# 2014.09.17 11:13:29 (*) Running Generator Program for pio_latency
+# 2014.10.24 14:04:00 (*) Running Generator Program for sd_dat
 
-# 2014.09.17 11:13:30 (*) Running Generator Program for pio_missed
+# 2014.10.24 14:04:01 (*) Running Generator Program for sd_cmd
 
-# 2014.09.17 11:13:31 (*) Running Generator Program for pio_dutycycle
-
-# 2014.09.17 11:13:31 (*) Running Generator Program for pio_period
-
-# 2014.09.17 11:13:32 (*) Running Generator Program for pio_response
-
-# 2014.09.17 11:13:33 (*) Running Generator Program for pio_egmenable
-
-# 2014.09.17 11:13:34 (*) Running Generator Program for pio_egmreset
+# 2014.10.24 14:04:02 (*) Running Generator Program for sd_clk
 
 .
 
 
-# 2014.09.17 11:13:35 (*) Running Test Generator Program for sdram_0
+# 2014.10.24 14:04:02 (*) Running Test Generator Program for sdram_0
 
-# 2014.09.17 11:13:35 (*) Making arbitration and system (top) modules.
+# 2014.10.24 14:04:03 (*) Making arbitration and system (top) modules.
 
-# 2014.09.17 11:13:42 (*) Generating Quartus symbol for top level: my_controller
+# 2014.10.24 14:04:08 (*) Generating Quartus symbol for top level: my_controller
 
-# 2014.09.17 11:13:42 (*) Generating Symbol N:/ece224/myESystem/ANT/my_controller.bsf
+# 2014.10.24 14:04:08 (*) Generating Symbol N:/ece224/myESystem/ANT/my_controller.bsf
 
-# 2014.09.17 11:13:42 (*) Creating command-line system-generation script: N:/ece224/myESystem/ANT/my_controller_generation_script
+# 2014.10.24 14:04:09 (*) Creating command-line system-generation script: N:/ece224/myESystem/ANT/my_controller_generation_script
 
-# 2014.09.17 11:13:42 (*) Running setup for HDL simulator: modelsim
+# 2014.10.24 14:04:09 (*) Running setup for HDL simulator: modelsim
 
 
 00
-# 2014.09.17 11:13:42 (*) Completed generation for system: my_controller.
-# 2014.09.17 11:13:42 (*) THE FOLLOWING SYSTEM ITEMS HAVE BEEN GENERATED:
+# 2014.10.24 14:04:09 (*) Completed generation for system: my_controller.
+# 2014.10.24 14:04:09 (*) THE FOLLOWING SYSTEM ITEMS HAVE BEEN GENERATED:
   SOPC Builder database : N:/ece224/myESystem/ANT/my_controller.ptf 
   System HDL Model : N:/ece224/myESystem/ANT/my_controller.v 
   System Generation Script : N:/ece224/myESystem/ANT/my_controller_generation_script 
 
-# 2014.09.17 11:13:42 (*) SUCCESS: SYSTEM GENERATION COMPLETED.
+# 2014.10.24 14:04:09 (*) SUCCESS: SYSTEM GENERATION COMPLETED.
 
 
 Press 'Exit' to exit.
