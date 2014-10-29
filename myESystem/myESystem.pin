@@ -402,10 +402,10 @@ RESERVED_INPUT               : G23       :        :                   :         
 RESERVED_INPUT               : G24       :        :                   :         : 5         :                
 RESERVED_INPUT               : G25       :        :                   :         : 5         :                
 KEY[0]                       : G26       : input  : 3.3-V LVTTL       :         : 5         : Y              
-LCD_DATA[2]                  : H1        : output : 3.3-V LVTTL       :         : 2         : Y              
-LCD_DATA[3]                  : H2        : output : 3.3-V LVTTL       :         : 2         : Y              
-LCD_DATA[7]                  : H3        : output : 3.3-V LVTTL       :         : 2         : Y              
-LCD_DATA[6]                  : H4        : output : 3.3-V LVTTL       :         : 2         : Y              
+LCD_DATA[2]                  : H1        : bidir  : 3.3-V LVTTL       :         : 2         : Y              
+LCD_DATA[3]                  : H2        : bidir  : 3.3-V LVTTL       :         : 2         : Y              
+LCD_DATA[7]                  : H3        : bidir  : 3.3-V LVTTL       :         : 2         : Y              
+LCD_DATA[6]                  : H4        : bidir  : 3.3-V LVTTL       :         : 2         : Y              
 GND                          : H5        : gnd    :                   :         :           :                
 RESERVED_INPUT               : H6        :        :                   :         : 2         :                
 VCCD_PLL3                    : H7        : power  :                   : 1.2V    :           :                
@@ -428,10 +428,10 @@ RESERVED_INPUT               : H23       :        :                   :         
 RESERVED_INPUT               : H24       :        :                   :         : 5         :                
 RESERVED_INPUT               : H25       :        :                   :         : 5         :                
 RESERVED_INPUT               : H26       :        :                   :         : 5         :                
-LCD_DATA[0]                  : J1        : output : 3.3-V LVTTL       :         : 2         : Y              
-LCD_DATA[1]                  : J2        : output : 3.3-V LVTTL       :         : 2         : Y              
-LCD_DATA[5]                  : J3        : output : 3.3-V LVTTL       :         : 2         : Y              
-LCD_DATA[4]                  : J4        : output : 3.3-V LVTTL       :         : 2         : Y              
+LCD_DATA[0]                  : J1        : bidir  : 3.3-V LVTTL       :         : 2         : Y              
+LCD_DATA[1]                  : J2        : bidir  : 3.3-V LVTTL       :         : 2         : Y              
+LCD_DATA[5]                  : J3        : bidir  : 3.3-V LVTTL       :         : 2         : Y              
+LCD_DATA[4]                  : J4        : bidir  : 3.3-V LVTTL       :         : 2         : Y              
 RESERVED_INPUT               : J5        :        :                   :         : 2         :                
 RESERVED_INPUT               : J6        :        :                   :         : 2         :                
 RESERVED_INPUT               : J7        :        :                   :         : 2         :                

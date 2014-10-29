@@ -1,7 +1,7 @@
 *.o
 *.d
 workspace
-Debug/*
+Debug
 .cdtproject
 *report/*.out
 *report/*.log

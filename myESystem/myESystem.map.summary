@@ -1,10 +1,10 @@
-Analysis & Synthesis Status : Successful - Wed Oct 29 09:56:41 2014
+Analysis & Synthesis Status : Successful - Wed Oct 29 10:52:36 2014
 Quartus II 64-Bit Version : 10.1 Build 197 01/19/2011 SP 1 SJ Full Version
 Revision Name : myESystem
 Top-level Entity Name : myESystem
 Family : Cyclone II
-Total logic elements : 3,802
-    Total combinational functions : 3,161
+Total logic elements : 3,791
+    Total combinational functions : 3,150
     Dedicated logic registers : 2,071
 Total registers : 2071
 Total pins : 171

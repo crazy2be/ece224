@@ -11688,26 +11688,6 @@ a36c8ec425c8a2589af98b2d4daabc3
 
 # end
 # entity
-myESystem
-# storage
-db|myESystem.(0).cnf
-db|myESystem.(0).cnf
-# case_insensitive
-# source_file
-myesystem.bdf
-715a44e6c08016034c9903c6dee839f
-26
-# internal_option {
-BLOCK_DESIGN_NAMING
-AUTO
-}
-# hierarchies {
-|
-}
-# macro_sequence
-
-# end
-# entity
 my_controller
 # storage
 db|myESystem.(8).cnf
@@ -13151,6 +13131,26 @@ VERILOG_NON_CONSTANT_LOOP_LIMIT
 }
 # hierarchies {
 my_controller:inst4|my_controller_reset_clk_0_domain_synch_module:my_controller_reset_clk_0_domain_synch
+}
+# macro_sequence
+
+# end
+# entity
+myESystem
+# storage
+db|myESystem.(0).cnf
+db|myESystem.(0).cnf
+# case_insensitive
+# source_file
+myesystem.bdf
+fb8c639145eafb4ea89d88a02364e5
+26
+# internal_option {
+BLOCK_DESIGN_NAMING
+AUTO
+}
+# hierarchies {
+|
 }
 # macro_sequence
 
