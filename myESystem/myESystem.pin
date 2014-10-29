@@ -70,9 +70,9 @@ Pin Name/Usage               : Location  : Dir.   : I/O Standard      : Voltage 
 -------------------------------------------------------------------------------------------------------------
 GND                          : A2        : gnd    :                   :         :           :                
 VCCIO3                       : A3        : power  :                   : 3.3V    : 3         :                
-RESERVED_INPUT               : A4        :        :                   :         : 3         :                
-RESERVED_INPUT               : A5        :        :                   :         : 3         :                
-RESERVED_INPUT               : A6        :        :                   :         : 3         :                
+AUD_DACDAT                   : A4        : output : 3.3-V LVTTL       :         : 3         : Y              
+AUD_XCK                      : A5        : output : 3.3-V LVTTL       :         : 3         : Y              
+I2C_SCLK                     : A6        : output : 3.3-V LVTTL       :         : 3         : Y              
 RESERVED_INPUT               : A7        :        :                   :         : 3         :                
 RESERVED_INPUT               : A8        :        :                   :         : 3         :                
 RESERVED_INPUT               : A9        :        :                   :         : 3         :                
@@ -193,8 +193,8 @@ VCCIO7                       : AD20      : power  :                   : 3.3V    
 LEDR[6]                      : AD21      : output : 3.3-V LVTTL       :         : 7         : Y              
 LEDR[4]                      : AD22      : output : 3.3-V LVTTL       :         : 7         : Y              
 LEDR[5]                      : AD23      : output : 3.3-V LVTTL       :         : 7         : Y              
-RESERVED_INPUT               : AD24      :        :                   :         : 6         :                
-RESERVED_INPUT               : AD25      :        :                   :         : 6         :                
+SD_DAT                       : AD24      : bidir  : 3.3-V LVTTL       :         : 6         : Y              
+SD_CLK                       : AD25      : output : 3.3-V LVTTL       :         : 6         : Y              
 VCCIO6                       : AD26      : power  :                   : 3.3V    : 6         :                
 GND                          : AE1       : gnd    :                   :         :           :                
 DRAM_BA_0                    : AE2       : output : 3.3-V LVTTL       :         : 1         : Y              
@@ -249,9 +249,9 @@ GND                          : AF25      : gnd    :                   :         
 GND                          : B1        : gnd    :                   :         :           :                
 RESERVED_INPUT               : B2        :        :                   :         : 2         :                
 RESERVED_INPUT               : B3        :        :                   :         : 2         :                
-RESERVED_INPUT               : B4        :        :                   :         : 3         :                
+AUD_BCLK                     : B4        : output : 3.3-V LVTTL       :         : 3         : Y              
 RESERVED_INPUT               : B5        :        :                   :         : 3         :                
-RESERVED_INPUT               : B6        :        :                   :         : 3         :                
+I2C_SDAT                     : B6        : output : 3.3-V LVTTL       :         : 3         : Y              
 RESERVED_INPUT               : B7        :        :                   :         : 3         :                
 RESERVED_INPUT               : B8        :        :                   :         : 3         :                
 RESERVED_INPUT               : B9        :        :                   :         : 3         :                
@@ -277,7 +277,7 @@ RESERVED_INPUT               : C2        :        :                   :         
 RESERVED_INPUT               : C3        :        :                   :         : 2         :                
 RESERVED_INPUT               : C4        :        :                   :         : 3         :                
 RESERVED_INPUT               : C5        :        :                   :         : 3         :                
-RESERVED_INPUT               : C6        :        :                   :         : 3         :                
+AUD_DACLRCK                  : C6        : output : 3.3-V LVTTL       :         : 3         : Y              
 RESERVED_INPUT               : C7        :        :                   :         : 3         :                
 RESERVED_INPUT               : C8        :        :                   :         : 3         :                
 RESERVED_INPUT               : C9        :        :                   :         : 3         :                
@@ -310,7 +310,7 @@ RESERVED_INPUT               : D9        :        :                   :         
 RESERVED_INPUT               : D10       :        :                   :         : 3         :                
 RESERVED_INPUT               : D11       :        :                   :         : 3         :                
 RESERVED_INPUT               : D12       :        :                   :         : 3         :                
-GND+                         : D13       :        :                   :         : 3         :                
+CLOCK_27                     : D13       : input  : 3.3-V LVTTL       :         : 3         : Y              
 RESERVED_INPUT               : D14       :        :                   :         : 4         :                
 RESERVED_INPUT               : D15       :        :                   :         : 4         :                
 RESERVED_INPUT               : D16       :        :                   :         : 4         :                
@@ -402,10 +402,10 @@ RESERVED_INPUT               : G23       :        :                   :         
 RESERVED_INPUT               : G24       :        :                   :         : 5         :                
 RESERVED_INPUT               : G25       :        :                   :         : 5         :                
 KEY[0]                       : G26       : input  : 3.3-V LVTTL       :         : 5         : Y              
-LCD_DATA[2]                  : H1        : bidir  : 3.3-V LVTTL       :         : 2         : Y              
-LCD_DATA[3]                  : H2        : bidir  : 3.3-V LVTTL       :         : 2         : Y              
-LCD_DATA[7]                  : H3        : bidir  : 3.3-V LVTTL       :         : 2         : Y              
-LCD_DATA[6]                  : H4        : bidir  : 3.3-V LVTTL       :         : 2         : Y              
+LCD_DATA[2]                  : H1        : output : 3.3-V LVTTL       :         : 2         : Y              
+LCD_DATA[3]                  : H2        : output : 3.3-V LVTTL       :         : 2         : Y              
+LCD_DATA[7]                  : H3        : output : 3.3-V LVTTL       :         : 2         : Y              
+LCD_DATA[6]                  : H4        : output : 3.3-V LVTTL       :         : 2         : Y              
 GND                          : H5        : gnd    :                   :         :           :                
 RESERVED_INPUT               : H6        :        :                   :         : 2         :                
 VCCD_PLL3                    : H7        : power  :                   : 1.2V    :           :                
@@ -428,10 +428,10 @@ RESERVED_INPUT               : H23       :        :                   :         
 RESERVED_INPUT               : H24       :        :                   :         : 5         :                
 RESERVED_INPUT               : H25       :        :                   :         : 5         :                
 RESERVED_INPUT               : H26       :        :                   :         : 5         :                
-LCD_DATA[0]                  : J1        : bidir  : 3.3-V LVTTL       :         : 2         : Y              
-LCD_DATA[1]                  : J2        : bidir  : 3.3-V LVTTL       :         : 2         : Y              
-LCD_DATA[5]                  : J3        : bidir  : 3.3-V LVTTL       :         : 2         : Y              
-LCD_DATA[4]                  : J4        : bidir  : 3.3-V LVTTL       :         : 2         : Y              
+LCD_DATA[0]                  : J1        : output : 3.3-V LVTTL       :         : 2         : Y              
+LCD_DATA[1]                  : J2        : output : 3.3-V LVTTL       :         : 2         : Y              
+LCD_DATA[5]                  : J3        : output : 3.3-V LVTTL       :         : 2         : Y              
+LCD_DATA[4]                  : J4        : output : 3.3-V LVTTL       :         : 2         : Y              
 RESERVED_INPUT               : J5        :        :                   :         : 2         :                
 RESERVED_INPUT               : J6        :        :                   :         : 2         :                
 RESERVED_INPUT               : J7        :        :                   :         : 2         :                
@@ -734,7 +734,7 @@ GND                          : Y17       : gnd    :                   :         
 LEDG[7]                      : Y18       : output : 3.3-V LVTTL       :         : 7         : Y              
 GNDA_PLL4                    : Y19       : gnd    :                   :         :           :                
 VCCD_PLL4                    : Y20       : power  :                   : 1.2V    :           :                
-RESERVED_INPUT               : Y21       :        :                   :         : 6         :                
+SD_CMD                       : Y21       : bidir  : 3.3-V LVTTL       :         : 6         : Y              
 HEX1[3]                      : Y22       : output : 3.3-V LVTTL       :         : 6         : Y              
 HEX3[6]                      : Y23       : output : 3.3-V LVTTL       :         : 6         : Y              
 HEX2[0]                      : Y24       : output : 3.3-V LVTTL       :         : 6         : Y              

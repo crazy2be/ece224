@@ -1,5 +1,5 @@
 Flow report for myESystem
-Wed Oct 01 08:41:26 2014
+Wed Oct 29 09:57:31 2014
 Quartus II 64-Bit Version 10.1 Build 197 01/19/2011 Service Pack 1 SJ Full Version
 
 
@@ -38,22 +38,22 @@ applicable agreement for further details.
 +-------------------------------------------------------------------------------------+
 ; Flow Summary                                                                        ;
 +------------------------------------+------------------------------------------------+
-; Flow Status                        ; Successful - Wed Oct 01 08:41:24 2014          ;
+; Flow Status                        ; Successful - Wed Oct 29 09:57:28 2014          ;
 ; Quartus II 64-Bit Version          ; 10.1 Build 197 01/19/2011 SP 1 SJ Full Version ;
 ; Revision Name                      ; myESystem                                      ;
 ; Top-level Entity Name              ; myESystem                                      ;
 ; Family                             ; Cyclone II                                     ;
 ; Device                             ; EP2C35F672C6                                   ;
 ; Timing Models                      ; Final                                          ;
-; Total logic elements               ; 3,222 / 33,216 ( 10 % )                        ;
-;     Total combinational functions  ; 2,962 / 33,216 ( 9 % )                         ;
-;     Dedicated logic registers      ; 1,890 / 33,216 ( 6 % )                         ;
-; Total registers                    ; 1958                                           ;
-; Total pins                         ; 161 / 475 ( 34 % )                             ;
+; Total logic elements               ; 3,471 / 33,216 ( 10 % )                        ;
+;     Total combinational functions  ; 3,167 / 33,216 ( 10 % )                        ;
+;     Dedicated logic registers      ; 2,037 / 33,216 ( 6 % )                         ;
+; Total registers                    ; 2105                                           ;
+; Total pins                         ; 171 / 475 ( 36 % )                             ;
 ; Total virtual pins                 ; 0                                              ;
-; Total memory bits                  ; 46,720 / 483,840 ( 10 % )                      ;
+; Total memory bits                  ; 50,816 / 483,840 ( 11 % )                      ;
 ; Embedded Multiplier 9-bit elements ; 0 / 70 ( 0 % )                                 ;
-; Total PLLs                         ; 1 / 4 ( 25 % )                                 ;
+; Total PLLs                         ; 2 / 4 ( 50 % )                                 ;
 +------------------------------------+------------------------------------------------+
 
 
@@ -62,7 +62,7 @@ applicable agreement for further details.
 +-------------------+---------------------+
 ; Option            ; Setting             ;
 +-------------------+---------------------+
-; Start date & time ; 10/01/2014 08:39:49 ;
+; Start date & time ; 10/29/2014 09:55:34 ;
 ; Main task         ; Compilation         ;
 ; Revision Name     ; myESystem           ;
 +-------------------+---------------------+
@@ -73,20 +73,29 @@ applicable agreement for further details.
 +-------------------------------------+---------------------------------------+---------------+-------------+------------+
 ; Assignment Name                     ; Value                                 ; Default Value ; Entity Name ; Section Id ;
 +-------------------------------------+---------------------------------------+---------------+-------------+------------+
-; COMPILER_SIGNATURE_ID               ; 9210263402984.141216718705044         ; --            ; --          ; --         ;
+; COMPILER_SIGNATURE_ID               ; 9210263402984.141459093300764         ; --            ; --          ; --         ;
 ; IP_TOOL_NAME                        ; ALTPLL                                ; --            ; --          ; --         ;
+; IP_TOOL_NAME                        ; FIFO                                  ; --            ; --          ; --         ;
+; IP_TOOL_NAME                        ; ALTPLL                                ; --            ; --          ; --         ;
+; IP_TOOL_VERSION                     ; 10.1                                  ; --            ; --          ; --         ;
+; IP_TOOL_VERSION                     ; 10.1                                  ; --            ; --          ; --         ;
 ; IP_TOOL_VERSION                     ; 10.1                                  ; --            ; --          ; --         ;
 ; MAX_CORE_JUNCTION_TEMP              ; 85                                    ; --            ; --          ; --         ;
 ; MIN_CORE_JUNCTION_TEMP              ; 0                                     ; --            ; --          ; --         ;
 ; MISC_FILE                           ; sdram_pll.bsf                         ; --            ; --          ; --         ;
 ; MISC_FILE                           ; sdram_pll.cmp                         ; --            ; --          ; --         ;
 ; MISC_FILE                           ; sdram_pll.ppf                         ; --            ; --          ; --         ;
+; MISC_FILE                           ; audio_pll.bsf                         ; --            ; --          ; --         ;
+; MISC_FILE                           ; audio_pll.cmp                         ; --            ; --          ; --         ;
+; MISC_FILE                           ; aud_pll.bsf                           ; --            ; --          ; --         ;
+; MISC_FILE                           ; aud_pll.cmp                           ; --            ; --          ; --         ;
+; MISC_FILE                           ; aud_pll.ppf                           ; --            ; --          ; --         ;
 ; PARTITION_COLOR                     ; 16764057                              ; --            ; --          ; Top        ;
 ; PARTITION_FITTER_PRESERVATION_LEVEL ; PLACEMENT_AND_ROUTING                 ; --            ; --          ; Top        ;
 ; PARTITION_NETLIST_TYPE              ; SOURCE                                ; --            ; --          ; Top        ;
 ; POWER_BOARD_THERMAL_MODEL           ; None (CONSERVATIVE)                   ; --            ; --          ; --         ;
 ; POWER_PRESET_COOLING_SOLUTION       ; 23 MM HEAT SINK WITH 200 LFPM AIRFLOW ; --            ; --          ; --         ;
-; SOPC_BUILDER_SIGNATURE_ID           ; 08606E7A79E800000148842AA6CE          ; --            ; --          ; --         ;
+; SOPC_BUILDER_SIGNATURE_ID           ; 08606E7A79E8000001495C25A45F          ; --            ; --          ; --         ;
 +-------------------------------------+---------------------------------------+---------------+-------------+------------+
 
 
@@ -95,11 +104,11 @@ applicable agreement for further details.
 +---------------------------+--------------+-------------------------+---------------------+------------------------------------+
 ; Module Name               ; Elapsed Time ; Average Processors Used ; Peak Virtual Memory ; Total CPU Time (on all processors) ;
 +---------------------------+--------------+-------------------------+---------------------+------------------------------------+
-; Analysis & Synthesis      ; 00:00:50     ; 1.0                     ; 465 MB              ; 00:00:21                           ;
-; Fitter                    ; 00:00:17     ; 1.2                     ; 505 MB              ; 00:00:15                           ;
-; Assembler                 ; 00:00:07     ; 1.0                     ; 377 MB              ; 00:00:02                           ;
-; TimeQuest Timing Analyzer ; 00:00:09     ; 1.0                     ; 399 MB              ; 00:00:04                           ;
-; Total                     ; 00:01:23     ; --                      ; --                  ; 00:00:42                           ;
+; Analysis & Synthesis      ; 00:00:59     ; 1.0                     ; 466 MB              ; 00:00:23                           ;
+; Fitter                    ; 00:00:22     ; 1.1                     ; 507 MB              ; 00:00:17                           ;
+; Assembler                 ; 00:00:08     ; 1.0                     ; 378 MB              ; 00:00:02                           ;
+; TimeQuest Timing Analyzer ; 00:00:11     ; 1.0                     ; 402 MB              ; 00:00:04                           ;
+; Total                     ; 00:01:40     ; --                      ; --                  ; 00:00:46                           ;
 +---------------------------+--------------+-------------------------+---------------------+------------------------------------+
 
 

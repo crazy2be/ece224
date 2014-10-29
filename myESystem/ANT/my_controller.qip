@@ -33,5 +33,5 @@ set_global_assignment -name VERILOG_FILE [file join $::quartus(qip_path) audio_0
 # sd_cmd
 # sd_clk
 # null
-set_global_assignment -name SOPC_BUILDER_SIGNATURE_ID 60A44C53E442000001494351D5E3 
+set_global_assignment -name SOPC_BUILDER_SIGNATURE_ID 08606E7A79E8000001495C232AB3 
  
