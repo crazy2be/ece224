@@ -72,7 +72,7 @@ GND                          : A2        : gnd    :                   :         
 VCCIO3                       : A3        : power  :                   : 3.3V    : 3         :                
 AUD_DACDAT                   : A4        : output : 3.3-V LVTTL       :         : 3         : Y              
 AUD_XCK                      : A5        : output : 3.3-V LVTTL       :         : 3         : Y              
-I2C_SCLK                     : A6        : output : 3.3-V LVTTL       :         : 3         : Y              
+I2C_SCLK                     : A6        : bidir  : 3.3-V LVTTL       :         : 3         : Y              
 RESERVED_INPUT               : A7        :        :                   :         : 3         :                
 RESERVED_INPUT               : A8        :        :                   :         : 3         :                
 RESERVED_INPUT               : A9        :        :                   :         : 3         :                
@@ -251,7 +251,7 @@ RESERVED_INPUT               : B2        :        :                   :         
 RESERVED_INPUT               : B3        :        :                   :         : 2         :                
 AUD_BCLK                     : B4        : output : 3.3-V LVTTL       :         : 3         : Y              
 RESERVED_INPUT               : B5        :        :                   :         : 3         :                
-I2C_SDAT                     : B6        : output : 3.3-V LVTTL       :         : 3         : Y              
+I2C_SDAT                     : B6        : bidir  : 3.3-V LVTTL       :         : 3         : Y              
 RESERVED_INPUT               : B7        :        :                   :         : 3         :                
 RESERVED_INPUT               : B8        :        :                   :         : 3         :                
 RESERVED_INPUT               : B9        :        :                   :         : 3         :                

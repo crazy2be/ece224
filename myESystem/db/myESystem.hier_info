@@ -23,6 +23,8 @@ SW[15] => my_controller:inst4.in_port_to_the_switch_pio[15]
 SW[16] => my_controller:inst4.reset_n
 SW[16] => inst.IN0
 CLOCK_27 => aud_pll:inst3.inclk0
+I2C_SCLK <> I2C_tri:inst2.I2C_CLK
+I2C_SDAT <> I2C_tri:inst2.I2C_DATA
 SD_CMD <> my_controller:inst4.bidir_port_to_and_from_the_sd_cmd
 SD_DAT <> my_controller:inst4.bidir_port_to_and_from_the_sd_dat
 KEY[0] => my_controller:inst4.in_port_to_the_button_pio[0]
@@ -69,8 +71,6 @@ DRAM_LDQM <= my_controller:inst4.zs_dqm_from_the_sdram_0[0]
 DRAM_RAS_N <= my_controller:inst4.zs_ras_n_from_the_sdram_0
 DRAM_WE_N <= my_controller:inst4.zs_we_n_from_the_sdram_0
 AUD_XCK <= aud_pll:inst3.c0
-I2C_SCLK <= scl.DB_MAX_OUTPUT_PORT_TYPE
-I2C_SDAT <= sda.DB_MAX_OUTPUT_PORT_TYPE
 DRAM_ADDR[0] <= my_controller:inst4.zs_addr_from_the_sdram_0[0]
 DRAM_ADDR[1] <= my_controller:inst4.zs_addr_from_the_sdram_0[1]
 DRAM_ADDR[2] <= my_controller:inst4.zs_addr_from_the_sdram_0[2]
