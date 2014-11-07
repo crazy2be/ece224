@@ -63,7 +63,6 @@ uint32_t TotSec;
 uint32_t DataSec;
 uint32_t CountofClusters;
 uint32_t FirstRootDirSecNum;
-char FATType[6];
 uint32_t ThisFATSecNum;
 uint32_t ThisFATEntOffset;
 uint16_t FAT12ClusEntryVal;
@@ -309,12 +308,15 @@ void CalcFATSecAndOffset(uint32_t N) {
 			FAT12ClusEntryVal = (FAT12ClusEntryVal | ((buf[0] & 0x0F) << 8));
 		}
 		FATClusEntryVal = FAT12ClusEntryVal;
+		break;
 	case TypeFAT16:
 		FAT16ClusEntryVal = read_uint16(&buf[ThisFATEntOffset]);
 		FATClusEntryVal = FAT16ClusEntryVal;
+		break;
 	case TypeFAT32:
 		FAT32ClusEntryVal = read_uint32(&buf[ThisFATEntOffset]) & 0x0FFFFFFF;
 		FATClusEntryVal = FAT32ClusEntryVal;
+		break;
 	}
 }
 // Determines if the Cluster is the last cluster in the file's cluster chain
@@ -461,7 +463,9 @@ uint32_t search_for_filetype(char *extension, data_file *df, int sub_directory,
 				if (file_count == file_number) {
 					strcpy(df->Name, filename);
 					df->Attr = attribute;
-					df->FirstCluster = read
+
+					// TODO: is this wrong?
+					df->FirstCluster =
 						(buf[entry_num*32 + FstClusLo_offset]) +
 						(buf[entry_num*32 + FstClusLo_offset + 1] << 8) +
 						(buf[entry_num*32 + FstClusHi_offset]) +
