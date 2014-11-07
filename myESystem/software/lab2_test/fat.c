@@ -377,17 +377,18 @@ uint32_t search_for_filetype(char *extension, data_file *df, int sub_directory,
 
 	//Browse while there are still entries to browse
 	while ((buf[entry_num*32] != 0x00)) {
-		ATTR_LONG_NAME_MASK = buf[entry_num*32 + attribute_offset] & 0x3F;
-		ATTR_LONG_NAME = buf[entry_num*32 + attribute_offset] & 0x0F;
+		uint8_t *entry = buf + entry_num*32;
+		ATTR_LONG_NAME_MASK = entry[attribute_offset] & 0x3F;
+		ATTR_LONG_NAME = entry[attribute_offset] & 0x0F;
 
 		//Determine if the entry contains a long file name
-		if (((buf[entry_num*32 + attribute_offset] & ATTR_LONG_NAME_MASK)
+		if (((entry[attribute_offset] & ATTR_LONG_NAME_MASK)
 				== ATTR_LONG_NAME)
-				&& (buf[entry_num*32 + attribute_offset] != 0x08)
-				&& (buf[entry_num*32] != 0xE5)) //long filename
+				&& (entry[attribute_offset] != 0x08)
+				&& (entry[0] != 0xE5)) //long filename
 		{
 			//longname_blocks is the amount of entrys that contain the long filename
-			int longname_blocks = (buf[entry_num*32] & 0xBF);
+			int longname_blocks = (entry[0] & 0xBF);
 			if (longname_blocks < 20) {
 				longname[(longname_blocks - 1)*13 + 13] = '\0';
 			}
@@ -420,6 +421,8 @@ uint32_t search_for_filetype(char *extension, data_file *df, int sub_directory,
 			}
 		}
 
+		entry = buf + entry_num*32;
+
 		//Read the attribute tag of the current entry
 		//0x00 Indicates the end of the FAT entries
 		//0x08 Indicates Volume ID
@@ -427,18 +430,18 @@ uint32_t search_for_filetype(char *extension, data_file *df, int sub_directory,
 		//0x10 Indicates a Directory
 		//anything else indicates a file
 
-		attribute = buf[entry_num * 32 + attribute_offset];
+		attribute = entry[attribute_offset];
 
-		if ((attribute & 0x08) || (buf[entry_num * 32] == 0xE5)) {
+		if ((attribute & 0x08) || (entry[0] == 0xE5)) {
 			//0x08 Indicates Volume ID
 			//0xE5 Indicates and empty entry
 			//Either case increment to next entry
 		} else if (attribute & 0x10) {
 			//Indicates a Directory, search the directory
-			sub_directory = (buf[entry_num*32 + FstClusLo_offset])
-					+ (buf[entry_num*32 + FstClusLo_offset + 1] << 8)
-					+ (buf[entry_num*32 + FstClusHi_offset])
-					+ (buf[entry_num*32 + FstClusHi_offset + 1] << 8);
+			sub_directory = (entry[FstClusLo_offset])
+					+ (entry[FstClusLo_offset + 1] << 8)
+					+ (entry[FstClusHi_offset])
+					+ (entry[FstClusHi_offset + 1] << 8);
 			sub_directory = FirstSectorofCluster(sub_directory);
 			if (!search_for_filetype(extension, df, sub_directory, 0)) {
 				return 0;
@@ -451,9 +454,9 @@ uint32_t search_for_filetype(char *extension, data_file *df, int sub_directory,
 			filename[11] = '\0';
 
 			//Grab the current entry numbers file extension
-			fileext[0] = buf[entry_num*32 + 8];
-			fileext[1] = buf[entry_num*32 + 9];
-			fileext[2] = buf[entry_num*32 + 10];
+			fileext[0] = entry[8];
+			fileext[1] = entry[9];
+			fileext[2] = entry[10];
 			fileext[3] = '\0';
 
 			//printf("found file: %s.%s\n", filename, fileext);
@@ -461,21 +464,22 @@ uint32_t search_for_filetype(char *extension, data_file *df, int sub_directory,
 			//compare the current file's file extension to the extension to search for
 			if (!strcmp(extension, fileext)) {
 				if (file_count == file_number) {
-					strcpy(df->Name, filename);
+					memcpy(df->Name, entry, 11 * sizeof(char));
+					df->Name[11] = '\0';
 					df->Attr = attribute;
 
 					// TODO: is this wrong?
 					df->FirstCluster =
-						(buf[entry_num*32 + FstClusLo_offset]) +
-						(buf[entry_num*32 + FstClusLo_offset + 1] << 8) +
-						(buf[entry_num*32 + FstClusHi_offset]) +
-						(buf[entry_num*32 + FstClusHi_offset + 1] << 8);
+						(entry[FstClusLo_offset]) +
+						(entry[FstClusLo_offset + 1] << 8) +
+						(entry[FstClusHi_offset]) +
+						(entry[FstClusHi_offset + 1] << 8);
 
 					df->FileSize =
-						(buf[entry_num*32 + FileSize_offset]) |
-						(buf[entry_num*32 + FileSize_offset + 1] << 8) |
-						(buf[entry_num*32 + FileSize_offset + 2] << 16) |
-						(buf[entry_num*32 + FileSize_offset + 3] << 24);
+						(entry[FileSize_offset]) |
+						(entry[FileSize_offset + 1] << 8) |
+						(entry[FileSize_offset + 2] << 16) |
+						(entry[FileSize_offset + 3] << 24);
 					df->FirstSector = FirstSectorofCluster(df->FirstCluster);
 					df->Posn = 0;
 					file_count = 0;
@@ -514,7 +518,7 @@ uint32_t search_for_filetype(char *extension, data_file *df, int sub_directory,
 }
 
 static inline uint32_t ceil_div(uint32_t a, uint32_t b) {
-	// doesn't handle overflow, positive numbers only please.
+	// doesn't handle overflow, positive numbers only please
 	return (a + b - 1) / b;
 }
 

@@ -6,7 +6,7 @@
 //-------------------------------------------------------------------------
 // data_file Data Structure
 typedef struct {
-	char     Name[11];     // File name
+	char     Name[8 + 3 + 1];     // File name
 	uint8_t  Attr;         // File attribute tag
 	uint32_t FirstCluster; // First cluster of file data
 	uint32_t FileSize;     // Size of the file in bytes
