@@ -7,12 +7,12 @@ uint16_t file_number = 0;
 //-------------------------------------------------------------------------
 //MASTER BOOT RECORD
 // TODO: Make these into nice structs.
-uint8_t MBR_Bootable;
-uint8_t MBR_Start_Sector[3];
-uint8_t MBR_End_End[3];
-uint8_t MBR_Partition_Type;
-uint32_t MBR_BS_Location;
-uint32_t MBR_Partition_Len;
+// uint8_t MBR_Bootable;
+// uint8_t MBR_Start_Sector[3];
+// uint8_t MBR_End_End[3];
+// uint8_t MBR_Partition_Type;
+uint32_t MBR_BS_Location = -1;
+uint32_t MBR_Partition_Len = -1;
 
 //FAT12, FAT16, FAT32
 uint8_t BS_JmpBoot[3];
@@ -66,32 +66,40 @@ uint16_t FAT12ClusEntryVal;
 uint16_t FAT16ClusEntryVal;
 uint32_t FAT32ClusEntryVal;
 uint32_t FATClusEntryVal;
-//-------------------------------------------------------------------------
+
+static uint16_t read_uint16(uint8_t *buf) {
+	return buf[0] + (buf[1] << 8);
+}
+static uint32_t read_uint32(uint8_t *buf) {
+	return buf[0] + (buf[1] << 8) + (buf[2] << 16) + (buf[3] << 24);
+}
+
 // Initialize the Master Boot Record
 uint8_t init_mbr(void) {
 	uint8_t buf[512] = { 0 };
 
-	SD_read_lba(buf, 0, 1); //Store master boot record in buf
+	SD_read_lba(buf, 0, 1); // Store master boot record in buf
 
 	// Check the last 2 bytes of the buffer to ensure it is tagged as the MBR
 	// (magic bytes)
-	if (buf[510] == 0x55 && buf[511] == 0xAA) {
-		MBR_Bootable = buf[446];
-		MBR_Start_Sector[0] = buf[447];
-		MBR_Start_Sector[1] = buf[448];
-		MBR_Start_Sector[2] = buf[449];
-		MBR_Partition_Type = buf[450];
-		MBR_End_End[0] = buf[451];
-		MBR_End_End[1] = buf[452];
-		MBR_End_End[2] = buf[453];
-		MBR_BS_Location = buf[454] + (buf[455] << 8)
-				+ (buf[456] << 16) + (buf[457] << 24);
-		MBR_Partition_Len = buf[458] + (buf[459] << 8) + (buf[460]
-				<< 16) + (buf[461] << 24);
-		return 0; //OK
-	} else {
-		return 1; //Error
+	if (buf[510] != 0x55 || buf[511] != 0xAA) {
+		return -1;
 	}
+
+// 	MBR_Bootable = buf[446];
+// 	MBR_Start_Sector[0] = buf[447];
+// 	MBR_Start_Sector[1] = buf[448];
+// 	MBR_Start_Sector[2] = buf[449];
+// 	MBR_Partition_Type = buf[450];
+// 	MBR_End_End[0] = buf[451];
+// 	MBR_End_End[1] = buf[452];
+// 	MBR_End_End[2] = buf[453];
+
+	// Read boot sector and partition length for first partition. Other
+	// partitions are ignored.
+	MBR_BS_Location = read_uint32(&buf[454]);
+	MBR_Partition_Len = read_uint32(&buf[458]);
+	return 0;
 }
 //-------------------------------------------------------------------------
 // Initialize the Boot Sector
@@ -100,144 +108,123 @@ uint8_t init_bs(void) {
 
 	SD_read_lba(buf, MBR_BS_Location, 1); //Store boot sector in buf
 
-	if (buf[510] == MASTER_BOOT_RECORD_ID1 && buf[511]
-			== MASTER_BOOT_RECORD_ID2) {
-		BS_JmpBoot[0] = buf[0];
-		BS_JmpBoot[1] = buf[1];
-		BS_JmpBoot[2] = buf[2];
-		BS_OEMName[0] = buf[3];
-		BS_OEMName[1] = buf[4];
-		BS_OEMName[2] = buf[5];
-		BS_OEMName[3] = buf[6];
-		BS_OEMName[4] = buf[7];
-		BS_OEMName[5] = buf[8];
-		BS_OEMName[6] = buf[9];
-		BS_OEMName[7] = buf[10];
-		BPB_BytsPerSec = buf[11] + (buf[12] << 8);
-		BPB_SecPerClus = buf[13];
-		BPB_RsvdSecCnt = buf[14] + (buf[15] << 8);
-		BPB_NumFATs = buf[16];
-		BPB_RootEntCnt = buf[17] + (buf[18] << 8);
-		BPB_TotSec16 = buf[19] + (buf[20] << 8);
-		BPB_Media = buf[21];
-		BPB_FATSz16 = buf[22] + (buf[23] << 8);
-		BPB_SecPerTrk = buf[24] + (buf[25] << 8);
-		BPB_NumHeads = buf[26] + (buf[27] << 8);
-		BPB_HiddSec = buf[28] + (buf[29] << 8) + (buf[30] << 16)
-				+ (buf[31] << 24);
-		BPB_TotSec32 = buf[32] + (buf[33] << 8) + (buf[34] << 16)
-				+ (buf[35] << 24);
-
-		//count of sectors occupied by the root directory
-		RootDirSectors = ((BPB_RootEntCnt * 32) + (BPB_BytsPerSec - 1))
-				/ BPB_BytsPerSec;
-
-		if (BPB_FATSz16 != 0) {
-			FATSz = BPB_FATSz16;
-
-			BS_DrvNum_16 = buf[36];
-			BS_BootSig_16 = buf[38];
-			BS_VOLID_16 = buf[39] + (buf[40] << 8) + (buf[41] << 16)
-					+ (buf[42] << 24);
-			BS_VOLLab_16[0] = buf[43];
-			BS_VOLLab_16[1] = buf[44];
-			BS_VOLLab_16[2] = buf[45];
-			BS_VOLLab_16[3] = buf[46];
-			BS_VOLLab_16[4] = buf[47];
-			BS_VOLLab_16[5] = buf[48];
-			BS_VOLLab_16[6] = buf[49];
-			BS_VOLLab_16[7] = buf[50];
-			BS_VOLLab_16[8] = buf[51];
-			BS_VOLLab_16[9] = buf[52];
-			BS_VOLLab_16[10] = buf[53];
-			BS_FilSysType_16[0] = buf[54];
-			BS_FilSysType_16[1] = buf[55];
-			BS_FilSysType_16[2] = buf[56];
-			BS_FilSysType_16[3] = buf[57];
-			BS_FilSysType_16[4] = buf[58];
-			BS_FilSysType_16[5] = buf[59];
-			BS_FilSysType_16[6] = buf[60];
-			BS_FilSysType_16[6] = buf[61];
-
-			//root directory LBA = FirstRootDirSecNum + MBR_BS_Location
-			FirstRootDirSecNum = BPB_RsvdSecCnt + (BPB_NumFATs * BPB_FATSz16);
-			FirstDataSector = BPB_RsvdSecCnt + (BPB_NumFATs * BPB_FATSz16)
-					+ RootDirSectors;
-		} else {
-			FATSz = BPB_FATSz32;
-
-			BPB_FATSz32 = buf[36] + (buf[37] << 8) + (buf[38] << 16)
-					+ (buf[39] << 24);
-			BPB_ExtFlags = buf[40] + (buf[41] << 8);
-			BPB_FSVer = buf[42] + (buf[43] << 8);
-			BPB_RootClus = buf[44] + (buf[45] << 8) + (buf[46] << 16)
-					+ (buf[47] << 24);
-			BPB_FSInfo = buf[48] + (buf[49] << 8);
-			BPB_BkBootSec = buf[50] + (buf[51] << 8);
-			BS_DrvNum_32 = buf[64];
-			BS_BootSig_32 = buf[66];
-			BS_VOLID_32 = buf[67] + (buf[68] << 8) + (buf[69] << 16)
-					+ (buf[70] << 24);
-			BS_VOLLab_32[0] = buf[71];
-			BS_VOLLab_32[1] = buf[72];
-			BS_VOLLab_32[2] = buf[73];
-			BS_VOLLab_32[3] = buf[74];
-			BS_VOLLab_32[4] = buf[75];
-			BS_VOLLab_32[5] = buf[76];
-			BS_VOLLab_32[6] = buf[77];
-			BS_VOLLab_32[7] = buf[78];
-			BS_VOLLab_32[8] = buf[79];
-			BS_VOLLab_32[9] = buf[80];
-			BS_VOLLab_32[10] = buf[81];
-			BS_FilSysType_32[0] = buf[82];
-			BS_FilSysType_32[1] = buf[83];
-			BS_FilSysType_32[2] = buf[84];
-			BS_FilSysType_32[3] = buf[85];
-			BS_FilSysType_32[4] = buf[86];
-			BS_FilSysType_32[5] = buf[87];
-			BS_FilSysType_32[6] = buf[88];
-			BS_FilSysType_32[7] = buf[89];
-
-			//root directory LBA = FirstRootDirSecNum + MBR_BS_Location
-			FirstRootDirSecNum = BPB_RsvdSecCnt + (BPB_NumFATs * BPB_FATSz32);
-			FirstDataSector = BPB_RsvdSecCnt + (BPB_NumFATs * BPB_FATSz32)
-					+ RootDirSectors;
-		}
-		//The start of the data region, the first sector of cluster 2
-
-
-		if (BPB_TotSec16 != 0)
-			TotSec = BPB_TotSec16;
-		else
-			TotSec = BPB_TotSec32;
-		DataSec = TotSec - (BPB_RsvdSecCnt + (BPB_NumFATs * FATSz)
-				+ RootDirSectors);
-
-		CountofClusters = DataSec / BPB_SecPerClus;
-		/*
-		 if(CountofClusters < 4085)
-		 {
-		 // Volume is FAT12
-		 strcpy(FATType,"FAT12");
-		 printf("\nFile System: %s",FATType);
-		 }
-		 else if(CountofClusters < 65525)
-		 {
-		 // Volume is FAT16
-		 strcpy(FATType,"FAT16");
-		 printf("\nFile System: %s",FATType);
-		 }
-		 else
-		 {
-		 // Volume is FAT32
-		 strcpy(FATType,"FAT32");
-		 printf("\nFile System: %s",FATType);
-		 }
-		 */
-		return 0; //OK
-	} else {
-		return 1; //error
+	if (buf[510] != 0x55 || buf[511] != 0xAA) {
+		return -1;
 	}
+
+	BS_JmpBoot[0]  = buf[0];
+	BS_JmpBoot[1]  = buf[1];
+	BS_JmpBoot[2]  = buf[2];
+	BS_OEMName[0]  = buf[3];
+	BS_OEMName[1]  = buf[4];
+	BS_OEMName[2]  = buf[5];
+	BS_OEMName[3]  = buf[6];
+	BS_OEMName[4]  = buf[7];
+	BS_OEMName[5]  = buf[8];
+	BS_OEMName[6]  = buf[9];
+	BS_OEMName[7]  = buf[10];
+	BPB_BytsPerSec = read_uint16(&buf[11]);
+	BPB_SecPerClus = buf[13];
+	BPB_RsvdSecCnt = read_uint16(&buf[14]);
+	BPB_NumFATs    = buf[16];
+	BPB_RootEntCnt = read_uint16(&buf[17]);
+	BPB_TotSec16   = read_uint16(&buf[19]);
+	BPB_Media      = buf[21];
+	BPB_FATSz16    = read_uint16(&buf[22]);
+	BPB_SecPerTrk  = read_uint16(&buf[24]);
+	BPB_NumHeads   = read_uint16(&buf[26]);
+	BPB_HiddSec    = read_uint32(&buf[28]);
+	BPB_TotSec32   = read_uint32(&buf[32]);
+
+	//count of sectors occupied by the root directory
+	RootDirSectors = ((BPB_RootEntCnt * 32) + (BPB_BytsPerSec - 1)) / BPB_BytsPerSec;
+
+	if (BPB_FATSz16 != 0) {
+		FATSz = BPB_FATSz16;
+
+		BS_DrvNum_16        = buf[36];
+		BS_BootSig_16       = buf[38];
+		BS_VOLID_16         = read_uint32(&buf[39]);
+		BS_VOLLab_16[0]     = buf[43];
+		BS_VOLLab_16[1]     = buf[44];
+		BS_VOLLab_16[2]     = buf[45];
+		BS_VOLLab_16[3]     = buf[46];
+		BS_VOLLab_16[4]     = buf[47];
+		BS_VOLLab_16[5]     = buf[48];
+		BS_VOLLab_16[6]     = buf[49];
+		BS_VOLLab_16[7]     = buf[50];
+		BS_VOLLab_16[8]     = buf[51];
+		BS_VOLLab_16[9]     = buf[52];
+		BS_VOLLab_16[10]    = buf[53];
+		BS_FilSysType_16[0] = buf[54];
+		BS_FilSysType_16[1] = buf[55];
+		BS_FilSysType_16[2] = buf[56];
+		BS_FilSysType_16[3] = buf[57];
+		BS_FilSysType_16[4] = buf[58];
+		BS_FilSysType_16[5] = buf[59];
+		BS_FilSysType_16[6] = buf[60];
+		BS_FilSysType_16[6] = buf[61];
+
+		//root directory LBA = FirstRootDirSecNum + MBR_BS_Location
+		FirstRootDirSecNum = BPB_RsvdSecCnt + (BPB_NumFATs * BPB_FATSz16);
+		FirstDataSector = BPB_RsvdSecCnt + (BPB_NumFATs * BPB_FATSz16) + RootDirSectors;
+	} else {
+		FATSz = BPB_FATSz32;
+
+		BPB_FATSz32         = read_uint32(&buf[36]);
+		BPB_ExtFlags        = read_uint16(&buf[40]);
+		BPB_FSVer           = read_uint16(&buf[42]);
+		BPB_RootClus        = read_uint32(&buf[44]);
+		BPB_FSInfo          = read_uint16(&buf[48]);
+		BPB_BkBootSec       = read_uint16(&buf[50]);
+		BS_DrvNum_32        = buf[64];
+		BS_BootSig_32       = buf[66];
+		BS_VOLID_32         = read_uint32(&buf[67]);
+		BS_VOLLab_32[0]     = buf[71];
+		BS_VOLLab_32[1]     = buf[72];
+		BS_VOLLab_32[2]     = buf[73];
+		BS_VOLLab_32[3]     = buf[74];
+		BS_VOLLab_32[4]     = buf[75];
+		BS_VOLLab_32[5]     = buf[76];
+		BS_VOLLab_32[6]     = buf[77];
+		BS_VOLLab_32[7]     = buf[78];
+		BS_VOLLab_32[8]     = buf[79];
+		BS_VOLLab_32[9]     = buf[80];
+		BS_VOLLab_32[10]    = buf[81];
+		BS_FilSysType_32[0] = buf[82];
+		BS_FilSysType_32[1] = buf[83];
+		BS_FilSysType_32[2] = buf[84];
+		BS_FilSysType_32[3] = buf[85];
+		BS_FilSysType_32[4] = buf[86];
+		BS_FilSysType_32[5] = buf[87];
+		BS_FilSysType_32[6] = buf[88];
+		BS_FilSysType_32[7] = buf[89];
+
+		//root directory LBA = FirstRootDirSecNum + MBR_BS_Location
+		FirstRootDirSecNum = BPB_RsvdSecCnt + (BPB_NumFATs * BPB_FATSz32);
+		FirstDataSector = BPB_RsvdSecCnt + (BPB_NumFATs * BPB_FATSz32)
+				+ RootDirSectors;
+	}
+	//The start of the data region, the first sector of cluster 2
+
+
+	if (BPB_TotSec16 != 0) {
+		TotSec = BPB_TotSec16;
+	} else {
+		TotSec = BPB_TotSec32;
+	}
+	DataSec = TotSec - (BPB_RsvdSecCnt + (BPB_NumFATs * FATSz) + RootDirSectors);
+
+	CountofClusters = DataSec / BPB_SecPerClus;
+	if (CountofClusters < 4085) {
+		strcpy(FATType, "FAT12");
+	} else if (CountofClusters < 65525) {
+		strcpy(FATType, "FAT16");
+	} else {
+		strcpy(FATType, "FAT32");
+	}
+	// printf("\nFile System: %s",FATType);
+	return 0;
 }
 //-------------------------------------------------------------------------
 // Prints Boot Sector information
@@ -344,37 +331,21 @@ void CalcFATSecAndOffset(uint32_t N) {
 // Returns 1 if FATContent is the last cluster in the cluster chain
 // Returns 0 if there are more clusters
 uint8_t isEOF(uint32_t FATContent) {
-	uint8_t IsEOF = 0;
-
-	if (CountofClusters < 4085) {
-		//FAT12
-		if (FATContent >= 0x0FF8)
-			IsEOF = 1;
-	} else if (CountofClusters < 65525) {
-		//FAT16
-		if (FATContent >= 0xFFF8)
-			IsEOF = 1;
-	} else {
-		//FAT32
-		if (FATContent >= 0x0FFFFFF8)
-			IsEOF = 1;
-	}
-	return IsEOF;
+	if (CountofClusters < 4085) return FATContent >= 0x0FF8; // FAT12
+	else if (CountofClusters < 65525) return FATContent >= 0xFFF8; // FAT16
+	else return FATContent >= 0x0FFFFFF8; // FAT32
 }
 //-------------------------------------------------------------------------
 // Buffers the cluster chain of a file so that it can be streamed
 void build_cluster_chain(int cc[], uint32_t length, data_file *df) {
-	int i = 1;
 	cc[0] = df->FirstCluster;
 	CalcFATSecAndOffset(df->FirstCluster);
 
-	while (i < length) {
+	for (int i = 1; i < length; i++) {
 		cc[i] = FATClusEntryVal;
-
 		if (!isEOF(FATClusEntryVal)) {
 			CalcFATSecAndOffset(FATClusEntryVal);
 		}
-		i++;
 	}
 }
 //-------------------------------------------------------------------------
@@ -394,8 +365,7 @@ uint32_t search_for_filetype(uint8_t *extension, data_file *df, int sub_director
 	char filename[12];
 	char fileext[4];
 	char longname[255] = { 0 };
-	int i, root_sector_count = 0, longname_blocks, ATTR_LONG_NAME,
-			ATTR_LONG_NAME_MASK;
+	int root_sector_count = 0, ATTR_LONG_NAME, ATTR_LONG_NAME_MASK;
 
 	if (search_root) {
 		//Search the root directory
@@ -422,7 +392,7 @@ uint32_t search_for_filetype(uint8_t *extension, data_file *df, int sub_director
 				&& (buf[entry_num * 32] != 0xE5)) //long filename
 		{
 			//longname_blocks is the amount of entrys that contain the long filename
-			longname_blocks = (buf[entry_num * 32] & 0xBF);
+			int longname_blocks = (buf[entry_num * 32] & 0xBF);
 			if (longname_blocks < 20) {
 				longname[(longname_blocks - 1) * 13 + 13] = '\0';
 			}
@@ -480,7 +450,7 @@ uint32_t search_for_filetype(uint8_t *extension, data_file *df, int sub_director
 			}
 		} else {
 			//Indicates a file
-			for (i = 0; i < 11; i++) {
+			for (int i = 0; i < 11; i++) {
 				filename[i] = buf[entry_num * 32 + i];
 			}
 			filename[11] = '\0';
@@ -555,16 +525,16 @@ int get_rel_sector(data_file *df, uint8_t *buffer, int cc[], int sector) {
 
 	if ((sector >= Total_Sectors) || (sector < 0)) {
 		return -1; //sector is out of range
-	} else {
-		//get sector
-		Return_Sector = (sector % BPB_SecPerClus) + FirstSectorofCluster(
-				cc[(int) (floor(sector / BPB_SecPerClus))]);
-		SD_read_lba(buffer, Return_Sector, 1);
+	}
 
-		if (sector == (Total_Sectors - 1)) {
-			return (df->FileSize - ((sector + 1) * BPB_BytsPerSec));
-		} else {
-			return 0; //valid sector
-		}
+	//get sector
+	Return_Sector = (sector % BPB_SecPerClus) + FirstSectorofCluster(
+			cc[(int) (floor(sector / BPB_SecPerClus))]);
+	SD_read_lba(buffer, Return_Sector, 1);
+
+	if (sector == (Total_Sectors - 1)) {
+		return (df->FileSize - ((sector + 1) * BPB_BytsPerSec));
+	} else {
+		return 0; //valid sector
 	}
 }
