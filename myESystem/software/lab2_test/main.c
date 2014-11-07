@@ -3,7 +3,6 @@
 #include "sys/alt_irq.h"
 #include "altera_avalon_pio_regs.h"
 #include "altera_avalon_timer_regs.h"
-#include "SD_Card.h"
 #include "fat.h"
 #include "stdio.h"
 

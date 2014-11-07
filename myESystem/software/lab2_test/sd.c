@@ -1,7 +1,6 @@
-#ifndef   __SD_Card_H__
-#define   __SD_Card_H__
+#include "sd.h"
 
-#include <inttypes.h>
+// TODO: INCLUDE PIN DEFINITIONS HERE!!
 
 //-------------------------------------------------------------------------
 //  SD Card Set I/O Direction
@@ -19,17 +18,12 @@
 //  SD Card Input Read
 #define SD_TEST_CMD IORD(SD_CMD_BASE, 0)
 #define SD_TEST_DAT IORD(SD_DAT_BASE, 0)
-//  Master Boot Record
-#define MASTER_BOOT_RECORD_ID1  0x55
-#define MASTER_BOOT_RECORD_ID2  0xAA
 
 //-------------------------------------------------------------------------
 void Ncr(void);
 void Ncc(void);
 uint8_t response_R(uint8_t);
 uint8_t send_cmd(uint8_t *);
-uint8_t SD_read_lba(uint8_t *, uint32_t, uint32_t);
-uint8_t SD_card_init(void);
 
 //-------------------------------------------------------------------------
 uint8_t read_status;
@@ -72,7 +66,7 @@ const uint8_t acmd6[5] = { 0x46, 0x00, 0x00, 0x00, 0x02 };
 const uint8_t acmd41[5] = { 0x69, 0x0f, 0xf0, 0x00, 0x00 };
 /*ACMD51 Reads the SD Configuration Register (SCR).*/
 const uint8_t acmd51[5] = { 0x73, 0x00, 0x00, 0x00, 0x00 };
-//-------------------------------------------------------------------------
+
 void Ncr(void) {
 	SD_CMD_IN;
 	SD_CLK_LOW;
@@ -80,7 +74,7 @@ void Ncr(void) {
 	SD_CLK_LOW;
 	SD_CLK_HIGH;
 }
-//-------------------------------------------------------------------------
+
 void Ncc(void) {
 	int i;
 	for (i = 0; i < 8; i++) {
@@ -88,7 +82,7 @@ void Ncc(void) {
 		SD_CLK_HIGH;
 	}
 }
-//-------------------------------------------------------------------------
+
 uint8_t SD_card_init(void) {
 	uint8_t x, y;
 	SD_CMD_OUT;
@@ -162,7 +156,7 @@ uint8_t SD_card_init(void) {
 	read_status = 1; //sd card ready
 	return 0;
 }
-//-------------------------------------------------------------------------
+
 uint8_t SD_read_lba(uint8_t *buff, uint32_t lba, uint32_t seccnt) {
 	uint8_t c = 0;
 	uint32_t i, j;
@@ -205,7 +199,7 @@ uint8_t SD_read_lba(uint8_t *buff, uint32_t lba, uint32_t seccnt) {
 	read_status = 1; //SD data next in
 	return 0;
 }
-//-------------------------------------------------------------------------
+
 uint8_t response_R(uint8_t s) {
 	uint8_t a = 0, b = 0, c = 0, r = 0, crc = 0;
 	uint8_t i, j = 6, k;
@@ -255,7 +249,7 @@ uint8_t response_R(uint8_t s) {
 	}
 	return r;
 }
-//-------------------------------------------------------------------------
+
 uint8_t send_cmd(uint8_t *in) {
 	int i, j;
 	uint8_t b, crc = 0;
@@ -289,5 +283,3 @@ uint8_t send_cmd(uint8_t *in) {
 	}
 	return b;
 }
-
-#endif
