@@ -330,6 +330,9 @@ uint8_t isEOF(uint32_t FATContent) {
 // Buffers the cluster chain of a file so that it can be streamed
 void build_cluster_chain(int cc[], uint32_t length, data_file *df) {
 	cc[0] = df->FirstCluster;
+
+	// TODO: this uses global variables in a frankly disgusting way
+	//       it should be refactored as soon as possible
 	CalcFATSecAndOffset(df->FirstCluster);
 
 	for (int i = 1; i < length; i++) {
@@ -506,27 +509,16 @@ uint32_t search_for_filetype(char *extension, data_file *df, int sub_directory,
 	return 0;
 }
 
-int get_rel_sector(data_file *df, uint8_t *buffer, int cc[], int sector) {
-	//relative sector address start from sector 0 not 1!!!
-	//return 0 valid sector
-	//return -1 sector is out of range
-	//return <bytes in last sector> valid/last sector
+static inline uint32_t ceil_div(uint32_t a, uint32_t b) {
+	// doesn't handle overflow
+	return (a + b - 1) / b;
+}
 
-	int Total_Sectors = ceil(df->FileSize / BPB_BytsPerSec);
-	int Return_Sector;
 
-	if ((sector >= Total_Sectors) || (sector < 0)) {
-		return -1; //sector is out of range
-	}
+inline uint32_t get_file_cluster_count(data_file *df) {
+	return ceil_div(df->FileSize, BPB_BytsPerSec * BPB_SecPerClus);
+}
 
-	//get sector
-	Return_Sector = (sector % BPB_SecPerClus) + FirstSectorofCluster(
-			cc[(int) (floor(sector / BPB_SecPerClus))]);
-	SD_read_lba(buffer, Return_Sector, 1);
-
-	if (sector == (Total_Sectors - 1)) {
-		return (df->FileSize - ((sector + 1) * BPB_BytsPerSec));
-	} else {
-		return 0; //valid sector
-	}
+inline uint32_t get_file_sector_count(data_file *df) {
+	return ceil_div(df->FileSize, BPB_SecPerClus);
 }

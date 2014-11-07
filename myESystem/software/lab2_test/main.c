@@ -25,6 +25,25 @@ void display(mode_t mode, int value) {
     }
 }
 
+void play_audio(struct file_stream *fs) {
+	uint8_t buf[BPB_BytsPerSec];
+	int bytes_read;
+	int i = 12 + 24 + 8; // initially skip header
+
+	while ((bytes_read = fs_read(fs, buf)) != -1) {
+		for ( ; i < bytes_read; i += 2) {
+			uint16_t part = (buf[i + 1] << 8) | buf[i];
+			while(IORD(AUD_FULL_BASE, 0)); //wait until the FIFO is not full
+			// sector buffer array into the single 16-bit variable tmp
+			IOWR(AUDIO_0_BASE, 0, part);
+		}
+		if (bytes_read < BPB_BytsPerSec) {
+			break;
+		}
+		i = 0;
+	}
+}
+
 int main(void) {
 	if (SD_card_init() != 0) {
 		printf("Error initializing SD card\n");
@@ -38,21 +57,20 @@ int main(void) {
 	}
 	// info_bs();
 	data_file df;
-	search_for_filetype("WAV", &df, 0, 1);
-
-	printf("Found file with name: %s\n", df.Name);
+	for (int i = 0; i < 9; i++) {
+		search_for_filetype("WAV", &df, 0, 1);
+		printf("Found file with name: %s\n", df.Name);
+	}
 
 	//I2C_Init(PRESCALE);
 	init_audio_codec();
 
 	printf("Done all configuration\n");
 
-	uint16_t tmp = 0;
-	while (1) {
-		IOWR(AUDIO_0_BASE, 0, tmp);
+	struct file_stream fs;
+	fs_init(&fs, &df);
 
-		tmp = rand() % 0xffff;
-	}
+	play_audio(&fs);
 
 	return 0;
 }
