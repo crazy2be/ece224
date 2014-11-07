@@ -404,7 +404,6 @@ void build_cluster_chain(int cc[], UINT32 length, data_file *df) {
 // search_for_filetye("extension",0,1);
 UINT32 search_for_filetype(BYTE *extension, data_file *df, int sub_directory,
 		int search_root) {
-	printf("Search for filename start\n");
 	UINT16 directory;
 	BYTE Buffer[512] = { 0 };
 	BYTE attribute_offset = 11; //first attribute offset
@@ -422,9 +421,7 @@ UINT32 search_for_filetype(BYTE *extension, data_file *df, int sub_directory,
 	if (search_root) {
 		//Search the root directory
 		directory = (MBR_BS_Location + FirstRootDirSecNum);
-		printf("About to SO_read_lba\n");
 		SD_read_lba(Buffer, directory, 1);
-		printf("Done SD_read_lba\n");
 	} else {
 		//Search the sub directory
 		SD_read_lba(Buffer, sub_directory, 1);
@@ -436,7 +433,6 @@ UINT32 search_for_filetype(BYTE *extension, data_file *df, int sub_directory,
 
 	//Browse while there are still entries to browse
 	while ((Buffer[entry_num * 32] != 0x00)) {
-		printf("while 1 start\n");
 		ATTR_LONG_NAME_MASK = Buffer[entry_num * 32 + attribute_offset] & 0x3F;
 		ATTR_LONG_NAME = Buffer[entry_num * 32 + attribute_offset] & 0x0F;
 
@@ -454,7 +450,6 @@ UINT32 search_for_filetype(BYTE *extension, data_file *df, int sub_directory,
 
 			//read the file name from the buffer and store it into longname[]
 			while (longname_blocks > 0) {
-				printf("while 2 begin\n");
 				longname[(longname_blocks - 1) * 13 + 0] = Buffer[entry_num
 						* 32 + 1];
 				longname[(longname_blocks - 1) * 13 + 1] = Buffer[entry_num
@@ -491,7 +486,6 @@ UINT32 search_for_filetype(BYTE *extension, data_file *df, int sub_directory,
 					SD_read_lba(Buffer, directory + root_sector_count, 1);
 					entry_num = 0;
 				}
-				printf("while 2 end\n");
 			}
 		}
 
@@ -531,6 +525,8 @@ UINT32 search_for_filetype(BYTE *extension, data_file *df, int sub_directory,
 			fileext[2] = Buffer[entry_num * 32 + 10];
 			fileext[3] = '\0';
 
+			//printf("found file: %s.%s\n", filename, fileext);
+
 			//compare the current file's file extension to the extension to search for
 			if (!strcmp(extension, fileext)) {
 				if (file_count == file_number) {
@@ -562,7 +558,6 @@ UINT32 search_for_filetype(BYTE *extension, data_file *df, int sub_directory,
 			SD_read_lba(Buffer, directory + root_sector_count, 1);
 			entry_num = 0;
 		}
-		printf("End while 1\n");
 	}
 
 	//The Buffer[entry_num*32] is 0x00

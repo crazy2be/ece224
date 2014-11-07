@@ -1,5 +1,8 @@
 #ifndef   __SD_Card_H__
 #define   __SD_Card_H__
+
+#include <inttypes.h>
+
 //-------------------------------------------------------------------------
 //  SD Card Set I/O Direction
 #define SD_CMD_IN   IOWR(SD_CMD_BASE, 1, 0)
@@ -21,58 +24,54 @@
 #define MASTER_BOOT_RECORD_ID2  0xAA
 
 //-------------------------------------------------------------------------
-#define BYTE    unsigned char
-#define UINT16  unsigned int
-#define UINT32  unsigned long
-//-------------------------------------------------------------------------
 void Ncr(void);
 void Ncc(void);
-BYTE response_R(BYTE);
-BYTE send_cmd(BYTE *);
-BYTE SD_read_lba(BYTE *, UINT32, UINT32);
-BYTE SD_card_init(void);
+uint8_t response_R(uint8_t);
+uint8_t send_cmd(uint8_t *);
+uint8_t SD_read_lba(uint8_t *, uint32_t, uint32_t);
+uint8_t SD_card_init(void);
 
 //-------------------------------------------------------------------------
-BYTE read_status;
+uint8_t read_status;
 //response_buffer, stores system registers after response_R(param) is used
-BYTE response_buffer[20];
-BYTE RCA[2];
-BYTE cmd_buffer[5];
+uint8_t response_buffer[20];
+uint8_t RCA[2];
+uint8_t cmd_buffer[5];
 
 //-------------------------------------------------------------------------
 //SD Card Commands
 
 /*CMD0 *Resets all cards to Idle State.*/
-const BYTE cmd0[5] = { 0x40, 0x00, 0x00, 0x00, 0x00 };
+const uint8_t cmd0[5] = { 0x40, 0x00, 0x00, 0x00, 0x00 };
 /*CMD55 Indicates to the card that the next command is an
  application specific command rather than a
  standard command*/
-const BYTE cmd55[5] = { 0x77, 0x00, 0x00, 0x00, 0x00 };
+const uint8_t cmd55[5] = { 0x77, 0x00, 0x00, 0x00, 0x00 };
 /*CMD2 Asks any card to send their CID numbers on the CMD line. (Any card*/
 /* that is connected to the host will respond.)*/
-const BYTE cmd2[5] = { 0x42, 0x00, 0x00, 0x00, 0x00 };
+const uint8_t cmd2[5] = { 0x42, 0x00, 0x00, 0x00, 0x00 };
 /*CMD3 Asks the card to publish a new relative address (RCA).*/
-const BYTE cmd3[5] = { 0x43, 0x00, 0x00, 0x00, 0x00 };
+const uint8_t cmd3[5] = { 0x43, 0x00, 0x00, 0x00, 0x00 };
 /*CMD7 Command toggles a card between the Stand-by and Transfer states*/
 /*or between the Programming and Disconnect state.*/
-const BYTE cmd7[5] = { 0x47, 0x00, 0x00, 0x00, 0x00 };
+const uint8_t cmd7[5] = { 0x47, 0x00, 0x00, 0x00, 0x00 };
 /*CMD9 Addressed card sends its card-specific data (CSD) on the CMD line.*/
-const BYTE cmd9[5] = { 0x49, 0x00, 0x00, 0x00, 0x00 };
+const uint8_t cmd9[5] = { 0x49, 0x00, 0x00, 0x00, 0x00 };
 /*CMD16 Selects a block length (in bytes) for all following
  block commands (read and write).*/
-const BYTE cmd16[5] = { 0x50, 0x00, 0x00, 0x02, 0x00 };
+const uint8_t cmd16[5] = { 0x50, 0x00, 0x00, 0x02, 0x00 };
 /*CMD17 Reads a block of the size selected by the
  SET_BLOCKLEN command.*/
-const BYTE cmd17[5] = { 0x51, 0x00, 0x00, 0x00, 0x00 };
+const uint8_t cmd17[5] = { 0x51, 0x00, 0x00, 0x00, 0x00 };
 /*ACMD6 Defines the data bus width (’00’=1bit or ’10’=4 bits bus)
  to be used for data transfer.*/
-const BYTE acmd6[5] = { 0x46, 0x00, 0x00, 0x00, 0x02 };
+const uint8_t acmd6[5] = { 0x46, 0x00, 0x00, 0x00, 0x02 };
 /*ACMD41 Asks the accessed card to send its operating condition
  register (OCR) con tent in the response on the CMD
  line.*/
-const BYTE acmd41[5] = { 0x69, 0x0f, 0xf0, 0x00, 0x00 };
+const uint8_t acmd41[5] = { 0x69, 0x0f, 0xf0, 0x00, 0x00 };
 /*ACMD51 Reads the SD Configuration Register (SCR).*/
-const BYTE acmd51[5] = { 0x73, 0x00, 0x00, 0x00, 0x00 };
+const uint8_t acmd51[5] = { 0x73, 0x00, 0x00, 0x00, 0x00 };
 //-------------------------------------------------------------------------
 void Ncr(void) {
 	SD_CMD_IN;
@@ -90,8 +89,8 @@ void Ncc(void) {
 	}
 }
 //-------------------------------------------------------------------------
-BYTE SD_card_init(void) {
-	BYTE x, y;
+uint8_t SD_card_init(void) {
+	uint8_t x, y;
 	SD_CMD_OUT;
 	SD_DAT_IN;
 	SD_CLK_HIGH;
@@ -164,12 +163,11 @@ BYTE SD_card_init(void) {
 	return 0;
 }
 //-------------------------------------------------------------------------
-BYTE SD_read_lba(BYTE *buff, UINT32 lba, UINT32 seccnt) {
-	printf("SD_read_lba %p, %d, %d\n", buff, lba, seccnt);
-	BYTE c = 0;
-	UINT32 i, j;
+uint8_t SD_read_lba(uint8_t *buff, uint32_t lba, uint32_t seccnt) {
+	uint8_t c = 0;
+	uint32_t i, j;
 	for (j = 0; j < seccnt; j++) {
-		printf("SD_read_lba loop 1: %d\n", j);
+		//printf("SD_read_lba loop 1: %d\n", j);
 		{
 			Ncc();
 			cmd_buffer[0] = cmd17[0];
@@ -182,17 +180,14 @@ BYTE SD_read_lba(BYTE *buff, UINT32 lba, UINT32 seccnt) {
 			Ncr();
 		}
 		while (1) {
-			printf("SD_read_lba loop 2\n");
 			SD_CLK_LOW;
 			SD_CLK_HIGH;
 			if (!(SD_TEST_DAT))
 				break;
 		}
 		for (i = 0; i < 512; i++) {
-			printf("SD_read_lba loop 3\n");
-			BYTE j;
+			uint8_t j;
 			for (j = 0; j < 8; j++) {
-				printf("SD_read_lba loop 4\n");
 				SD_CLK_LOW;
 				SD_CLK_HIGH;
 				c <<= 1;
@@ -203,7 +198,6 @@ BYTE SD_read_lba(BYTE *buff, UINT32 lba, UINT32 seccnt) {
 			buff++;
 		}
 		for (i = 0; i < 16; i++) {
-			printf("SD_read_lba loop 5\n");
 			SD_CLK_LOW;
 			SD_CLK_HIGH;
 		}
@@ -212,9 +206,9 @@ BYTE SD_read_lba(BYTE *buff, UINT32 lba, UINT32 seccnt) {
 	return 0;
 }
 //-------------------------------------------------------------------------
-BYTE response_R(BYTE s) {
-	BYTE a = 0, b = 0, c = 0, r = 0, crc = 0;
-	BYTE i, j = 6, k;
+uint8_t response_R(uint8_t s) {
+	uint8_t a = 0, b = 0, c = 0, r = 0, crc = 0;
+	uint8_t i, j = 6, k;
 	while (1) {
 		SD_CLK_LOW;
 		SD_CLK_HIGH;
@@ -262,9 +256,9 @@ BYTE response_R(BYTE s) {
 	return r;
 }
 //-------------------------------------------------------------------------
-BYTE send_cmd(BYTE *in) {
+uint8_t send_cmd(uint8_t *in) {
 	int i, j;
-	BYTE b, crc = 0;
+	uint8_t b, crc = 0;
 	SD_CMD_OUT;
 	for (i = 0; i < 5; i++) {
 		b = in[i];
