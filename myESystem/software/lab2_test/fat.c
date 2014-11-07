@@ -514,7 +514,7 @@ uint32_t search_for_filetype(char *extension, data_file *df, int sub_directory,
 }
 
 static inline uint32_t ceil_div(uint32_t a, uint32_t b) {
-	// doesn't handle overflow
+	// doesn't handle overflow, positive numbers only please.
 	return (a + b - 1) / b;
 }
 
