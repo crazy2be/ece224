@@ -25,10 +25,39 @@ void display(mode_t mode, int value) {
     }
 }
 
+void write_to_7seg(uint32_t x) {
+	const uint8_t pat[] = {
+			0x01, // 0
+			0x4f, // 1
+			0x12, // 2
+			0x06, // 3
+			0x4c, // 4
+			0x24, // 5
+			0x20, // 6
+			0x0f, // 7
+			0x00, // 8
+			0x04, // 9
+			0x08, // A
+			0x60, // b
+			0x31, // C
+			0x42, // d
+			0x30, // E
+			0x38  // F
+	};
+	uint32_t p = 0;
+	for (int i = 3; i >= 0; i--) {
+		p = (p << 8) | pat[(x >> (4 * i)) & 0xf];
+	}
+	IOWR(SEVEN_SEG_RIGHT_PIO_BASE, 0, p);
+}
+
 void play_audio(struct file_stream *fs) {
 	uint8_t buf[BPB_BytsPerSec];
 	int bytes_read;
 	int i = 12 + 24 + 8; // initially skip header
+
+	int count = 0, count2 = 0;
+	IOWR(RED_LED_PIO_BASE, 0, 5);
 
 	while ((bytes_read = fs_read(fs, buf)) != -1) {
 		for ( ; i < bytes_read; i += 2) {
@@ -41,7 +70,13 @@ void play_audio(struct file_stream *fs) {
 			break;
 		}
 		i = 0;
+		write_to_7seg(count);
+
+		//IOWR(RED_LED_PIO_BASE, 0, count);
+		count++;
+
 	}
+	IOWR(LED_PIO_BASE, 0, 5);
 }
 
 int main(void) {
