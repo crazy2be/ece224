@@ -315,7 +315,7 @@ void build_cluster_chain(int cc[], uint32_t length, data_file *df) {
 	for (int i = 1; i < length; i++) {
 		cc[i] = next_cluster(cc[i - 1]);
 	}
-	assert(isEOF(cc[length - 1]));
+	// assert(isEOF(cc[length - 1]));
 }
 
 // Calculates the First Sector of Cluster number 'N'
@@ -490,5 +490,5 @@ inline uint32_t get_file_cluster_count(data_file *df) {
 }
 
 inline uint32_t get_file_sector_count(data_file *df) {
-	return ceil_div(df->FileSize, BPB_SecPerClus);
+	return ceil_div(df->FileSize, BPB_BytsPerSec);
 }
