@@ -1,21 +1,16 @@
-#include "alt_types.h"
-#include <stdio.h>
-#include "sys/alt_irq.h"
 #include "altera_avalon_pio_regs.h"
-#include "altera_avalon_timer_regs.h"
 #include "fat.h"
-#include "stdio.h"
-
-#include "Open_I2C.h"
-#include <system.h>
-
-#include "wm8731.h"
-
 #include "file_stream.h"
+#include "Open_I2C.h"
+#include "sd.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <system.h>
+#include "wm8731.h"
 
 enum mode_t { LED, SEVEN_SEG, OFF };
 const unsigned int seven_seg_digits[] = { 0xffffff81, 0xffffffcf, 0xffffffff };
-const UINT16 PRESCALE = 0x000a;
+const uint16_t PRESCALE = 0x000a;
 
 void display(mode_t mode, int value) {
     switch (mode) {
@@ -52,7 +47,7 @@ int main(void) {
 
 	printf("Done all configuration\n");
 
-	UINT16 tmp = 0;
+	uint16_t tmp = 0;
 	while (1) {
 		IOWR(AUDIO_0_BASE, 0, tmp);
 

@@ -1,5 +1,10 @@
 #include "fat.h"
 
+#include <math.h>
+#include "sd.h"
+#include <stdio.h>
+#include <string.h>
+
 //-------------------------------------------------------------------------
 uint16_t file_count = 0;
 uint16_t file_number = 0;
@@ -244,8 +249,8 @@ void info_bs() {
 	printf("\nBPB_FATSz16: %d", BPB_FATSz16);
 	printf("\nBPB_SecPerTrk: %d", BPB_SecPerTrk);
 	printf("\nBPB_NumHeads: %d", BPB_NumHeads);
-	printf("\nBPB_HiddSec: %d", BPB_HiddSec);
-	printf("\nBPB_TotSec32: %d", BPB_TotSec32);
+	printf("\nBPB_HiddSec: %ud", BPB_HiddSec);
+	printf("\nBPB_TotSec32: %ud", BPB_TotSec32);
 
 	//Calculated based on Boot Sector Values
 	printf("\nRootDirSectors: 0x%04X (%d)10", RootDirSectors, RootDirSectors);
@@ -352,7 +357,7 @@ void build_cluster_chain(int cc[], uint32_t length, data_file *df) {
 // Searches for a particular file extension specified by "extension"
 // To browse from the start of the file system use
 // search_for_filetye("extension",0,1);
-uint32_t search_for_filetype(uint8_t *extension, data_file *df, int sub_directory,
+uint32_t search_for_filetype(char *extension, data_file *df, int sub_directory,
 		int search_root) {
 	uint16_t directory;
 	uint8_t buf[512] = { 0 };
@@ -512,6 +517,7 @@ uint32_t search_for_filetype(uint8_t *extension, data_file *df, int sub_director
 		//The subdirectory doesn't contain any more entries
 		return 1;//entry not found
 	}
+	return 0;
 }
 //-------------------------------------------------------------------------
 int get_rel_sector(data_file *df, uint8_t *buffer, int cc[], int sector) {

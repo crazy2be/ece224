@@ -1,5 +1,9 @@
 #include "sd.h"
 
+#include "altera_avalon_pio_regs.h"
+#include <stdlib.h>
+#include "sys/alt_irq.h"
+
 // TODO: INCLUDE PIN DEFINITIONS HERE!!
 
 //-------------------------------------------------------------------------
