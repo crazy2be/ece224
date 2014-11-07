@@ -64,7 +64,6 @@ uint32_t DataSec;
 uint32_t CountofClusters;
 uint32_t FirstRootDirSecNum;
 char FATType[6];
-uint32_t FATOffset;
 uint32_t ThisFATSecNum;
 uint32_t ThisFATEntOffset;
 uint16_t FAT12ClusEntryVal;
@@ -77,6 +76,22 @@ static uint16_t read_uint16(uint8_t *buf) {
 }
 static uint32_t read_uint32(uint8_t *buf) {
 	return buf[0] + (buf[1] << 8) + (buf[2] << 16) + (buf[3] << 24);
+}
+typedef enum {
+	TypeINVALID = 0,
+	TypeFAT12 = 1,
+	TypeFAT16 = 2,
+	TypeFAT32 = 3,
+} FilesystemType;
+static const char *filesystem_type_to_string(FilesystemType type) {
+	static const char strs[][6] = {"???", "FAT12", "FAT16", "FAT32"};
+	if (type > TypeFAT32) type = TypeINVALID;
+	return strs[(int)type];
+}
+static FilesystemType filesystem_type(uint32_t CountofClusters) {
+	if (CountofClusters < 4085) return TypeFAT12;
+	else if (CountofClusters < 65525) return TypeFAT16;
+	else return TypeFAT32;
 }
 
 // Initialize the Master Boot Record
@@ -106,7 +121,6 @@ uint8_t init_mbr(void) {
 	MBR_Partition_Len = read_uint32(&buf[458]);
 	return 0;
 }
-//-------------------------------------------------------------------------
 // Initialize the Boot Sector
 uint8_t init_bs(void) {
 	uint8_t buf[512] = { 0 };
@@ -221,17 +235,9 @@ uint8_t init_bs(void) {
 	DataSec = TotSec - (BPB_RsvdSecCnt + (BPB_NumFATs * FATSz) + RootDirSectors);
 
 	CountofClusters = DataSec / BPB_SecPerClus;
-	if (CountofClusters < 4085) {
-		strcpy(FATType, "FAT12");
-	} else if (CountofClusters < 65525) {
-		strcpy(FATType, "FAT16");
-	} else {
-		strcpy(FATType, "FAT32");
-	}
-	// printf("\nFile System: %s",FATType);
+	// printf("\nFile System: %s", FATType);
 	return 0;
 }
-//-------------------------------------------------------------------------
 // Prints Boot Sector information
 void info_bs() {
 	//Stored in Boot Sector
@@ -262,30 +268,19 @@ void info_bs() {
 	printf("\nFirstRootDirSecNum: 0x%04X (%d)10", FirstRootDirSecNum,
 			FirstRootDirSecNum);
 }
-//-------------------------------------------------------------------------
 // Calculates the First Sector of Cluster number 'N'
 uint32_t FirstSectorofCluster(uint32_t N) {
 	return (((N - 2) * BPB_SecPerClus) + FirstDataSector + MBR_BS_Location);
 }
-
-//-------------------------------------------------------------------------
 // Calculates the Next Cluster after cluster 'N'
 // Finds the cluster 'N' in the File Allocation Table
 // Cluster 'N's data contains the Next Cluster number 
 void CalcFATSecAndOffset(uint32_t N) {
-	uint8_t buf[512] = { 0 };
-	//Calculate The absolute FATOffset based on which File System is in use
-	//Difference between FAT12, FAT16, FAT32 is based only on CountofClusters
-	if (CountofClusters < 4085) {
-		//FAT12
-		// Multiply by 1.5 without using floating point, the divide by 2 rounds DOWN
-		FATOffset = N + (N / 2);
-	} else if (CountofClusters < 65525) {
-		//FAT16
-		FATOffset = N * 2;
-	} else {
-		//FAT32
-		FATOffset = N * 4;
+	uint32_t FATOffset = -1;
+	switch (filesystem_type(CountofClusters)) {
+	case TypeFAT12: FATOffset = N + N/2; break; // Multiply by 1.5
+	case TypeFAT16: FATOffset = N*2; break;
+	case TypeFAT32: FATOffset = N*4; break;
 	}
 
 	//FAT Sector
@@ -293,12 +288,12 @@ void CalcFATSecAndOffset(uint32_t N) {
 	//FAT Offset
 	ThisFATEntOffset = FATOffset % BPB_BytsPerSec;
 
-	//Store the FAT Sector into buf[512]
+	uint8_t buf[512] = { 0 };
 	SD_read_lba(buf, MBR_BS_Location + ThisFATSecNum, 1);
 
 	//FATClusEntryVal is the next cluster for cluster 'N'
-	if (CountofClusters < 4085) {
-		//FAT12
+	switch (filesystem_type(CountofClusters)) {
+	case TypeFAT12:
 		if (ThisFATEntOffset != 511) {
 			if (N & 0x0001) {
 				// Cluster number is ODD
@@ -306,8 +301,7 @@ void CalcFATSecAndOffset(uint32_t N) {
 						| (buf[ThisFATEntOffset + 1] << 8)) >> 4);
 			} else {
 				// Cluster number is EVEN
-				FAT12ClusEntryVal = ((buf[ThisFATEntOffset]
-						| (buf[ThisFATEntOffset + 1] << 8)) & 0x0FFF);
+				FAT12ClusEntryVal = read_uint16(&buf[ThisFATEntOffset]) & 0x0FFF;
 			}
 		} else {
 			FAT12ClusEntryVal = (buf[511] & 0xFF);
@@ -315,32 +309,24 @@ void CalcFATSecAndOffset(uint32_t N) {
 			FAT12ClusEntryVal = (FAT12ClusEntryVal | ((buf[0] & 0x0F) << 8));
 		}
 		FATClusEntryVal = FAT12ClusEntryVal;
-	} else if (CountofClusters < 65525) {
-		//FAT16
-		FAT16ClusEntryVal = (buf[ThisFATEntOffset]
-				| (buf[ThisFATEntOffset + 1] << 8));
+	case TypeFAT16:
+		FAT16ClusEntryVal = read_uint16(&buf[ThisFATEntOffset]);
 		FATClusEntryVal = FAT16ClusEntryVal;
-	} else {
-		//FAT32
-		FAT32ClusEntryVal = (buf[ThisFATEntOffset]
-				| (buf[ThisFATEntOffset + 1] << 8)
-				| (buf[ThisFATEntOffset + 2] << 16)
-				| (buf[ThisFATEntOffset + 3] << 24)) & 0x0FFFFFFF;
+	case TypeFAT32:
+		FAT32ClusEntryVal = read_uint32(&buf[ThisFATEntOffset]) & 0x0FFFFFFF;
 		FATClusEntryVal = FAT32ClusEntryVal;
 	}
-
 }
-
-//-------------------------------------------------------------------------
 // Determines if the Cluster is the last cluster in the file's cluster chain
 // Returns 1 if FATContent is the last cluster in the cluster chain
 // Returns 0 if there are more clusters
 uint8_t isEOF(uint32_t FATContent) {
-	if (CountofClusters < 4085) return FATContent >= 0x0FF8; // FAT12
-	else if (CountofClusters < 65525) return FATContent >= 0xFFF8; // FAT16
-	else return FATContent >= 0x0FFFFFF8; // FAT32
+	switch (filesystem_type(CountofClusters)) {
+	case TypeFAT12: return FATContent >= 0x0FF8;
+	case TypeFAT16: return FATContent >= 0xFFF8;
+	case TypeFAT32: return FATContent >= 0x0FFFFFF8;
+	}
 }
-//-------------------------------------------------------------------------
 // Buffers the cluster chain of a file so that it can be streamed
 void build_cluster_chain(int cc[], uint32_t length, data_file *df) {
 	cc[0] = df->FirstCluster;
@@ -353,12 +339,11 @@ void build_cluster_chain(int cc[], uint32_t length, data_file *df) {
 		}
 	}
 }
-//-------------------------------------------------------------------------
 // Searches for a particular file extension specified by "extension"
 // To browse from the start of the file system use
 // search_for_filetye("extension",0,1);
 uint32_t search_for_filetype(char *extension, data_file *df, int sub_directory,
-		int search_root) {
+		bool search_root) {
 	uint16_t directory;
 	uint8_t buf[512] = { 0 };
 	uint8_t attribute_offset = 11; //first attribute offset
@@ -386,20 +371,20 @@ uint32_t search_for_filetype(char *extension, data_file *df, int sub_directory,
 	}
 
 	//Browse while there are still entries to browse
-	while ((buf[entry_num * 32] != 0x00)) {
-		ATTR_LONG_NAME_MASK = buf[entry_num * 32 + attribute_offset] & 0x3F;
-		ATTR_LONG_NAME = buf[entry_num * 32 + attribute_offset] & 0x0F;
+	while ((buf[entry_num*32] != 0x00)) {
+		ATTR_LONG_NAME_MASK = buf[entry_num*32 + attribute_offset] & 0x3F;
+		ATTR_LONG_NAME = buf[entry_num*32 + attribute_offset] & 0x0F;
 
 		//Determine if the entry contains a long file name
-		if (((buf[entry_num * 32 + attribute_offset] & ATTR_LONG_NAME_MASK)
+		if (((buf[entry_num*32 + attribute_offset] & ATTR_LONG_NAME_MASK)
 				== ATTR_LONG_NAME)
-				&& (buf[entry_num * 32 + attribute_offset] != 0x08)
-				&& (buf[entry_num * 32] != 0xE5)) //long filename
+				&& (buf[entry_num*32 + attribute_offset] != 0x08)
+				&& (buf[entry_num*32] != 0xE5)) //long filename
 		{
 			//longname_blocks is the amount of entrys that contain the long filename
-			int longname_blocks = (buf[entry_num * 32] & 0xBF);
+			int longname_blocks = (buf[entry_num*32] & 0xBF);
 			if (longname_blocks < 20) {
-				longname[(longname_blocks - 1) * 13 + 13] = '\0';
+				longname[(longname_blocks - 1)*13 + 13] = '\0';
 			}
 
 			//read the file name from the buffer and store it into longname[]
@@ -445,10 +430,10 @@ uint32_t search_for_filetype(char *extension, data_file *df, int sub_directory,
 			//Either case increment to next entry
 		} else if (attribute & 0x10) {
 			//Indicates a Directory, search the directory
-			sub_directory = (buf[entry_num * 32 + FstClusLo_offset])
-					+ (buf[entry_num * 32 + FstClusLo_offset + 1] << 8)
-					+ (buf[entry_num * 32 + FstClusHi_offset])
-					+ (buf[entry_num * 32 + FstClusHi_offset + 1] << 8);
+			sub_directory = (buf[entry_num*32 + FstClusLo_offset])
+					+ (buf[entry_num*32 + FstClusLo_offset + 1] << 8)
+					+ (buf[entry_num*32 + FstClusHi_offset])
+					+ (buf[entry_num*32 + FstClusHi_offset + 1] << 8);
 			sub_directory = FirstSectorofCluster(sub_directory);
 			if (!search_for_filetype(extension, df, sub_directory, 0)) {
 				return 0;
@@ -456,14 +441,14 @@ uint32_t search_for_filetype(char *extension, data_file *df, int sub_directory,
 		} else {
 			//Indicates a file
 			for (int i = 0; i < 11; i++) {
-				filename[i] = buf[entry_num * 32 + i];
+				filename[i] = buf[entry_num*32 + i];
 			}
 			filename[11] = '\0';
 
 			//Grab the current entry numbers file extension
-			fileext[0] = buf[entry_num * 32 + 8];
-			fileext[1] = buf[entry_num * 32 + 9];
-			fileext[2] = buf[entry_num * 32 + 10];
+			fileext[0] = buf[entry_num*32 + 8];
+			fileext[1] = buf[entry_num*32 + 9];
+			fileext[2] = buf[entry_num*32 + 10];
 			fileext[3] = '\0';
 
 			//printf("found file: %s.%s\n", filename, fileext);
@@ -473,16 +458,17 @@ uint32_t search_for_filetype(char *extension, data_file *df, int sub_directory,
 				if (file_count == file_number) {
 					strcpy(df->Name, filename);
 					df->Attr = attribute;
-					df->FirstCluster = (buf[entry_num * 32 + FstClusLo_offset])
-							+ (buf[entry_num * 32 + FstClusLo_offset + 1]
-									<< 8) + (buf[entry_num * 32
-							+ FstClusHi_offset]) + (buf[entry_num * 32
-							+ FstClusHi_offset + 1] << 8);
-					df->FileSize = (buf[entry_num * 32 + FileSize_offset])
-							| (buf[entry_num * 32 + FileSize_offset + 1]
-									<< 8) | (buf[entry_num * 32
-							+ FileSize_offset + 2] << 16) | (buf[entry_num
-							* 32 + FileSize_offset + 3] << 24);
+					df->FirstCluster = read
+						(buf[entry_num*32 + FstClusLo_offset]) +
+						(buf[entry_num*32 + FstClusLo_offset + 1] << 8) +
+						(buf[entry_num*32 + FstClusHi_offset]) +
+						(buf[entry_num*32 + FstClusHi_offset + 1] << 8);
+
+					df->FileSize =
+						(buf[entry_num*32 + FileSize_offset]) |
+						(buf[entry_num*32 + FileSize_offset + 1] << 8) |
+						(buf[entry_num*32 + FileSize_offset + 2] << 16) |
+						(buf[entry_num*32 + FileSize_offset + 3] << 24);
 					df->FirstSector = FirstSectorofCluster(df->FirstCluster);
 					df->Posn = 0;
 					file_count = 0;
@@ -519,7 +505,7 @@ uint32_t search_for_filetype(char *extension, data_file *df, int sub_directory,
 	}
 	return 0;
 }
-//-------------------------------------------------------------------------
+
 int get_rel_sector(data_file *df, uint8_t *buffer, int cc[], int sector) {
 	//relative sector address start from sector 0 not 1!!!
 	//return 0 valid sector
