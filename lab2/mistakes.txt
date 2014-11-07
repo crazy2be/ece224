@@ -1,0 +1,15 @@
+What did we fuck up?
+====================
+
+(November 7, 2014)
+- Sector calculations: Accidentally calculated file to have way more sectors
+  than it actually did, by using the wrong constant in the calculation.
+- Forgetting to call init: Strange failures without nice error messages.
+- Given code did not allocate sufficient space for the filename, causing
+  changes to another field in the struct to overwrite it.
+- Spent a long time refactoring and cleaning up the given FAT code to make
+  it clearer, fixed a few bugs and a lot of maintainability and readability
+  issues.
+- We had to turn on optimization in order to get the audio file to play back
+  fast enough.
+
