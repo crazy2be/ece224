@@ -263,10 +263,6 @@ void info_bs() {
 	printf("\nFirstRootDirSecNum: 0x%04X (%d)10", FirstRootDirSecNum,
 			FirstRootDirSecNum);
 }
-// Calculates the First Sector of Cluster number 'N'
-uint32_t FirstSectorofCluster(uint32_t N) {
-	return (((N - 2) * BPB_SecPerClus) + FirstDataSector + MBR_BS_Location);
-}
 // The FAT is a linked list of clusters. Given a cluster, this function finds
 // the next cluster in the list.
 uint32_t next_cluster(uint32_t cur_cluster) {
@@ -321,6 +317,11 @@ void build_cluster_chain(int cc[], uint32_t length, data_file *df) {
 	}
 	assert(isEOF(cc[length - 1]));
 }
+
+// Calculates the First Sector of Cluster number 'N'
+static uint32_t first_sector_of_cluster(uint32_t N) {
+	return (((N - 2) * BPB_SecPerClus) + FirstDataSector + MBR_BS_Location);
+}
 // Searches for a particular file extension specified by "extension"
 // To browse from the start of the file system use
 // search_for_filetye("extension",0,1);
@@ -364,28 +365,11 @@ uint32_t search_for_filetype(char *extension, data_file *df, int sub_directory,
 				&& (entry[attribute_offset] != 0x08)
 				&& (entry[0] != 0xE5)) //long filename
 		{
-			//longname_blocks is the amount of entrys that contain the long filename
+			//longname_blocks is the amount of entries that contain the long filename
 			int longname_blocks = (entry[0] & 0xBF);
-			if (longname_blocks < 20) {
-				longname[(longname_blocks - 1)*13 + 13] = '\0';
-			}
 
 			//read the file name from the buffer and store it into longname[]
 			while (longname_blocks > 0) {
-				longname[(longname_blocks - 1)*13 + 0] = buf[entry_num*32 + 1];
-				longname[(longname_blocks - 1)*13 + 1] = buf[entry_num*32 + 3];
-				longname[(longname_blocks - 1)*13 + 2] = buf[entry_num*32 + 5];
-				longname[(longname_blocks - 1)*13 + 3] = buf[entry_num*32 + 7];
-				longname[(longname_blocks - 1)*13 + 4] = buf[entry_num*32 + 9];
-				longname[(longname_blocks - 1)*13 + 5] = buf[entry_num*32 + 14];
-				longname[(longname_blocks - 1)*13 + 6] = buf[entry_num*32 + 16];
-				longname[(longname_blocks - 1)*13 + 7] = buf[entry_num*32 + 18];
-				longname[(longname_blocks - 1)*13 + 8] = buf[entry_num*32 + 20];
-				longname[(longname_blocks - 1)*13 + 9] = buf[entry_num*32 + 22];
-				longname[(longname_blocks - 1)*13 + 10] = buf[entry_num*32 + 24];
-				longname[(longname_blocks - 1)*13 + 11] = buf[entry_num*32 + 28];
-				longname[(longname_blocks - 1)*13 + 12] = buf[entry_num*32 + 30];
-
 				longname_blocks--;
 				entry_num++;
 
@@ -419,7 +403,7 @@ uint32_t search_for_filetype(char *extension, data_file *df, int sub_directory,
 					+ (entry[FstClusLo_offset + 1] << 8)
 					+ (entry[FstClusHi_offset])
 					+ (entry[FstClusHi_offset + 1] << 8);
-			sub_directory = FirstSectorofCluster(sub_directory);
+			sub_directory = first_sector_of_cluster(sub_directory);
 			if (!search_for_filetype(extension, df, sub_directory, 0)) {
 				return 0;
 			}
@@ -458,7 +442,7 @@ uint32_t search_for_filetype(char *extension, data_file *df, int sub_directory,
 						(entry[FileSize_offset + 1] << 8) |
 						(entry[FileSize_offset + 2] << 16) |
 						(entry[FileSize_offset + 3] << 24);
-					df->FirstSector = FirstSectorofCluster(df->FirstCluster);
+					df->FirstSector = first_sector_of_cluster(df->FirstCluster);
 					df->Posn = 0;
 					file_count = 0;
 					file_number = file_number + 1;
@@ -469,7 +453,7 @@ uint32_t search_for_filetype(char *extension, data_file *df, int sub_directory,
 		}
 		entry_num++;
 		//if the entry number spans beyond the current sector, grab the next one
-		if (entry_num * 32 >= BPB_BytsPerSec) {
+		if (entry_num*32 >= BPB_BytsPerSec) {
 			root_sector_count++;
 			SD_read_lba(buf, directory + root_sector_count, 1);
 			entry_num = 0;
