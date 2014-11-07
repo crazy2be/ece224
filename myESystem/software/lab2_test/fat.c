@@ -4,6 +4,7 @@
 #include "sd.h"
 #include <stdio.h>
 #include <string.h>
+#include <assert.h>
 
 //-------------------------------------------------------------------------
 uint16_t file_count = 0;
@@ -63,12 +64,6 @@ uint32_t TotSec;
 uint32_t DataSec;
 uint32_t CountofClusters;
 uint32_t FirstRootDirSecNum;
-char FATType[6];
-uint32_t ThisFATSecNum;
-uint32_t ThisFATEntOffset;
-uint16_t FAT12ClusEntryVal;
-uint16_t FAT16ClusEntryVal;
-uint32_t FAT32ClusEntryVal;
 uint32_t FATClusEntryVal;
 
 static uint16_t read_uint16(uint8_t *buf) {
@@ -272,55 +267,45 @@ void info_bs() {
 uint32_t FirstSectorofCluster(uint32_t N) {
 	return (((N - 2) * BPB_SecPerClus) + FirstDataSector + MBR_BS_Location);
 }
-// Calculates the Next Cluster after cluster 'N'
-// Finds the cluster 'N' in the File Allocation Table
-// Cluster 'N's data contains the Next Cluster number 
-void CalcFATSecAndOffset(uint32_t N) {
-	uint32_t FATOffset = -1;
+// The FAT is a linked list of clusters. Given a cluster, this function finds
+// the next cluster in the list.
+uint32_t next_cluster(uint32_t cur_cluster) {
+	uint32_t fat_offset = -1;
 	switch (filesystem_type(CountofClusters)) {
-	case TypeFAT12: FATOffset = N + N/2; break; // Multiply by 1.5
-	case TypeFAT16: FATOffset = N*2; break;
-	case TypeFAT32: FATOffset = N*4; break;
+	case TypeFAT12: fat_offset = cur_cluster + cur_cluster/2; break; // Multiply by 1.5
+	case TypeFAT16: fat_offset = cur_cluster*2; break;
+	case TypeFAT32: fat_offset = cur_cluster*4; break;
 	}
 
-	//FAT Sector
-	ThisFATSecNum = BPB_RsvdSecCnt + (FATOffset / BPB_BytsPerSec);
-	//FAT Offset
-	ThisFATEntOffset = FATOffset % BPB_BytsPerSec;
+	uint32_t sector = BPB_RsvdSecCnt + (fat_offset / BPB_BytsPerSec);
+	uint32_t entry_offset = fat_offset % BPB_BytsPerSec;
 
 	uint8_t buf[512] = { 0 };
-	SD_read_lba(buf, MBR_BS_Location + ThisFATSecNum, 1);
+	SD_read_lba(buf, MBR_BS_Location + sector, 1);
 
-	//FATClusEntryVal is the next cluster for cluster 'N'
 	switch (filesystem_type(CountofClusters)) {
 	case TypeFAT12:
-		if (ThisFATEntOffset != 511) {
-			if (N & 0x0001) {
+		if (entry_offset != 511) {
+			if (cur_cluster & 0x0001) {
 				// Cluster number is ODD
-				FAT12ClusEntryVal = (((buf[ThisFATEntOffset] & 0xF0)
-						| (buf[ThisFATEntOffset + 1] << 8)) >> 4);
+				return (((buf[entry_offset] & 0xF0) | (buf[entry_offset + 1] << 8)) >> 4);
 			} else {
 				// Cluster number is EVEN
-				FAT12ClusEntryVal = read_uint16(&buf[ThisFATEntOffset]) & 0x0FFF;
+				return read_uint16(&buf[entry_offset]) & 0x0FFF;
 			}
 		} else {
-			FAT12ClusEntryVal = (buf[511] & 0xFF);
-			SD_read_lba(buf, MBR_BS_Location + ThisFATSecNum + 1, 1);
-			FAT12ClusEntryVal = (FAT12ClusEntryVal | ((buf[0] & 0x0F) << 8));
+			uint32_t low = buf[511];
+			SD_read_lba(buf, MBR_BS_Location + sector + 1, 1);
+			return (low | ((buf[0] & 0x0F) << 8));
 		}
-		FATClusEntryVal = FAT12ClusEntryVal;
 	case TypeFAT16:
-		FAT16ClusEntryVal = read_uint16(&buf[ThisFATEntOffset]);
-		FATClusEntryVal = FAT16ClusEntryVal;
+		return read_uint16(&buf[entry_offset]);
 	case TypeFAT32:
-		FAT32ClusEntryVal = read_uint32(&buf[ThisFATEntOffset]) & 0x0FFFFFFF;
-		FATClusEntryVal = FAT32ClusEntryVal;
+		return read_uint32(&buf[entry_offset]) & 0x0FFFFFFF;
 	}
 }
-// Determines if the Cluster is the last cluster in the file's cluster chain
-// Returns 1 if FATContent is the last cluster in the cluster chain
-// Returns 0 if there are more clusters
-uint8_t isEOF(uint32_t FATContent) {
+// Returns true if the Cluster is the last cluster in the file's cluster chain
+bool isEOF(uint32_t FATContent) {
 	switch (filesystem_type(CountofClusters)) {
 	case TypeFAT12: return FATContent >= 0x0FF8;
 	case TypeFAT16: return FATContent >= 0xFFF8;
@@ -330,17 +315,10 @@ uint8_t isEOF(uint32_t FATContent) {
 // Buffers the cluster chain of a file so that it can be streamed
 void build_cluster_chain(int cc[], uint32_t length, data_file *df) {
 	cc[0] = df->FirstCluster;
-
-	// TODO: this uses global variables in a frankly disgusting way
-	//       it should be refactored as soon as possible
-	CalcFATSecAndOffset(df->FirstCluster);
-
 	for (int i = 1; i < length; i++) {
-		cc[i] = FATClusEntryVal;
-		if (!isEOF(FATClusEntryVal)) {
-			CalcFATSecAndOffset(FATClusEntryVal);
-		}
+		cc[i] = next_cluster(cc[i - 1]);
 	}
+	assert(isEOF(cc[length - 1]));
 }
 // Searches for a particular file extension specified by "extension"
 // To browse from the start of the file system use
@@ -461,7 +439,7 @@ uint32_t search_for_filetype(char *extension, data_file *df, int sub_directory,
 				if (file_count == file_number) {
 					strcpy(df->Name, filename);
 					df->Attr = attribute;
-					df->FirstCluster = read
+					df->FirstCluster =
 						(buf[entry_num*32 + FstClusLo_offset]) +
 						(buf[entry_num*32 + FstClusLo_offset + 1] << 8) +
 						(buf[entry_num*32 + FstClusHi_offset]) +
