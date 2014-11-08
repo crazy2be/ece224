@@ -26,7 +26,7 @@ void display(mode_t mode, int value) {
 }
 
 inline uint16_t attenuate(uint16_t level) {
-	return (uint16_t) ((int16_t) level / 8);
+	return (uint16_t) ((int16_t) level / 256);
 }
 
 void write_to_7seg(uint32_t x) {
@@ -70,13 +70,7 @@ void play_audio(struct file_stream *fs) {
 			// sector buffer array into the single 16-bit variable tmp
 			IOWR(AUDIO_0_BASE, 0, part);
 		}
-		if (bytes_read < BPB_BytsPerSec) {
-			break;
-		}
 		i = 0;
-		//write_to_7seg(count);
-
-		//IOWR(RED_LED_PIO_BASE, 0, count);
 		count++;
 
 	}
@@ -96,7 +90,7 @@ int main(void) {
 	}
 	// info_bs();
 	data_file df;
-	for (int i = 0; i < 9; i++) {
+	for (int i = 0; i < 2; i++) {
 		search_for_filetype("WAV", &df, 0, 1);
 		printf("Found file with name: %s\n", df.Name);
 	}
