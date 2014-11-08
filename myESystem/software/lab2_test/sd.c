@@ -24,17 +24,14 @@
 #define SD_TEST_DAT IORD(SD_DAT_BASE, 0)
 
 //-------------------------------------------------------------------------
-void Ncr(void);
-void Ncc(void);
-uint8_t response_R(uint8_t);
-uint8_t send_cmd(uint8_t *);
+static void Ncr(void);
+static void Ncc(void);
+static uint8_t response_R(uint8_t);
+static uint8_t send_cmd(uint8_t *);
 
 //-------------------------------------------------------------------------
-uint8_t read_status;
-//response_buffer, stores system registers after response_R(param) is used
+///esponse_buffer, stores system registers after response_R(param) is used
 uint8_t response_buffer[20];
-uint8_t RCA[2];
-uint8_t cmd_buffer[5];
 
 //-------------------------------------------------------------------------
 //SD Card Commands
@@ -71,7 +68,7 @@ const uint8_t acmd41[5] = { 0x69, 0x0f, 0xf0, 0x00, 0x00 };
 /*ACMD51 Reads the SD Configuration Register (SCR).*/
 const uint8_t acmd51[5] = { 0x73, 0x00, 0x00, 0x00, 0x00 };
 
-void Ncr(void) {
+static void Ncr(void) {
 	SD_CMD_IN;
 	SD_CLK_LOW;
 	SD_CLK_HIGH;
@@ -79,7 +76,7 @@ void Ncr(void) {
 	SD_CLK_HIGH;
 }
 
-void Ncc(void) {
+static void Ncc(void) {
 	int i;
 	for (i = 0; i < 8; i++) {
 		SD_CLK_LOW;
@@ -89,52 +86,44 @@ void Ncc(void) {
 
 uint8_t SD_card_init(void) {
 	uint8_t x, y;
+    uint8_t cmd_buffer[5];
+    uint8_t RCA[2];
+
 	SD_CMD_OUT;
 	SD_DAT_IN;
 	SD_CLK_HIGH;
 	SD_CMD_HIGH;
 	SD_DAT_LOW;
-	read_status = 0;
 	for (x = 0; x < 40; x++)
 		Ncr();
-	for (x = 0; x < 5; x++)
-		cmd_buffer[x] = cmd0[x];
-	y = send_cmd(cmd_buffer);
+	y = send_cmd(cmd0);
 	do {
 		for (x = 0; x < 40; x++)
 			;
 		Ncc();
-		for (x = 0; x < 5; x++)
-			cmd_buffer[x] = cmd55[x];
-		y = send_cmd(cmd_buffer);
+		y = send_cmd(cmd55);
 		Ncr();
 		if (response_R(1) > 1) //response too long or crc error
 			return 1;
 		Ncc();
-		for (x = 0; x < 5; x++)
-			cmd_buffer[x] = acmd41[x];
-		y = send_cmd(cmd_buffer);
+		y = send_cmd(acmd41);
 		Ncr();
 	} while (response_R(3) == 1);
 	Ncc();
-	for (x = 0; x < 5; x++)
-		cmd_buffer[x] = cmd2[x];
-	y = send_cmd(cmd_buffer);
+	y = send_cmd(cmd2);
 	Ncr();
 	if (response_R(2) > 1)
 		return 1;
 	Ncc();
-	for (x = 0; x < 5; x++)
-		cmd_buffer[x] = cmd3[x];
-	y = send_cmd(cmd_buffer);
+	y = send_cmd(cmd3);
 	Ncr();
 	if (response_R(6) > 1)
 		return 1;
 	RCA[0] = response_buffer[1];
 	RCA[1] = response_buffer[2];
 	Ncc();
-	for (x = 0; x < 5; x++)
-		cmd_buffer[x] = cmd9[x];
+
+    memcpy(cmd_buffer, cmd9, 5 * sizeof(uint8_t));
 	cmd_buffer[1] = RCA[0];
 	cmd_buffer[2] = RCA[1];
 	y = send_cmd(cmd_buffer);
@@ -142,8 +131,8 @@ uint8_t SD_card_init(void) {
 	if (response_R(2) > 1)
 		return 1;
 	Ncc();
-	for (x = 0; x < 5; x++)
-		cmd_buffer[x] = cmd7[x];
+
+    memcpy(cmd_buffer, cmd7, 5 * sizeof(uint8_t));
 	cmd_buffer[1] = RCA[0];
 	cmd_buffer[2] = RCA[1];
 	y = send_cmd(cmd_buffer);
@@ -151,19 +140,17 @@ uint8_t SD_card_init(void) {
 	if (response_R(1) > 1)
 		return 1;
 	Ncc();
-	for (x = 0; x < 5; x++)
-		cmd_buffer[x] = cmd16[x];
-	y = send_cmd(cmd_buffer);
+	y = send_cmd(cmd16);
 	Ncr();
 	if (response_R(1) > 1)
 		return 1;
-	read_status = 1; //sd card ready
 	return 0;
 }
 
 uint8_t SD_read_lba(uint8_t *buff, uint32_t lba, uint32_t seccnt) {
 	uint8_t c = 0;
 	uint32_t i, j;
+    uint8_t cmd_buffer[5];
 	for (j = 0; j < seccnt; j++) {
 		//printf("SD_read_lba loop 1: %d\n", j);
 		{
@@ -200,11 +187,10 @@ uint8_t SD_read_lba(uint8_t *buff, uint32_t lba, uint32_t seccnt) {
 			SD_CLK_HIGH;
 		}
 	}
-	read_status = 1; //SD data next in
 	return 0;
 }
 
-uint8_t response_R(uint8_t s) {
+static uint8_t response_R(uint8_t s) {
 	uint8_t a = 0, b = 0, c = 0, r = 0, crc = 0;
 	uint8_t i, j = 6, k;
 	while (1) {
@@ -222,6 +208,7 @@ uint8_t response_R(uint8_t s) {
 	for (k = 0; k < j; k++) {
 		c = 0;
 		if (k > 0) //for crc culcar
+            // TODO: response buffer is read in an uninitialized state
 			b = response_buffer[k - 1];
 		for (i = 0; i < 8; i++) {
 			SD_CLK_LOW;
@@ -254,7 +241,7 @@ uint8_t response_R(uint8_t s) {
 	return r;
 }
 
-uint8_t send_cmd(uint8_t *in) {
+static uint8_t send_cmd(uint8_t *in) {
 	int i, j;
 	uint8_t b, crc = 0;
 	SD_CMD_OUT;
