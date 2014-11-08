@@ -1,3 +1,12 @@
+2014/11/05:
+Little progress:
+A bug where accidentally swapping input/bidir pins was fixed.
+The computed or board being used to dev on was found to be broken and
+couldn't read from the SD card properly.
+Switching to a different computer seemed to fix the issue.
+At the end of the lab, the call to find file by extension terminated, but
+returned no results.
+
 What did we fuck up?
 ====================
 
