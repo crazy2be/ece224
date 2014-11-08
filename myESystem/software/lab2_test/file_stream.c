@@ -25,7 +25,7 @@ int fs_read(struct file_stream *fs, uint8_t *buf) {
 
 	//get sector
 	int lba = (fs->sector_index % BPB_SecPerClus) +
-			FirstSectorofCluster(fs->cluster_chain[fs->sector_index/ BPB_SecPerClus]);
+			first_sector_of_cluster(fs->cluster_chain[fs->sector_index/ BPB_SecPerClus]);
 	SD_read_lba(buf, lba, 1);
 
 	fs->sector_index++;

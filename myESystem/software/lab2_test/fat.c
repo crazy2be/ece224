@@ -319,7 +319,7 @@ void build_cluster_chain(int cc[], uint32_t length, data_file *df) {
 }
 
 // Calculates the First Sector of Cluster number 'N'
-static uint32_t first_sector_of_cluster(uint32_t N) {
+uint32_t first_sector_of_cluster(uint32_t N) {
 	return (((N - 2) * BPB_SecPerClus) + FirstDataSector + MBR_BS_Location);
 }
 // Searches for a particular file extension specified by "extension"
@@ -337,7 +337,6 @@ uint32_t search_for_filetype(char *extension, data_file *df, int sub_directory,
 	uint8_t entry_num = 0;
 	char filename[12];
 	char fileext[4];
-	char longname[255] = { 0 };
 	int root_sector_count = 0, ATTR_LONG_NAME, ATTR_LONG_NAME_MASK;
 
 	if (search_root) {

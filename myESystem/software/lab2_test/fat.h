@@ -18,11 +18,10 @@ extern uint16_t BPB_BytsPerSec;
 extern uint8_t BPB_SecPerClus;
 
 // TODO: Remove these that aren't used.
-uint32_t FirstSectorofCluster(uint32_t);
+uint32_t first_sector_of_cluster(uint32_t);
 uint8_t init_mbr(void);
 uint8_t init_bs(void);
 void info_bs();
-uint32_t FirstSectorofCluster(uint32_t N);
 void CalcFATSecAndOffset(uint32_t);
 bool isEOF(uint32_t);
 void build_cluster_chain(int cc[], uint32_t length, data_file *df);

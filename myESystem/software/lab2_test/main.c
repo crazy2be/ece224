@@ -70,7 +70,7 @@ void play_audio(struct file_stream *fs) {
 			break;
 		}
 		i = 0;
-		write_to_7seg(count);
+		//write_to_7seg(count);
 
 		//IOWR(RED_LED_PIO_BASE, 0, count);
 		count++;
