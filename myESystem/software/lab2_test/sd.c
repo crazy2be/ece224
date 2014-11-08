@@ -4,8 +4,6 @@
 #include <stdlib.h>
 #include "sys/alt_irq.h"
 
-// TODO: INCLUDE PIN DEFINITIONS HERE!!
-
 //-------------------------------------------------------------------------
 //  SD Card Set I/O Direction
 #define SD_CMD_IN   IOWR(SD_CMD_BASE, 1, 0)
@@ -30,7 +28,8 @@ static uint8_t response_R(uint8_t);
 static uint8_t send_cmd(uint8_t *);
 
 //-------------------------------------------------------------------------
-///esponse_buffer, stores system registers after response_R(param) is used
+// response_buffer, stores system registers after response_R(param) is used
+// NB: this is implicitly initialized to all zeros
 uint8_t response_buffer[20];
 
 //-------------------------------------------------------------------------
@@ -208,7 +207,6 @@ static uint8_t response_R(uint8_t s) {
 	for (k = 0; k < j; k++) {
 		c = 0;
 		if (k > 0) //for crc culcar
-            // TODO: response buffer is read in an uninitialized state
 			b = response_buffer[k - 1];
 		for (i = 0; i < 8; i++) {
 			SD_CLK_LOW;
