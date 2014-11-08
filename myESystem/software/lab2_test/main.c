@@ -1,8 +1,13 @@
+#include "buttons.h"
+
 #include "altera_avalon_pio_regs.h"
+#include "buttons.h"
 #include "fat.h"
 #include "file_stream.h"
+#include "LCD.h"
 #include "Open_I2C.h"
 #include "sd.h"
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <system.h>
@@ -60,9 +65,6 @@ void play_audio(struct file_stream *fs) {
 	int bytes_read;
 	int i = 12 + 24 + 8; // initially skip header
 
-	int count = 0, count2 = 0;
-	IOWR(RED_LED_PIO_BASE, 0, 5);
-
 	while ((bytes_read = fs_read(fs, buf)) != -1) {
 		for ( ; i < bytes_read; i += 2) {
 			uint16_t part = attenuate((buf[i + 1] << 8) | buf[i]);
@@ -71,34 +73,48 @@ void play_audio(struct file_stream *fs) {
 			IOWR(AUDIO_0_BASE, 0, part);
 		}
 		i = 0;
-		count++;
-
 	}
-	IOWR(LED_PIO_BASE, 0, 5);
+}
+
+void init(struct playback_data *data) {
+	if (SD_card_init() != 0) {
+		printf("Error initializing SD card\n");
+	} else if (init_mbr() != 0) {
+		printf("Error initializing MBR\n");
+	} else if (init_bs() != 0) {
+		printf("Error initializing boot sector\n");
+	} else {
+		 // cannot fail
+		LCD_Init();
+		init_audio_codec();
+		init_button_interrupts(data);
+		printf("Done all configuration\n");
+		return;
+	}
+	exit(1);
+}
+
+void loop(struct playback_data *data) {
+	for (;;) {
+//		if (play == PLAY) {
+//			data_file current = file_to_play;
+//			file_stream fs;
+//			fs_init(&fs, &current);
+//			play_audio(&fs);
+//		}
+	}
 }
 
 int main(void) {
-	if (SD_card_init() != 0) {
-		printf("Error initializing SD card\n");
-		return 1;
-	} else if (init_mbr() != 0) {
-		printf("Error initializing MBR\n");
-		return 1;
-	} else if (init_bs() != 0) {
-		printf("Error initializing boot sector\n");
-		return 1;
-	}
-	// info_bs();
+	struct playback_data data;
+	init(&data);
+	loop(&data);
+
 	data_file df;
 	for (int i = 0; i < 2; i++) {
 		search_for_filetype("WAV", &df, 0, 1);
 		printf("Found file with name: %s\n", df.Name);
 	}
-
-	//I2C_Init(PRESCALE);
-	init_audio_codec();
-
-	printf("Done all configuration\n");
 
 	struct file_stream fs;
 	fs_init(&fs, &df);
