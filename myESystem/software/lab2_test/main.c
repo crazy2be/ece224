@@ -25,6 +25,10 @@ void display(mode_t mode, int value) {
     }
 }
 
+inline uint16_t attenuate(uint16_t level) {
+	return (uint16_t) ((int16_t) level / 8);
+}
+
 void write_to_7seg(uint32_t x) {
 	const uint8_t pat[] = {
 			0x01, // 0
@@ -61,7 +65,7 @@ void play_audio(struct file_stream *fs) {
 
 	while ((bytes_read = fs_read(fs, buf)) != -1) {
 		for ( ; i < bytes_read; i += 2) {
-			uint16_t part = (buf[i + 1] << 8) | buf[i];
+			uint16_t part = attenuate((buf[i + 1] << 8) | buf[i]);
 			while(IORD(AUD_FULL_BASE, 0)); //wait until the FIFO is not full
 			// sector buffer array into the single 16-bit variable tmp
 			IOWR(AUDIO_0_BASE, 0, part);
