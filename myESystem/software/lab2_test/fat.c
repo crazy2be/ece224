@@ -113,7 +113,7 @@ typedef struct __attribute__((packed)) {
 _Static_assert(sizeof(MasterBootRecord) == 512, "Blocks are 512 bytes!");
 
 int read_mbr(MasterBootRecord *mbr) {
-	SD_read_lba(&mbr, 0, 1);
+	SD_read_lba((uint8_t*)mbr, 0);
 	if (mbr->Magic1 != 0x55 || mbr->Magic2 != 0xAA) {
 		return -1;
 	}
@@ -192,10 +192,19 @@ typedef struct packed {
 } BootSector;
 _Static_assert(sizeof(BootSector) == 512, "Blocks are 512 bytes!");
 
-int read_boot_sector(BootSector *bs, int lba) {
-	SD_read_lba(bs, lba, 1);
-
+void print_boot_sector(BootSector *bs) {
+	printf("OEMName: %.*s\n", sizeof(bs->fat12.OEMName), bs->fat12.OEMName);
+	printf("SectorsPerFAT: %d\n", bs->fat32.SectorsPerFAT);
+	printf("RootCluster: %d\n", bs->fat32.RootCluster);
+	printf("VolumeLabel: %.*s\n", sizeof(bs->fat32.VolumeLabel), bs->fat32.VolumeLabel);
+	printf("FilesystemType: %.*s\n", sizeof(bs->fat32.FilesystemType), bs->fat32.FilesystemType);
+	printf("Magic: %x %x\n", bs->Magic1, bs->Magic2);
 }
+int read_boot_sector(BootSector *bs, int lba) {
+	SD_read_lba((uint8_t*)bs, lba);
+	print_boot_sector(bs);
+}
+
 
 static MasterBootRecord s_mbr;
 static BootSector s_boot_sector;
@@ -215,7 +224,7 @@ int fat_init(void) {
 uint8_t read_boot_sector_original(void) {
 	uint8_t buf[512] = { 0 };
 
-	SD_read_lba(buf, MBR_BS_Location, 1);
+	SD_read_lba(buf, MBR_BS_Location);
 
 	if (buf[510] != 0x55 || buf[511] != 0xAA) {
 		return -1;
@@ -380,7 +389,7 @@ uint32_t next_cluster(uint32_t cur_cluster) {
 	uint32_t entry_offset = fat_offset % BPB_BytsPerSec;
 
 	uint8_t buf[512] = { 0 };
-	SD_read_lba(buf, MBR_BS_Location + sector, 1);
+	SD_read_lba(buf, MBR_BS_Location + sector);
 
 	switch (filesystem_type(CountofClusters)) {
 	case TypeFAT12:
@@ -394,7 +403,7 @@ uint32_t next_cluster(uint32_t cur_cluster) {
 			}
 		} else {
 			uint32_t low = buf[511];
-			SD_read_lba(buf, MBR_BS_Location + sector + 1, 1);
+			SD_read_lba(buf, MBR_BS_Location + sector + 1);
 			return (low | ((buf[0] & 0x0F) << 8));
 		}
 
@@ -446,10 +455,10 @@ uint32_t search_for_filetype(char *extension, data_file *df, int sub_directory,
 	if (search_root) {
 		//Search the root directory
 		directory = (MBR_BS_Location + FirstRootDirSecNum);
-		SD_read_lba(buf, directory, 1);
+		SD_read_lba(buf, directory);
 	} else {
 		//Search the sub directory
-		SD_read_lba(buf, sub_directory, 1);
+		SD_read_lba(buf, sub_directory);
 		directory = sub_directory;
 		// start from entry number 2 to skip over the
 		// ./ Current directory Entry and the ../ Parent directory entry
@@ -479,7 +488,7 @@ uint32_t search_for_filetype(char *extension, data_file *df, int sub_directory,
 				//if the entry number spans beyond the current sector, grab the next one
 				if (entry_num*32 >= BPB_BytsPerSec) {
 					root_sector_count++;
-					SD_read_lba(buf, directory + root_sector_count, 1);
+					SD_read_lba(buf, directory + root_sector_count);
 					entry_num = 0;
 				}
 			}
@@ -558,7 +567,7 @@ uint32_t search_for_filetype(char *extension, data_file *df, int sub_directory,
 		//if the entry number spans beyond the current sector, grab the next one
 		if (entry_num*32 >= BPB_BytsPerSec) {
 			root_sector_count++;
-			SD_read_lba(buf, directory + root_sector_count, 1);
+			SD_read_lba(buf, directory + root_sector_count);
 			entry_num = 0;
 		}
 	}
