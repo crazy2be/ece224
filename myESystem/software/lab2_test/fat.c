@@ -111,6 +111,7 @@ typedef struct __attribute__((packed)) {
 	uint8_t Magic2; // Must be 0xAA
 } MasterBootRecord;
 _Static_assert(sizeof(MasterBootRecord) == 512, "Blocks are 512 bytes!");
+
 int read_mbr(MasterBootRecord *mbr) {
 	SD_read_lba(&mbr, 0, 1);
 	if (mbr->Magic1 != 0x55 || mbr->Magic2 != 0xAA) {
@@ -125,13 +126,15 @@ int read_mbr(MasterBootRecord *mbr) {
 
 // https://en.wikipedia.org/wiki/Design_of_the_FAT_file_system#Layout
 // FAT: File Allocation Table. Space at the beginning of the filesystem to
-// store chains of
+// store a singly linked list of all the entries in a file, starting at a
+// given sector.
 //////////////////////////////////////////////////////////////////////////////
 //  Boot  / FAT32 Info /  Reserved  / FAT /   FAT #2    /   Root    /  Data  /
 // Sector /   Sector   / Sector(0+) /  #1 / (sometimes) / Directory / Region /
 //////////////////////////////////////////////////////////////////////////////
-typedef struct {
-	struct {
+#define packed __attribute__((packed))
+typedef struct packed {
+	struct packed {
 		uint8_t  JumpInstruction[3];
 		uint8_t  OEMName[8];
 
@@ -154,20 +157,19 @@ typedef struct {
 		uint32_t HiddenSectorCount;
 		uint32_t TotalSectors32;
 	} fat12;
-	union {
-		struct {
-			uint8_t DriveNum;
-			uint8_t Reserved;
-			uint8_t ExtendedBootSignature;
+	union packed {
+		struct packed {
+			uint8_t  DriveNum;
+			uint8_t  Reserved;
+			uint8_t  ExtendedBootSignature;
 			uint32_t VolumeID;
-			uint8_t VolumeLabel[11];
-			uint8_t FilesystemType[8];
+			uint8_t  VolumeLabel[11];
+			uint8_t  FilesystemType[8];
 		} fat16;
-		struct {
-			uint32_t FATSize;
+		struct packed {
+			uint32_t SectorsPerFAT;
 			uint16_t MirroringFlags;
 			uint16_t Version;
-			// In FAT32
 			uint32_t RootCluster;
 			uint16_t FSInfoSector;
 			uint16_t BackupBootSector;
@@ -183,7 +185,12 @@ typedef struct {
 			uint8_t  FilesystemType[8];
 		} fat32;
 	};
+	uint8_t BootableCode[419];
+	uint8_t DriveNum; // From FAT12/FAT16
+	uint8_t Magic1; // Must be 0x55
+	uint8_t Magic2; // Must be 0xAA
 } BootSector;
+_Static_assert(sizeof(BootSector) == 512, "Blocks are 512 bytes!");
 
 int read_boot_sector(BootSector *bs, int lba) {
 	SD_read_lba(bs, lba, 1);
