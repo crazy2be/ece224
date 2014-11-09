@@ -1,5 +1,6 @@
 #pragma once
 #include <inttypes.h>
 
-uint8_t SD_read_lba(uint8_t *, uint32_t, uint32_t);
-uint8_t SD_card_init(void);
+// buf must be 512 bytes long
+int SD_read_lba(uint8_t *buf, uint32_t lba);
+int SD_card_init(void);
