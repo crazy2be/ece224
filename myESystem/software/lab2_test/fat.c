@@ -72,6 +72,12 @@ static uint16_t read_uint16(uint8_t *buf) {
 static uint32_t read_uint32(uint8_t *buf) {
 	return buf[0] + (buf[1] << 8) + (buf[2] << 16) + (buf[3] << 24);
 }
+static void copy(uint8_t *dst, uint8_t *src, int len) {
+	for (int i = 0; i < len; i++) {
+		dst[i] = src[i];
+	}
+}
+
 typedef enum {
 	TypeINVALID = 0,
 	TypeFAT12 = 1,
@@ -89,38 +95,120 @@ static FilesystemType filesystem_type(uint32_t CountofClusters) {
 	else return TypeFAT32;
 }
 
-// Initialize the Master Boot Record
-uint8_t init_mbr(void) {
-	uint8_t buf[512] = { 0 };
 
-	SD_read_lba(buf, 0, 1); // Store master boot record in buf
-
-	// Check the last 2 bytes of the buffer to ensure it is tagged as the MBR
-	// (magic bytes)
-	if (buf[510] != 0x55 || buf[511] != 0xAA) {
+// https://en.wikipedia.org/wiki/Master_boot_record
+typedef struct __attribute__((packed)) {
+	uint8_t BootableCode[446];
+	struct {
+		uint8_t Status;
+		uint8_t CHSFirstAddress[3];
+		uint8_t PartitionType;
+		uint8_t CHSLastAddress[3];
+		uint32_t LBAFirstAddress;
+		uint32_t LBALength;
+	} Partitions[4];
+	uint8_t Magic1; // Must be 0x55
+	uint8_t Magic2; // Must be 0xAA
+} MasterBootRecord;
+_Static_assert(sizeof(MasterBootRecord) == 512, "Blocks are 512 bytes!");
+int read_mbr(MasterBootRecord *mbr) {
+	SD_read_lba(&mbr, 0, 1);
+	if (mbr->Magic1 != 0x55 || mbr->Magic2 != 0xAA) {
 		return -1;
 	}
 
-// 	MBR_Bootable = buf[446];
-// 	MBR_Start_Sector[0] = buf[447];
-// 	MBR_Start_Sector[1] = buf[448];
-// 	MBR_Start_Sector[2] = buf[449];
-// 	MBR_Partition_Type = buf[450];
-// 	MBR_End_End[0] = buf[451];
-// 	MBR_End_End[1] = buf[452];
-// 	MBR_End_End[2] = buf[453];
-
-	// Read boot sector and partition length for first partition. Other
-	// partitions are ignored.
-	MBR_BS_Location = read_uint32(&buf[454]);
-	MBR_Partition_Len = read_uint32(&buf[458]);
+	MBR_BS_Location = mbr->Partitions[0].LBAFirstAddress;
+	MBR_Partition_Len = mbr->Partitions[0].LBALength;
 	return 0;
 }
-// Initialize the Boot Sector
-uint8_t init_bs(void) {
+
+
+// https://en.wikipedia.org/wiki/Design_of_the_FAT_file_system#Layout
+// FAT: File Allocation Table. Space at the beginning of the filesystem to
+// store chains of
+//////////////////////////////////////////////////////////////////////////////
+//  Boot  / FAT32 Info /  Reserved  / FAT /   FAT #2    /   Root    /  Data  /
+// Sector /   Sector   / Sector(0+) /  #1 / (sometimes) / Directory / Region /
+//////////////////////////////////////////////////////////////////////////////
+typedef struct {
+	struct {
+		uint8_t  JumpInstruction[3];
+		uint8_t  OEMName[8];
+
+		// DOS 2.0 BPB Entries
+		uint16_t BytesPerSector;
+		uint8_t  SectorsPerCluster;
+		uint16_t ReservedSectorCount;
+		uint8_t  NumFATs;
+		// Maximum number of root directory entries. These are stored
+		// immediately following the last FAT. This is zero in FAT32.
+		// (see fat32.RootCluster in that case)
+		uint16_t RootEntryCount;
+		uint16_t TotalSectors16;
+		uint8_t  MediaDescriptor;
+		uint16_t SectorsPerFAT;
+
+		// DOS 3.3.1 BPB Entries
+		uint16_t SectorsPerTrack;
+		uint16_t NumHeads;
+		uint32_t HiddenSectorCount;
+		uint32_t TotalSectors32;
+	} fat12;
+	union {
+		struct {
+			uint8_t DriveNum;
+			uint8_t Reserved;
+			uint8_t ExtendedBootSignature;
+			uint32_t VolumeID;
+			uint8_t VolumeLabel[11];
+			uint8_t FilesystemType[8];
+		} fat16;
+		struct {
+			uint32_t FATSize;
+			uint16_t MirroringFlags;
+			uint16_t Version;
+			// In FAT32
+			uint32_t RootCluster;
+			uint16_t FSInfoSector;
+			uint16_t BackupBootSector;
+			// Wikipedia says there should be 12 bytes of reserved space
+			// here, but the original code didn't think there was. I'm
+			// trusting Wikipedia, but we may want to verify.
+			uint8_t  Reserved2[12];
+			uint8_t  DriveNum;
+			uint8_t  Reserved;
+			uint8_t  ExtendedBootSignature;
+			uint32_t VolumeID;
+			uint8_t  VolumeLabel[11];
+			uint8_t  FilesystemType[8];
+		} fat32;
+	};
+} BootSector;
+
+int read_boot_sector(BootSector *bs, int lba) {
+	SD_read_lba(bs, lba, 1);
+
+}
+
+static MasterBootRecord s_mbr;
+static BootSector s_boot_sector;
+int fat_init(void) {
+	int status = 0;
+	if ((status = read_mbr(&s_mbr)) < 0) {
+		return status;
+	}
+	uint32_t partition_start = s_mbr.Partitions[0].LBAFirstAddress;
+	if ((status = read_boot_sector(&s_boot_sector, partition_start)) < 0) {
+		return status;
+	}
+	return status;
+}
+
+// Todo: Remove this garbage.
+uint8_t read_boot_sector_original(void) {
 	uint8_t buf[512] = { 0 };
 
-	SD_read_lba(buf, MBR_BS_Location, 1); //Store boot sector in buf
+	SD_read_lba(buf, MBR_BS_Location, 1);
 
 	if (buf[510] != 0x55 || buf[511] != 0xAA) {
 		return -1;
@@ -233,6 +321,14 @@ uint8_t init_bs(void) {
 	// printf("\nFile System: %s", FATType);
 	return 0;
 }
+
+
+
+
+
+
+// Initialize the Boot Sector
+
 // Prints Boot Sector information
 void info_bs() {
 	//Stored in Boot Sector
