@@ -60,12 +60,32 @@ void write_to_7seg(uint32_t x) {
 	IOWR(SEVEN_SEG_RIGHT_PIO_BASE, 0, p);
 }
 
-void play_audio(struct file_stream *fs) {
+void play_audio(struct file_stream *fs, enum speed speed, volatile enum playback_state *state) {
 	uint8_t buf[BPB_BytsPerSec];
 	int bytes_read;
 	int i = 12 + 24 + 8; // initially skip header
+	int increment;
+	int duplicates;
 
-	while ((bytes_read = fs_read(fs, buf)) != -1) {
+	switch (speed) {
+	case NORMAL:
+		increment = 1;
+		duplicates = 1;
+		break;
+	case DOUBLE:
+		increment = 2;
+		duplicates = 1;
+		break;
+	case HALF:
+		increment = 1;
+		duplicates = 2;
+		break;
+	case REVERSE:
+		// TODO
+		return;
+	}
+
+	while (*state == PLAYING && (bytes_read = fs_read(fs, buf)) != -1) {
 		for ( ; i < bytes_read; i += 2) {
 			uint16_t part = attenuate((buf[i + 1] << 8) | buf[i]);
 			while(IORD(AUD_FULL_BASE, 0)); //wait until the FIFO is not full
@@ -94,14 +114,16 @@ void init(struct playback_data *data) {
 	exit(1);
 }
 
-void loop(struct playback_data *data) {
+void loop(volatile struct playback_data *data) {
 	for (;;) {
-//		if (play == PLAY) {
-//			data_file current = file_to_play;
-//			file_stream fs;
-//			fs_init(&fs, &current);
-//			play_audio(&fs);
-//		}
+		if (data->state == START) {
+			data->state = PLAYING;
+			data_file current = data->file;
+			struct file_stream fs;
+			fs_init(&fs, &current);
+			play_audio(&fs, get_speed_from_switches(), &data->state);
+			fs_free(&fs);
+		}
 	}
 }
 
@@ -109,18 +131,6 @@ int main(void) {
 	struct playback_data data;
 	init(&data);
 	loop(&data);
-
-	data_file df;
-	for (int i = 0; i < 2; i++) {
-		search_for_filetype("WAV", &df, 0, 1);
-		printf("Found file with name: %s\n", df.Name);
-	}
-
-	struct file_stream fs;
-	fs_init(&fs, &df);
-
-	play_audio(&fs);
-
 	return 0;
 }
 

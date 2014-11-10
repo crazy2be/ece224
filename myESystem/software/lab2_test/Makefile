@@ -142,6 +142,7 @@ ELF := lab2_test.elf
 # Paths to C, C++, and assembly source files.
 C_SRCS += LCD.c
 C_SRCS += Open_I2C.c
+C_SRCS += buttons.c
 C_SRCS += fat.c
 C_SRCS += file_stream.c
 C_SRCS += main.c
@@ -167,7 +168,7 @@ CREATE_LINKER_MAP := 1
 APP_CFLAGS_DEFINED_SYMBOLS :=
 APP_CFLAGS_UNDEFINED_SYMBOLS :=
 APP_CFLAGS_OPTIMIZATION := -O3
-APP_CFLAGS_DEBUG_LEVEL := 
+APP_CFLAGS_DEBUG_LEVEL :=
 APP_CFLAGS_WARNINGS := -Wall
 APP_CFLAGS_USER_FLAGS := -std=c99
 

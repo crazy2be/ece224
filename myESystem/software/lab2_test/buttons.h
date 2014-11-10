@@ -3,9 +3,16 @@
 #include "fat.h"
 
 enum playback_state {
-	PLAY,
-	INTERRUPT,
+	START,
+	PLAYING,
 	DONE
+};
+
+enum speed {
+	NORMAL,
+	DOUBLE,
+	HALF,
+	REVERSE
 };
 
 struct playback_data {
@@ -14,3 +21,4 @@ struct playback_data {
 };
 
 void init_button_interrupts(struct playback_data *data);
+enum speed get_speed_from_switches();

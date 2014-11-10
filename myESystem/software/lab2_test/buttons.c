@@ -12,7 +12,8 @@ char WAV_FILETYPE[] = "WAV";
 void button_interrupt_handler(void *context, alt_u32 id) {
 	struct playback_data *data = (struct playback_data*) context;
 
-    unsigned short button = IORD_ALTERA_AVALON_PIO_EDGE_CAP(BUTTON_PIO_BASE);
+    unsigned short button = IORD(BUTTON_PIO_BASE, 0); //IORD_ALTERA_AVALON_PIO_EDGE_CAP(BUTTON_PIO_BASE);
+    //printf("button: %hu\n", 0xf ^ button);
 
     /* Reset the Button's edge capture register. */
     IOWR_ALTERA_AVALON_PIO_EDGE_CAP(BUTTON_PIO_BASE, 0);
@@ -22,22 +23,23 @@ void button_interrupt_handler(void *context, alt_u32 id) {
      * interrupt in systems with high processor -> pio latency and fast
      * interrupts.
      */
-    IORD_ALTERA_AVALON_PIO_EDGE_CAP(BUTTON_PIO_BASE);
+    //IORD_ALTERA_AVALON_PIO_EDGE_CAP(BUTTON_PIO_BASE);
 
     /* actually respond to the button press by altering the display */
     /* find the mode from the button press, then reset the button press */
-    switch (button) {
-        case 0x1: // button 0
-
+    switch (0xf ^ button) {
+        case 0x1: // button 0 - stop playback
+			data->state = DONE;
             break;
-        case 0x2: // button 1
+        case 0x2: // button 1 - start playback
+        	data->state = START;
             break;
-        case 0x4: // button 2
+        case 0x4: // button 2 - go to next song
         	if (search_for_filetype(WAV_FILETYPE, &data->file, 0, 1) == 0) {
 				LCD_Display(data->file.Name, 1);
         	}
         	break;
-        case 0x8: // button 3
+        case 0x8: // button 3 - go to previous song
         	break;
         default:
         	return;
@@ -50,4 +52,8 @@ void init_button_interrupts(struct playback_data *data) {
 
 	alt_irq_register(BUTTON_PIO_IRQ, (void*) data,
 	                 button_interrupt_handler);
+}
+
+enum speed get_speed_from_switches() {
+	return (enum speed) (0x3 & IORD(SWITCH_PIO_BASE, 0));
 }
