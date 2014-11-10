@@ -28,24 +28,22 @@ int fs_read(struct file_stream *fs, uint8_t *buf) {
 			first_sector_of_cluster(fs->cluster_chain[fs->sector_index/ BPB_SecPerClus]);
 	SD_read_lba(buf, lba, 1);
 
-	fs->sector_index++;
-
 	return (fs->sector_index == sector_count)
 		? fs->file->FileSize % BPB_BytsPerSec
 		: BPB_BytsPerSec;
 }
 
-bool fs_seek(struct file_stream *fs, uint32_t sector) {
-	uint32_t sector_count = get_file_sector_count(fs->file);
-	if (sector >= sector_count) {
-		return false;
-	} else {
-		fs->sector_index = sector;
-		return true;
-	}
-}
 
-void fs_seek_rel(struct file_stream *fs, uint32_t rel) {
-	uint32_t sector_count = get_file_sector_count(fs->file);
-    fs->sector_index = (fs->sector_index + rel) % sector_count;
+bool fs_seek_rel(struct file_stream *fs, int32_t rel) {
+	bool wrap = false;
+	uint32_t sector_new = fs->sector_index + rel ;
+	if (rel < 0 && sector_new > fs->sector_index) { // underflow
+		wrap = true;
+		sector_new += get_file_sector_count(fs->file);
+	} else if (rel > 0 && sector_new < fs->sector_index) { // overflow
+		wrap = true;
+		sector_new -= get_file_sector_count(fs->file);
+	}
+	fs->sector_index = sector_new;
+	return wrap;
 }

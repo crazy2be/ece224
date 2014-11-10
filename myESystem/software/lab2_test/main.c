@@ -1,6 +1,7 @@
 #include "buttons.h"
 
 #include "altera_avalon_pio_regs.h"
+#include <assert.h>
 #include "buttons.h"
 #include "fat.h"
 #include "file_stream.h"
@@ -60,19 +61,26 @@ void write_to_7seg(uint32_t x) {
 	IOWR(SEVEN_SEG_RIGHT_PIO_BASE, 0, p);
 }
 
-inline int16_t get_sample(uint8_t *p) {
-    return (int16_t) ((p[1] << 8) | p[0]);
+inline int16_t get_sample(uint8_t *p, int increment) {
+	return (int16_t) ((p[1] << 8) | p[0]);
+
+//	int32_t sample = 0;
+//	for (int i = 0; i < increment; i ++) {
+//		sample += (int16_t) ((p[4*i + 1] << 8) | p[4*i]);
+//	}
+//
+//    return sample / increment;
 }
 
-inline void play_sample(int16_t sample)
+inline void play_sample(int16_t sample) {
     while(IORD(AUD_FULL_BASE, 0)); //wait until the FIFO is not full
     // sector buffer array into the single 16-bit variable tmp
     IOWR(AUDIO_0_BASE, 0, (uint16_t) sample);
 }
 
-inline void read_and_play_sample(uint8_t buf, int duplicates) {
-    int16_t left = attenuate(get_sample(buf));
-    int16_t right = attenuate(get_sample(buf + 2));
+inline void read_and_play_sample(uint8_t *buf, int increment, int duplicates) {
+    int16_t left = attenuate(get_sample(buf, increment));
+    int16_t right = attenuate(get_sample(buf + 2, increment));
     for (int j = 0; j < duplicates; j++) {
         play_sample(left);
         play_sample(right);
@@ -84,6 +92,7 @@ void play_audio(struct file_stream *fs, enum speed speed, volatile enum playback
 	int bytes_read;
 	int i = 12 + 24 + 8; // initially skip header
 	int increment = 1;
+	int block_increment = 1;
 	int duplicates = 1;
 
 	switch (speed) {
@@ -96,24 +105,25 @@ void play_audio(struct file_stream *fs, enum speed speed, volatile enum playback
 		duplicates = 2;
 		break;
 	case REVERSE:
+        assert(fs_seek_rel(fs, -1));
+        block_increment = -1;
         // much of the logic is a special case here
 		break;
 	}
 
 	while (*state == PLAYING && (bytes_read = fs_read(fs, buf)) != -1) {
-        if (increment < 0) {
-            min =
-            i = bytes_read - 4;
-        }
+		write_to_7seg(fs->sector_index);
         if (speed == REVERSE) {
-            fs_seek_rel(fs, -1);
-            for (int j = bytes_read; j >= i; i -= 4) {
-                read_and_play_sample(buf + i, duplicates);
+            for (int j = bytes_read - 4; j >= i; j -= 4) {
+                read_and_play_sample(buf + j, increment, duplicates);
             }
         } else {
             for ( ; i < bytes_read; i += 4 * increment) {
-                read_and_play_sample(buf + i, duplicates);
+                read_and_play_sample(buf + i, increment, duplicates);
             }
+        }
+        if (fs_seek_rel(fs, block_increment)) {
+        	break;
         }
 		i = 0;
 	}

@@ -18,7 +18,6 @@ void fs_free(struct file_stream *fs);
 // returns the number of bytes copied, -1 on error
 int fs_read(struct file_stream *fs, uint8_t *buf);
 
-// returns false on error
-bool fs_seek(struct file_stream *fs, uint32_t sector);
+// returns true on overflow/underflow
+bool fs_seek_rel(struct file_stream *fs, int32_t rel);
 
-void fs_seek_rel(struct file_stream *fs, uint32_t rel);
