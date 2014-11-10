@@ -9,9 +9,6 @@ int main(void) {
     double ss[4];
     struct row rows[n];
     cubic_spline_solve(ys, ss, rows, n, 0);
-    /* for (int i = 0; i < n; i++) { */
-    /*     printf("%f, %f\n", ys[i], rows[i].a); */
-    /* } */
 
     for (int i = 0; i < n; i++) {
         double x = (double) i;

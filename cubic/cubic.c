@@ -3,9 +3,6 @@
 
 #define X_DELTA 1
 
-#define CLAMP_B 1
-#define CLAMP_C 0
-
 /* This algorithm is not entirely obvious.
  * It is a combination of the cubic spline formulas from the CS370 course
  * notes, and Thomas' algorithm for solving tridiagonal matrices.
@@ -34,9 +31,15 @@ void cubic_spline_solve(T *ys, T *ss, struct row *mat, int n, T left_clamp) {
      * space. */
 
     // left boundary (clamped)
-    mat[0].c = CLAMP_C / CLAMP_B;
-    mat[0].y = left_clamp / CLAMP_B;
+    {
+        const T b_1 = 1;
+        const T c_1 = 0;
+        const T y_1 = left_clamp;
+        mat[0].c = c_1 / b_1;
+        mat[0].y = y_1 / b_1;
+    }
 
+    // interior rows / knots
     for (int i = 1; i < n - 1; i++) {
         const T a_i = X_DELTA;
         const T b_i = 2 * (X_DELTA + X_DELTA);
@@ -53,7 +56,6 @@ void cubic_spline_solve(T *ys, T *ss, struct row *mat, int n, T left_clamp) {
     }
 
     // right boundary (free)
-
     {
         const T a_n = 0.5;
         const T b_n = 1;
@@ -79,15 +81,10 @@ T cubic_spline_interpolate(T *ys, T *ss, int n, T x) {
     const T d = (ss[i + 1] + ss[i] - 2 * y_prime) / (X_DELTA * X_DELTA);
 
     T ret;
-    ret = a;
-
+    ret  = a;
     ret += b * x_prime;
-
-    x_prime *= x_prime;
-    ret += c * x_prime;
-
-    x_prime *= x_prime;
-    ret += d * x_prime;
+    ret += c * x_prime * x_prime;
+    ret += d * x_prime * x_prime * x_prime;
 
     return ret;
 }
