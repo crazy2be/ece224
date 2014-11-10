@@ -66,6 +66,12 @@ uint32_t CountofClusters;
 uint32_t FirstRootDirSecNum;
 uint32_t FATClusEntryVal;
 
+
+//http://stackoverflow.com/questions/17944/how-to-round-up-the-result-of-integer-division
+static inline uint32_t ceil_div(uint32_t a, uint32_t b) {
+	// doesn't handle overflow, positive numbers only please
+	return (a + b - 1) / b;
+}
 static uint16_t read_uint16(uint8_t *buf) {
 	return buf[0] + (buf[1] << 8);
 }
@@ -194,6 +200,8 @@ _Static_assert(sizeof(BootSector) == 512, "Blocks are 512 bytes!");
 
 void print_boot_sector(BootSector *bs) {
 	printf("OEMName: %.*s\n", sizeof(bs->fat12.OEMName), bs->fat12.OEMName);
+	printf("SectorsPerCluster: %d\n", bs->fat12.SectorsPerCluster);
+	printf("ReservedSectors: %d\n", bs->fat12.ReservedSectorCount);
 	printf("SectorsPerFAT: %d\n", bs->fat32.SectorsPerFAT);
 	printf("RootCluster: %d\n", bs->fat32.RootCluster);
 	printf("VolumeLabel: %.*s\n", sizeof(bs->fat32.VolumeLabel), bs->fat32.VolumeLabel);
@@ -205,9 +213,61 @@ int read_boot_sector(BootSector *bs, int lba) {
 	print_boot_sector(bs);
 }
 
+typedef struct {
+	FilesystemType Type;
+	uint32_t       NumSectors;
+	uint16_t       BytesPerSector;
+	uint8_t        SectorsPerCluster;
 
+	// RootCluster should be used for FAT32, RootDirectorySectors for FAT12/16.
+	uint32_t RootCluster;
+	uint32_t RootDirectoryStartSector;
+	uint32_t RootDirectoryNumSectors;
+
+	uint32_t DataStartSector;
+	uint32_t DataNumClusters;
+} FSInfo;
+int calc_fs_info(FSInfo *info, const BootSector *bs) {
+	uint32_t num_sectors = bs->fat12.TotalSectors16 ?
+			bs->fat12.TotalSectors16 : bs->fat12.TotalSectors32;
+	uint32_t sectors_per_fat = bs->fat12.SectorsPerFAT ?
+			bs->fat12.SectorsPerFAT : bs->fat32.SectorsPerFAT;
+
+	// According to the FAT spec, we shouldn't have to ceil divide here, but
+	// we might as well just to be safe.
+	uint32_t root_dir_start = bs->fat12.ReservedSectorCount
+									+ bs->fat12.NumFATs*sectors_per_fat;
+	uint32_t root_dir_sectors = ceil_div(bs->fat12.RootEntryCount * 32,
+										 bs->fat12.BytesPerSector);
+
+
+	uint32_t num_data_sectors = num_sectors - (bs->fat12.ReservedSectorCount
+									+ bs->fat12.NumFATs*sectors_per_fat
+									+ root_dir_sectors);
+	uint32_t num_data_clusters = num_data_sectors / bs->fat12.SectorsPerCluster;
+
+	FilesystemType tp = filesystem_type(num_data_clusters);
+	*info = (FSInfo) {
+		.Type = tp,
+		.NumSectors = num_sectors,
+		.BytesPerSector = bs->fat12.BytesPerSector,
+		.SectorsPerCluster = bs->fat12.SectorsPerCluster,
+
+		.RootCluster = tp == TypeFAT32 ? bs->fat32.RootCluster : -1,
+		.RootDirectoryStartSector = tp == TypeFAT32 ? -1 : root_dir_start,
+		.RootDirectoryNumSectors = tp = TypeFAT32 ? -1 : root_dir_sectors,
+
+		.DataStartSector = root_dir_start + root_dir_sectors,
+		.DataNumClusters = num_data_clusters,
+	};
+	return 0;
+}
+
+uint8_t read_boot_sector_original(void);
+// Todo: Probably just s_fs_info should be global.
 static MasterBootRecord s_mbr;
 static BootSector s_boot_sector;
+static FSInfo s_fs_info;
 int fat_init(void) {
 	int status = 0;
 	if ((status = read_mbr(&s_mbr)) < 0) {
@@ -217,6 +277,19 @@ int fat_init(void) {
 	if ((status = read_boot_sector(&s_boot_sector, partition_start)) < 0) {
 		return status;
 	}
+	if ((status = calc_fs_info(&s_fs_info, &s_boot_sector)) < 0) {
+		return status;
+	}
+	printf("Type: %s (%d)\n", filesystem_type_to_string(s_fs_info.Type), s_fs_info.Type);
+	printf("Num sectors: %d\n", s_fs_info.NumSectors);
+	printf("Bytes per sector: %d\n", s_fs_info.BytesPerSector);
+	printf("Root cluster: %d\n", s_fs_info.RootCluster);
+	printf("Root directory start sector: %d\n", s_fs_info.RootDirectoryStartSector);
+	printf("Data start sector: %d\n", s_fs_info.DataStartSector);
+	printf("Data num clusters: %d\n", s_fs_info.DataNumClusters);
+	printf("------THEIR CODE-------");
+	read_boot_sector_original();
+	info_bs();
 	return status;
 }
 
@@ -589,11 +662,6 @@ uint32_t search_for_filetype(char *extension, data_file *df, int sub_directory,
 		return 1;//entry not found
 	}
 	return 0;
-}
-
-static inline uint32_t ceil_div(uint32_t a, uint32_t b) {
-	// doesn't handle overflow, positive numbers only please
-	return (a + b - 1) / b;
 }
 
 

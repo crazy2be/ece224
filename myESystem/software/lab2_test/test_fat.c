@@ -16,7 +16,12 @@ int SD_read_lba(uint8_t *buf, uint32_t lba) {
 }
 
 int main() {
+	// testfs is a designed to simulate a drive whose contents we may have to
+	// read. It was created with fdisk/mkfs and lots of trial and error. Some
+	// helpful tips are available at
+	// http://askubuntu.com/questions/69363/mount-single-partition-from-image-of-entire-disk-device
 	s_test_fs = fopen("testfs", "r");
-	printf("%d\n", fat_init());
+	printf("init: %d\n", fat_init());
+
 	return 0;
 }
