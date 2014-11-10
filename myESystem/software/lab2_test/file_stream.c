@@ -44,3 +44,8 @@ bool fs_seek(struct file_stream *fs, uint32_t sector) {
 		return true;
 	}
 }
+
+void fs_seek_rel(struct file_stream *fs, uint32_t rel) {
+	uint32_t sector_count = get_file_sector_count(fs->file);
+    fs->sector_index = (fs->sector_index + rel) % sector_count;
+}

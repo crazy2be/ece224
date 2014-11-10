@@ -20,3 +20,5 @@ int fs_read(struct file_stream *fs, uint8_t *buf);
 
 // returns false on error
 bool fs_seek(struct file_stream *fs, uint32_t sector);
+
+void fs_seek_rel(struct file_stream *fs, uint32_t rel);
