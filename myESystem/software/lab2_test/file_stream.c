@@ -19,6 +19,7 @@ void fs_free(struct file_stream *fs) {
 
 static inline int fs_read_incr(struct file_stream *fs, uint8_t *buf, int incr) {
 	uint32_t sector_count = get_file_sector_count(fs->file);
+	//printf("File sector count: %d", sector_count);
 
 	if (fs->sector_index + incr > sector_count) {
 		return -1; //sector is out of range

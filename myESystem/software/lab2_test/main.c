@@ -32,10 +32,6 @@ void display(mode_t mode, int value) {
     }
 }
 
-inline uint16_t attenuate(uint16_t level) {
-	return (uint16_t) ((int16_t) level / 256);
-}
-
 void write_to_7seg(uint32_t x) {
 	const uint8_t pat[] = {
 			0x01, // 0
@@ -62,7 +58,11 @@ void write_to_7seg(uint32_t x) {
 	IOWR(SEVEN_SEG_RIGHT_PIO_BASE, 0, p);
 }
 
-inline int16_t get_sample(uint8_t *p, int increment) {
+static inline int16_t attenuate(int16_t level) {
+	return level;
+}
+
+static inline int16_t get_sample(uint8_t *p, int increment) {
 	return (int16_t) ((p[1] << 8) | p[0]);
 
 //	int32_t sample = 0;
@@ -74,8 +74,7 @@ inline int16_t get_sample(uint8_t *p, int increment) {
 }
 
 inline void play_sample(int16_t sample) {
-    while(IORD(AUD_FULL_BASE, 0)); //wait until the FIFO is not full
-    // sector buffer array into the single 16-bit variable tmp
+    while (IORD(AUD_FULL_BASE, 0)) {} //wait until the FIFO is not full
     IOWR(AUDIO_0_BASE, 0, (uint16_t) sample);
 }
 
@@ -88,39 +87,82 @@ inline void read_and_play_sample(uint8_t *buf, int increment, int duplicates) {
     }
 }
 
-void play_audio_delay(struct file_stream *left_fs, volatile enum playback_state *state) {
-	struct file_stream right_fs = *left_fs;
-	uint8_t left_buf[BPB_BytsPerSec], right_buf[BPB_BytsPerSec];
-	int left_bytes_read = 0, right_bytes_read = 0;
+#include "ring_buffer.h"
+#include "altera_avalon_timer_regs.h"
+static inline void timer_init() {
+    IOWR_ALTERA_AVALON_TIMER_PERIODL(TIMER_1_BASE, 0xffff);
+    IOWR_ALTERA_AVALON_TIMER_PERIODH(TIMER_1_BASE, 0xffff);
+    IOWR_ALTERA_AVALON_TIMER_CONTROL(TIMER_1_BASE,
+        ALTERA_AVALON_TIMER_CONTROL_CONT_MSK |
+        ALTERA_AVALON_TIMER_CONTROL_START_MSK);
+}
+
+static inline uint32_t timer_sample() {
+	// 10 us resolution. Note: timer counts **DOWN**!
+	IOWR_ALTERA_AVALON_TIMER_SNAPL(TIMER_1_BASE, 0); // Magic
+	return (IORD_ALTERA_AVALON_TIMER_SNAPH(TIMER_1_BASE) << 16) | IORD_ALTERA_AVALON_TIMER_SNAPL(TIMER_1_BASE);
+}
+
+struct stopwatch {
+	int max;
+	int min;
+	int64_t sum;
+	int num;
+	int prev;
+};
+
+static inline void stopwatch_start(struct stopwatch *sw) {
+	*sw = (struct stopwatch) {
+		.prev = timer_sample(),
+	};
+}
+static inline void stopwatch_lap(struct stopwatch *sw) {
+	int now = timer_sample();
+	int val = sw->prev - now;
+	if (val > sw->max) sw->max = val;
+	if (val < sw->min) sw->min = val;
+	sw->sum += val;
+	sw->num++;
+}
+static void stopwatch_print(struct stopwatch *sw) {
+	printf("%d laps, min %d avg %"PRIi64" max %d sum %"PRIi64"\n", sw->num, sw->min, sw->sum/(int64_t)sw->num, sw->max, sw->sum);
+}
+
+void play_audio_delay(struct file_stream *fs, volatile enum playback_state *state) {
+	uint8_t buf[BPB_BytsPerSec];
+	const int num_seconds = 5;
+	struct ring_buffer *right_buf = ring_buffer_new(SAMPLE_FREQ*num_seconds + 2);
 	int sample = 0;
 	int i = 12 + 24 + 8; // initially skip header
 
-	while (*state == PLAYING && (left_bytes_read >= 0 || right_bytes_read >= 0)) {
-		left_bytes_read = fs_read(left_fs, left_buf);
-		if (sample >= SAMPLE_FREQ) {
-			right_bytes_read = fs_read(&right_fs, right_buf);
-		} else {
-			right_bytes_read = 0;
+	timer_init();
+	struct stopwatch sw;
+	stopwatch_start(&sw);
+
+	do {
+		int bytes_read = fs_read(fs, buf);
+		for (; i < BPB_BytsPerSec; i += 2 * sizeof(int16_t)) {
+			if (i < bytes_read) {
+				int16_t left = attenuate(get_sample(buf + i, 1));
+				int16_t right = attenuate(get_sample(buf + i + 2, 1));
+				play_sample(left);
+				ring_buffer_put(right_buf, right);
+			} else {
+				play_sample(0);
+			}
+			if (sample >= SAMPLE_FREQ && ring_buffer_len(right_buf)) {
+				play_sample(ring_buffer_take(right_buf));
+			} else {
+				play_sample(0);
+			}
+			sample++;
 		}
 
-		// play the current blocks
-
-		for (; i < left_bytes_read && i < right_bytes_read; i += 2 * 2) {
-			play_sample(attenuate(get_sample(left_buf + i, 1)));
-			play_sample(attenuate(get_sample(right_buf + i + 2, 1)));
-		}
-		for (; i < left_bytes_read; i += 2 * 2) {
-			play_sample(attenuate(get_sample(left_buf + i, 1)));
-			play_sample(0);
-		}
-		for (; i < right_bytes_read; i += 2 * 2) {
-			play_sample(0);
-			play_sample(attenuate(get_sample(right_buf + i + 2, 1)));
-		}
-
-		sample += i / 4;
 		i = 0;
-	}
+
+		stopwatch_lap(&sw);
+	} while (*state == PLAYING && ring_buffer_len(right_buf));
+	stopwatch_print(&sw);
 }
 
 void play_audio_reverse(struct file_stream *fs, volatile enum playback_state *state) {
@@ -182,7 +224,6 @@ void read_filenames(struct playback_data *data) {
 		num_files++;
 		printf("Found file %s at sector %d\n", tmp.Name, tmp.FirstSector);
 		assert(!search_for_filetype("WAV", &tmp, 0, 1));
-		printf("Found file %s at sector %d\n", tmp.Name, tmp.FirstSector);
 	} while (tmp.FirstSector != first_file_first_cluster);
 
 	data->files = malloc(num_files * sizeof(data_file));

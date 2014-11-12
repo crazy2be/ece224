@@ -3,7 +3,7 @@
 # Machine generated for CPU 'cpu_0' in SOPC Builder design 'my_controller'
 # SOPC Builder design path: N:/ece224/myESystem/my_controller.sopcinfo
 #
-# Generated: Wed Oct 29 10:35:07 EDT 2014
+# Generated: Wed Nov 12 14:00:13 EST 2014
 
 # DO NOT MODIFY THIS FILE
 #
