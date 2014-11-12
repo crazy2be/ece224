@@ -255,7 +255,7 @@ int calc_fs_info(FSInfo *info, const BootSector *bs) {
 
 		.RootCluster = tp == TypeFAT32 ? bs->fat32.RootCluster : -1,
 		.RootDirectoryStartSector = tp == TypeFAT32 ? -1 : root_dir_start,
-		.RootDirectoryNumSectors = tp = TypeFAT32 ? -1 : root_dir_sectors,
+		.RootDirectoryNumSectors = tp = TypeFAT32 ? 0 : root_dir_sectors,
 
 		.DataStartSector = root_dir_start + root_dir_sectors,
 		.DataNumClusters = num_data_clusters,
@@ -453,7 +453,8 @@ void info_bs() {
 uint32_t next_cluster(uint32_t cur_cluster) {
 	uint32_t fat_offset = -1;
 	switch (filesystem_type(CountofClusters)) {
-	case TypeFAT12: fat_offset = cur_cluster + cur_cluster/2; break; // Multiply by 1.5
+	// FAT12 cluster chain entries are 12 bits, or 1.5 bytes.
+	case TypeFAT12: fat_offset = cur_cluster + cur_cluster/2; break;
 	case TypeFAT16: fat_offset = cur_cluster*2; break;
 	case TypeFAT32: fat_offset = cur_cluster*4; break;
 	}
@@ -466,20 +467,15 @@ uint32_t next_cluster(uint32_t cur_cluster) {
 
 	switch (filesystem_type(CountofClusters)) {
 	case TypeFAT12:
-		if (entry_offset != 511) {
-			if (cur_cluster & 0x0001) {
-				// Cluster number is ODD
-				return (((buf[entry_offset] & 0xF0) | (buf[entry_offset + 1] << 8)) >> 4);
-			} else {
-				// Cluster number is EVEN
-				return read_uint16(&buf[entry_offset]) & 0x0FFF;
-			}
-		} else {
-			uint32_t low = buf[511];
+		uint16_t low = buf[entry_offset];
+		uint16_t high = buf[(entry_offset + 1) % BPB_BytsPerSec];
+		if (entry_offset == BPB_BytsPerSec - 1) {
 			SD_read_lba(buf, MBR_BS_Location + sector + 1);
-			return (low | ((buf[0] & 0x0F) << 8));
+			high = buf[0]; // FAT12 entries can span multiple sectors.
 		}
-
+		uint16_t next = low | (high << 8);
+		if (cur_cluster & 0x0001) return next >> 4;
+		else return next & 0x0FFF;
 	case TypeFAT16:
 		return read_uint16(&buf[entry_offset]);
 	case TypeFAT32:
