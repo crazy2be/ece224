@@ -104,11 +104,11 @@ static inline uint32_t timer_sample() {
 }
 
 struct stopwatch {
-	int max;
-	int min;
-	int64_t sum;
-	int num;
-	int prev;
+	uint32_t max;
+	uint32_t min;
+	uint64_t sum;
+	uint32_t num;
+	uint32_t prev;
 };
 
 static inline void stopwatch_start(struct stopwatch *sw) {
@@ -117,15 +117,17 @@ static inline void stopwatch_start(struct stopwatch *sw) {
 	};
 }
 static inline void stopwatch_lap(struct stopwatch *sw) {
-	int now = timer_sample();
-	int val = sw->prev - now;
+	uint32_t now = timer_sample();
+	uint32_t val = sw->prev - now;
+	if (val > 100000000) val = 100000000;
 	if (val > sw->max) sw->max = val;
 	if (val < sw->min) sw->min = val;
 	sw->sum += val;
 	sw->num++;
 }
 static void stopwatch_print(struct stopwatch *sw) {
-	printf("%d laps, min %d avg %"PRIi64" max %d sum %"PRIi64"\n", sw->num, sw->min, sw->sum/(int64_t)sw->num, sw->max, sw->sum);
+	printf("%"PRIu32" laps, min %"PRIu32" avg %"PRIu64" max %"PRIu32" sum %"PRIu64"\n",
+			sw->num, sw->min, sw->sum/(uint64_t)sw->num, sw->max, sw->sum);
 }
 
 void play_audio_delay(struct file_stream *fs, volatile enum playback_state *state) {
