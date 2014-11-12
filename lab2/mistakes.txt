@@ -7,9 +7,6 @@ Switching to a different computer seemed to fix the issue.
 At the end of the lab, the call to find file by extension terminated, but
 returned no results.
 
-What did we fuck up?
-====================
-
 (November 7, 2014)
 - Sector calculations: Accidentally calculated file to have way more sectors
   than it actually did, by using the wrong constant in the calculation.
@@ -22,3 +19,9 @@ What did we fuck up?
 - We had to turn on optimization in order to get the audio file to play back
   fast enough.
 - Learned a lot about how the FAT filesystem works.
+
+(November 12, 2014)
+- Turns out our CPU doesn't have hardware divide/multiply. This means %
+  operations (which we were using for our ring buffer), are really slow.
+- This made the audio really choppy.
+- Still can't figure out why timers are not working.
