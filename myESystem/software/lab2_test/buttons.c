@@ -9,25 +9,36 @@
 
 char WAV_FILETYPE[] = "WAV";
 
+void update_display(struct playback_data *data) {
+	if (data->display_clean) return;
+	LCD_Display(data->files[data->file_index].Name, get_speed_from_switches());
+	data->display_clean = true;
+}
+
+static inline int mod(int a, int b) {
+	return ((a % b) + b) % b;
+}
+
+static inline void change_song(struct playback_data *data, int amount) {
+	data->file_index = mod(data->file_index + amount, data->files_len);
+	data->display_clean = false;
+}
+
 void button_interrupt_handler(void *context, alt_u32 id) {
 	struct playback_data *data = (struct playback_data*) context;
 
-    unsigned short button = IORD(BUTTON_PIO_BASE, 0); //IORD_ALTERA_AVALON_PIO_EDGE_CAP(BUTTON_PIO_BASE);
+    unsigned short button = 0xf ^ IORD(BUTTON_PIO_BASE, 0); //IORD_ALTERA_AVALON_PIO_EDGE_CAP(BUTTON_PIO_BASE);
     //printf("button: %hu\n", 0xf ^ button);
 
-    /* Reset the Button's edge capture register. */
+    // Reset the Button's edge capture register.
     IOWR_ALTERA_AVALON_PIO_EDGE_CAP(BUTTON_PIO_BASE, 0);
-
-    /*
-     * Read the PIO to delay ISR exit. This is done to prevent a spurious
-     * interrupt in systems with high processor -> pio latency and fast
-     * interrupts.
-     */
-    //IORD_ALTERA_AVALON_PIO_EDGE_CAP(BUTTON_PIO_BASE);
 
     /* actually respond to the button press by altering the display */
     /* find the mode from the button press, then reset the button press */
-    switch (0xf ^ button) {
+    if (button != 0x1 && data->state != DONE) {
+    	return;
+    }
+    switch (button) {
         case 0x1: // button 0 - stop playback
 			data->state = DONE;
             break;
@@ -35,25 +46,36 @@ void button_interrupt_handler(void *context, alt_u32 id) {
         	data->state = START;
             break;
         case 0x4: // button 2 - go to next song
-        	if (search_for_filetype(WAV_FILETYPE, &data->file, 0, 1) == 0) {
-				LCD_Display(data->file.Name, 1);
-        	}
+        	change_song(data, 1);
         	break;
         case 0x8: // button 3 - go to previous song
+        	change_song(data, -1);
         	break;
         default:
         	return;
     }
 }
 
+void switch_interrupt_handler(void *context, alt_u32 id) {
+	struct playback_data *data = (struct playback_data*) context;
+    if (data->state != DONE) {
+    	return;
+    }
+    data->display_clean = false;
+}
+
 void init_button_interrupts(struct playback_data *data) {
 	IOWR_ALTERA_AVALON_PIO_IRQ_MASK(BUTTON_PIO_BASE, 0xf);
 	IOWR_ALTERA_AVALON_PIO_EDGE_CAP(BUTTON_PIO_BASE, 0x0);
 
-	alt_irq_register(BUTTON_PIO_IRQ, (void*) data,
-	                 button_interrupt_handler);
+	alt_irq_register(BUTTON_PIO_IRQ, (void*) data, button_interrupt_handler);
+
+	// TODO: Fix switch interrupts if we have time.
+	IOWR_ALTERA_AVALON_PIO_IRQ_MASK(SWITCH_PIO_BASE, 0xf);
+	IOWR_ALTERA_AVALON_PIO_EDGE_CAP(BUTTON_PIO_BASE, 0x0);
+	alt_irq_register(SWITCH_PIO_IRQ, (void*) data, switch_interrupt_handler);
 }
 
 enum speed get_speed_from_switches() {
-	return (enum speed) (0x3 & IORD(SWITCH_PIO_BASE, 0));
+	return (enum speed) (IORD(SWITCH_PIO_BASE, 0));
 }

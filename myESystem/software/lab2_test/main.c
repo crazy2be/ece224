@@ -109,6 +109,11 @@ void play_audio(struct file_stream *fs, enum speed speed, volatile enum playback
         block_increment = -1;
         // much of the logic is a special case here
 		break;
+	case DELAY:
+		printf("TODO");
+		return;
+	default:
+		return;
 	}
 
 	while (*state == PLAYING && (bytes_read = fs_read(fs, buf)) != -1) {
@@ -129,6 +134,28 @@ void play_audio(struct file_stream *fs, enum speed speed, volatile enum playback
 	}
 }
 
+void read_filenames(struct playback_data *data) {
+	int num_files = 0;
+	data_file tmp;
+	assert(!search_for_filetype("WAV", &tmp, 0, 1));
+	uint32_t first_file_first_cluster = tmp.FirstSector;
+	do {
+		num_files++;
+		printf("Found file %s at sector %d\n", tmp.Name, tmp.FirstSector);
+		assert(!search_for_filetype("WAV", &tmp, 0, 1));
+		printf("Found file %s at sector %d\n", tmp.Name, tmp.FirstSector);
+	} while (tmp.FirstSector != first_file_first_cluster);
+
+	data->files = malloc(num_files * sizeof(data_file));
+	assert(data->files);
+	data->files[0] = tmp;
+	for (int i = 1; i < num_files; i++) {
+		assert(!search_for_filetype("WAV", &data->files[i], 0, 1));
+	}
+	data->files_len = num_files;
+	data->file_index = 0;
+	printf("Found %d files\n", num_files);
+}
 void init(struct playback_data *data) {
 	if (SD_card_init() != 0) {
 		printf("Error initializing SD card\n");
@@ -137,7 +164,8 @@ void init(struct playback_data *data) {
 	} else if (init_bs() != 0) {
 		printf("Error initializing boot sector\n");
 	} else {
-		 // cannot fail
+		// cannot fail, or else we do :(.
+		read_filenames(data);
 		LCD_Init();
 		init_audio_codec();
 		init_button_interrupts(data);
@@ -151,17 +179,25 @@ void loop(volatile struct playback_data *data) {
 	for (;;) {
 		if (data->state == START) {
 			data->state = PLAYING;
-			data_file current = data->file;
 			struct file_stream fs;
-			fs_init(&fs, &current);
+			// Buffering...
+			LCD_File_Buffering(data->files[data->file_index].Name);
+			data->display_clean = false;
+			fs_init(&fs, &data->files[data->file_index]);
+			// Playing "DEADJIM"
+			update_display((struct playback_data*) data);
 			play_audio(&fs, get_speed_from_switches(), &data->state);
 			fs_free(&fs);
+			data->state = DONE;
+		} else {
+			update_display((struct playback_data*) data);
 		}
 	}
 }
 
 int main(void) {
-	struct playback_data data;
+	struct playback_data data = {};
+	data.state = DONE;
 	init(&data);
 	loop(&data);
 	return 0;
