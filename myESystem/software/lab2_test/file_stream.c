@@ -17,9 +17,10 @@ void fs_free(struct file_stream *fs) {
 	free(fs->cluster_chain);
 }
 
-int fs_read(struct file_stream *fs, uint8_t *buf) {
+static inline int fs_read_incr(struct file_stream *fs, uint8_t *buf, int incr) {
 	uint32_t sector_count = get_file_sector_count(fs->file);
-	if (fs->sector_index >= sector_count) {
+
+	if (fs->sector_index + incr > sector_count) {
 		return -1; //sector is out of range
 	}
 
@@ -27,23 +28,21 @@ int fs_read(struct file_stream *fs, uint8_t *buf) {
 	int lba = (fs->sector_index % BPB_SecPerClus) +
 			first_sector_of_cluster(fs->cluster_chain[fs->sector_index/ BPB_SecPerClus]);
 	SD_read_lba(buf, lba, 1);
+	fs->sector_index += incr;
 
 	return (fs->sector_index == sector_count)
 		? fs->file->FileSize % BPB_BytsPerSec
 		: BPB_BytsPerSec;
 }
 
+int fs_read(struct file_stream *fs, uint8_t *buf) {
+	return fs_read_incr(fs, buf, 1);
+}
 
-bool fs_seek_rel(struct file_stream *fs, int32_t rel) {
-	bool wrap = false;
-	uint32_t sector_new = fs->sector_index + rel ;
-	if (rel < 0 && sector_new > fs->sector_index) { // underflow
-		wrap = true;
-		sector_new += get_file_sector_count(fs->file);
-	} else if (rel > 0 && sector_new < fs->sector_index) { // overflow
-		wrap = true;
-		sector_new -= get_file_sector_count(fs->file);
-	}
-	fs->sector_index = sector_new;
-	return wrap;
+int fs_readr(struct file_stream *fs, uint8_t *buf) {
+	return fs_read_incr(fs, buf, -1);
+}
+
+int fs_seek_end(struct file_stream *fs) {
+	fs->sector_index = get_file_sector_count(fs->file) - 1;
 }

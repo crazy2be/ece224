@@ -17,6 +17,7 @@
 enum mode_t { LED, SEVEN_SEG, OFF };
 const unsigned int seven_seg_digits[] = { 0xffffff81, 0xffffffcf, 0xffffffff };
 const uint16_t PRESCALE = 0x000a;
+const uint16_t SAMPLE_FREQ = 44100; // 44.1 KHz
 
 void display(mode_t mode, int value) {
     switch (mode) {
@@ -87,50 +88,88 @@ inline void read_and_play_sample(uint8_t *buf, int increment, int duplicates) {
     }
 }
 
-void play_audio(struct file_stream *fs, enum speed speed, volatile enum playback_state *state) {
+void play_audio_delay(struct file_stream *left_fs, volatile enum playback_state *state) {
+	struct file_stream right_fs = *left_fs;
+	uint8_t left_buf[BPB_BytsPerSec], right_buf[BPB_BytsPerSec];
+	int left_bytes_read = 0, right_bytes_read = 0;
+	int sample = 0;
+	int i = 12 + 24 + 8; // initially skip header
+
+	while (*state == PLAYING && (left_bytes_read >= 0 || right_bytes_read >= 0)) {
+		left_bytes_read = fs_read(left_fs, left_buf);
+		if (sample >= SAMPLE_FREQ) {
+			right_bytes_read = fs_read(&right_fs, right_buf);
+		} else {
+			right_bytes_read = 0;
+		}
+
+		// play the current blocks
+
+		for (; i < left_bytes_read && i < right_bytes_read; i += 2 * 2) {
+			play_sample(attenuate(get_sample(left_buf + i, 1)));
+			play_sample(attenuate(get_sample(right_buf + i + 2, 1)));
+		}
+		for (; i < left_bytes_read; i += 2 * 2) {
+			play_sample(attenuate(get_sample(left_buf + i, 1)));
+			play_sample(0);
+		}
+		for (; i < right_bytes_read; i += 2 * 2) {
+			play_sample(0);
+			play_sample(attenuate(get_sample(right_buf + i + 2, 1)));
+		}
+
+		sample += i / 4;
+		i = 0;
+	}
+}
+
+void play_audio_reverse(struct file_stream *fs, volatile enum playback_state *state) {
 	uint8_t buf[BPB_BytsPerSec];
 	int bytes_read;
 	int i = 12 + 24 + 8; // initially skip header
-	int increment = 1;
-	int block_increment = 1;
-	int duplicates = 1;
+	fs_seek_end(fs);
 
-	switch (speed) {
-	case NORMAL:
-		break;
-	case DOUBLE:
-		increment = 2;
-		break;
-	case HALF:
-		duplicates = 2;
-		break;
-	case REVERSE:
-        assert(fs_seek_rel(fs, -1));
-        block_increment = -1;
-        // much of the logic is a special case here
-		break;
-	case DELAY:
-		printf("TODO");
-		return;
-	default:
-		return;
-	}
+	while (*state == PLAYING && (bytes_read = fs_readr(fs, buf)) != -1) {
+			write_to_7seg(fs->sector_index);
+
+			for (int j = bytes_read - 4; j >= i; j -= 4) {
+				read_and_play_sample(buf + j, 1, 1);
+			}
+			i = 0;
+		}
+}
+
+void play_audio_normal(struct file_stream *fs, int increment, int duplicates, volatile enum playback_state *state) {
+	uint8_t buf[BPB_BytsPerSec];
+	int bytes_read;
+	int i = 12 + 24 + 8; // initially skip header
 
 	while (*state == PLAYING && (bytes_read = fs_read(fs, buf)) != -1) {
 		write_to_7seg(fs->sector_index);
-        if (speed == REVERSE) {
-            for (int j = bytes_read - 4; j >= i; j -= 4) {
-                read_and_play_sample(buf + j, increment, duplicates);
-            }
-        } else {
-            for ( ; i < bytes_read; i += 4 * increment) {
-                read_and_play_sample(buf + i, increment, duplicates);
-            }
-        }
-        if (fs_seek_rel(fs, block_increment)) {
-        	break;
-        }
+		for ( ; i < bytes_read; i += 4 * increment) {
+			read_and_play_sample(buf + i, increment, duplicates);
+		}
 		i = 0;
+	}
+}
+
+void play_audio(struct file_stream *fs, enum speed speed, volatile enum playback_state *state) {
+	switch (speed) {
+	case NORMAL:
+		play_audio_normal(fs, 1, 1, state);
+		break;
+	case DOUBLE:
+		play_audio_normal(fs, 2, 1, state);
+		break;
+	case HALF:
+		play_audio_normal(fs, 1, 2, state);
+		break;
+	case REVERSE:
+		play_audio_reverse(fs, state);
+		break;
+	case DELAY:
+		play_audio_delay(fs, state);
+		break;
 	}
 }
 
