@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include <system.h>
 #include "wm8731.h"
+#include "stopwatch.h"
 
 enum mode_t { LED, SEVEN_SEG, OFF };
 const unsigned int seven_seg_digits[] = { 0xffffff81, 0xffffffcf, 0xffffffff };
@@ -64,17 +65,13 @@ static inline int16_t attenuate(int16_t level) {
 
 static inline int16_t get_sample(uint8_t *p, int increment) {
 	return (int16_t) ((p[1] << 8) | p[0]);
-
-//	int32_t sample = 0;
-//	for (int i = 0; i < increment; i ++) {
-//		sample += (int16_t) ((p[4*i + 1] << 8) | p[4*i]);
-//	}
-//
-//    return sample / increment;
 }
 
+static struct stopwatch sample_wait_stopwatch = {};
 inline void play_sample(int16_t sample) {
+	//stopwatch_start(&sample_wait_stopwatch);
     while (IORD(AUD_FULL_BASE, 0)) {} //wait until the FIFO is not full
+    //stopwatch_stop(&sample_wait_stopwatch);
     IOWR(AUDIO_0_BASE, 0, (uint16_t) sample);
 }
 
@@ -88,47 +85,6 @@ inline void read_and_play_sample(uint8_t *buf, int increment, int duplicates) {
 }
 
 #include "ring_buffer.h"
-#include "altera_avalon_timer_regs.h"
-static inline void timer_init() {
-    IOWR_ALTERA_AVALON_TIMER_PERIODL(TIMER_1_BASE, 0xffff);
-    IOWR_ALTERA_AVALON_TIMER_PERIODH(TIMER_1_BASE, 0xffff);
-    IOWR_ALTERA_AVALON_TIMER_CONTROL(TIMER_1_BASE,
-        ALTERA_AVALON_TIMER_CONTROL_CONT_MSK |
-        ALTERA_AVALON_TIMER_CONTROL_START_MSK);
-}
-
-static inline uint32_t timer_sample() {
-	// 10 us resolution. Note: timer counts **DOWN**!
-	IOWR_ALTERA_AVALON_TIMER_SNAPL(TIMER_1_BASE, 0); // Magic
-	return (IORD_ALTERA_AVALON_TIMER_SNAPH(TIMER_1_BASE) << 16) | IORD_ALTERA_AVALON_TIMER_SNAPL(TIMER_1_BASE);
-}
-
-struct stopwatch {
-	uint32_t max;
-	uint32_t min;
-	uint64_t sum;
-	uint32_t num;
-	uint32_t prev;
-};
-
-static inline void stopwatch_start(struct stopwatch *sw) {
-	*sw = (struct stopwatch) {
-		.prev = timer_sample(),
-	};
-}
-static inline void stopwatch_lap(struct stopwatch *sw) {
-	uint32_t now = timer_sample();
-	uint32_t val = sw->prev - now;
-	if (val > 100000000) val = 100000000;
-	if (val > sw->max) sw->max = val;
-	if (val < sw->min) sw->min = val;
-	sw->sum += val;
-	sw->num++;
-}
-static void stopwatch_print(struct stopwatch *sw) {
-	printf("%"PRIu32" laps, min %"PRIu32" avg %"PRIu64" max %"PRIu32" sum %"PRIu64"\n",
-			sw->num, sw->min, sw->sum/(uint64_t)sw->num, sw->max, sw->sum);
-}
 
 void play_audio_delay(struct file_stream *fs, volatile enum playback_state *state) {
 	uint8_t buf[BPB_BytsPerSec];
@@ -138,7 +94,7 @@ void play_audio_delay(struct file_stream *fs, volatile enum playback_state *stat
 	int i = 12 + 24 + 8; // initially skip header
 
 	timer_init();
-	struct stopwatch sw;
+	struct stopwatch sw = {};
 	stopwatch_start(&sw);
 
 	do {
@@ -188,16 +144,40 @@ void play_audio_normal(struct file_stream *fs, int increment, int duplicates, vo
 	int bytes_read;
 	int i = 12 + 24 + 8; // initially skip header
 
-	while (*state == PLAYING && (bytes_read = fs_read(fs, buf)) != -1) {
+	timer_init();
+	struct stopwatch sw = {};
+	stopwatch_start(&sw);
+	struct stopwatch file_read = {};
+	struct stopwatch samples_play = {};
+	stopwatch_reset(&sample_wait_stopwatch);
+
+	while (*state == PLAYING) {
+		stopwatch_start(&file_read);
+		bytes_read = fs_read(fs, buf);
+		stopwatch_stop(&file_read);
+		if (bytes_read < 0) break;
+
 		write_to_7seg(fs->sector_index);
+		stopwatch_start(&samples_play);
 		for ( ; i < bytes_read; i += 4 * increment) {
 			read_and_play_sample(buf + i, increment, duplicates);
 		}
+		stopwatch_stop(&samples_play);
 		i = 0;
+		stopwatch_lap(&sw);
 	}
+	stopwatch_print(&sw);
+	stopwatch_print(&file_read);
+	stopwatch_print(&samples_play);
+	stopwatch_print(&sample_wait_stopwatch);
 }
 
 void play_audio(struct file_stream *fs, enum speed speed, volatile enum playback_state *state) {
+	init_audio_codec();
+
+	// Reset Device
+	I2C_Send(0xFE, 0, 0); //Reset MSB
+	I2C_Send(0x00, 0, 1); //Write 0 to Reset LSB
 	switch (speed) {
 	case NORMAL:
 		play_audio_normal(fs, 1, 1, state);
@@ -216,7 +196,6 @@ void play_audio(struct file_stream *fs, enum speed speed, volatile enum playback
 		break;
 	}
 }
-
 void read_filenames(struct playback_data *data) {
 	int num_files = 0;
 	data_file tmp;
@@ -249,14 +228,12 @@ void init(struct playback_data *data) {
 		// cannot fail, or else we do :(.
 		read_filenames(data);
 		LCD_Init();
-		init_audio_codec();
 		init_button_interrupts(data);
 		printf("Done all configuration\n");
 		return;
 	}
 	exit(1);
 }
-
 void loop(volatile struct playback_data *data) {
 	for (;;) {
 		if (data->state == START) {
@@ -276,7 +253,6 @@ void loop(volatile struct playback_data *data) {
 		}
 	}
 }
-
 int main(void) {
 	struct playback_data data = {};
 	data.state = DONE;
@@ -284,4 +260,3 @@ int main(void) {
 	loop(&data);
 	return 0;
 }
-
