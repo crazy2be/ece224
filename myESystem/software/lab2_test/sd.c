@@ -97,8 +97,7 @@ uint8_t SD_card_init(void) {
 		Ncr();
 	y = send_cmd(cmd0);
 	do {
-		for (x = 0; x < 40; x++)
-			;
+		for (x = 0; x < 40; x++) {}
 		Ncc();
 		y = send_cmd(cmd55);
 		Ncr();
@@ -122,7 +121,7 @@ uint8_t SD_card_init(void) {
 	RCA[1] = response_buffer[2];
 	Ncc();
 
-    memcpy(cmd_buffer, cmd9, 5 * sizeof(uint8_t));
+    memcpy(cmd_buffer, cmd9, sizeof(cmd_buffer));
 	cmd_buffer[1] = RCA[0];
 	cmd_buffer[2] = RCA[1];
 	y = send_cmd(cmd_buffer);
@@ -131,7 +130,7 @@ uint8_t SD_card_init(void) {
 		return 1;
 	Ncc();
 
-    memcpy(cmd_buffer, cmd7, 5 * sizeof(uint8_t));
+    memcpy(cmd_buffer, cmd7, sizeof(cmd_buffer));
 	cmd_buffer[1] = RCA[0];
 	cmd_buffer[2] = RCA[1];
 	y = send_cmd(cmd_buffer);
@@ -147,44 +146,34 @@ uint8_t SD_card_init(void) {
 }
 
 uint8_t SD_read_lba(uint8_t *buff, uint32_t lba, uint32_t seccnt) {
-	uint8_t c = 0;
-	uint32_t i, j;
-    uint8_t cmd_buffer[5];
-	for (j = 0; j < seccnt; j++) {
-		//printf("SD_read_lba loop 1: %d\n", j);
-		{
-			Ncc();
-			cmd_buffer[0] = cmd17[0];
-			cmd_buffer[1] = (lba >> 15) & 0xff;
-			cmd_buffer[2] = (lba >> 7) & 0xff;
-			cmd_buffer[3] = (lba << 1) & 0xff;
-			cmd_buffer[4] = 0;
-			lba++;
-			send_cmd(cmd_buffer);
-			Ncr();
-		}
-		while (1) {
+	Ncc();
+	uint8_t cmd_buffer[5] = {cmd17[0], (lba >> 15) & 0xff,
+			(lba >> 7) & 0xff, (lba << 1) & 0xff, 0};
+	send_cmd(cmd_buffer);
+	Ncr();
+
+	while (1) {
+		SD_CLK_LOW;
+		SD_CLK_HIGH;
+		if (!(SD_TEST_DAT))
+			break;
+	}
+	//uint8_t c = 0;
+	for (int i = 0; i < 512; i++) {
+		uint8_t c = 0;
+		for (int j = 0; j < 8; j++) {
 			SD_CLK_LOW;
 			SD_CLK_HIGH;
-			if (!(SD_TEST_DAT))
-				break;
+			c <<= 1;
+			if (SD_TEST_DAT)
+				c |= 0x01;
 		}
-		for (i = 0; i < 512; i++) {
-			uint8_t j;
-			for (j = 0; j < 8; j++) {
-				SD_CLK_LOW;
-				SD_CLK_HIGH;
-				c <<= 1;
-				if (SD_TEST_DAT)
-					c |= 0x01;
-			}
-			*buff = c;
-			buff++;
-		}
-		for (i = 0; i < 16; i++) {
-			SD_CLK_LOW;
-			SD_CLK_HIGH;
-		}
+		*buff = c;
+		buff++;
+	}
+	for (int i = 0; i < 16; i++) {
+		SD_CLK_LOW;
+		SD_CLK_HIGH;
 	}
 	return 0;
 }
