@@ -48,10 +48,29 @@ file.
 
 %% Justin's section
 % A description of the testing and debugging strategy you used for one part of your hardware or software interfacing design and at least one alternative strategy that you discarded. Indicate any intermediate stages used in your design.
-For debugging, we used a combination of printf, printing values to the LED
-lights, and, eventually, printing values to the seven-segments. 
+For debugging, we initially just used printf. This technique was quite useful
+for determining if a section of code was running at all, i.e. to make sure our
+init code was running properly. This came in handy when the board we were
+initially using was fried- it would run our code, but get stuck in the SD card
+driver initialization, because a input never went low. Quickly isolating the
+line that was causing the issue allowed us to switch to another computer and
+continue developing the lab. However, this didn't work very effectively when
+code was running very quickly- for example, when our sample playing code was
+not stopping at the end of a file properly, and would just keep playing
+beyond that. Printing inside our sample playing loop would have made the code
+run so slowly that we would not have been able to debug it effectively.
+Instead, we started displaying the loop counter values on the LEDs. This worked
+fairly well, but it was difficult to figure out the value quickly (important
+in this case, as the values were changing quickly), and the range of values
+that could be displayed was not very big. For these reasons, we eventually
+transitioned to using the seven-segment to show values we cared about, in
+hexadecimal.
 
 % A discussion of the issues that impacted on the audio playback performance for each of the playback modes.
+Normal, reverse, and slow modes played smoothly immediately without additional
+code or complexities required, since we had followed the suggestions in the
+lab manual of reading the cluster chain beforehand. Delay mode, however,
+presented some significant challanges.
 
 % A discussion of the issues associated with writing effcient software so as to meet the performance requirements associated with the system.
 
