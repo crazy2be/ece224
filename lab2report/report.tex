@@ -1,13 +1,49 @@
 \documentclass[12pt]{article}
 \usepackage{setspace}
-\usepackage{alltt}
-\usepackage{tikz}
-\usepackage{graphicx}
-\usetikzlibrary{arrows}
 \usepackage[margin=1in]{geometry}
 
 \begin{document}
 
 \doublespacing
+
+The music player software is designed in a modular pattern.
+The most important sections of these are overviewed below.
+
+The initialization code is run as soon as the board turns on.
+It is responsible for running code to initialize the SD card and its FAT file
+system, the audio codec, and the button and switch interrupts.
+It also reads the SD card, and finds all files with a \texttt{.fat} file
+extension, and saves their names and sectors in an array for use later.
+
+Another module is the filesystem related code.
+Much of this was provided as part of the lab starter code, although it was also
+augmented to be able to treat a file as a stream.
+This simplifies the interface exposed to the playback code, which consumes the
+data from the file.
+% TODO mention bugs in fs code
+
+An interrupt handles the button press, which can change the current song,
+playback mode, or playback state (ie: playing/stopped).
+Note that because the interrupt handler can only block for a very short period
+of time, the handler cannot actually read the next song name off the card.
+The initialization process read all of the song files' information into an
+array at the start.
+The interrupt handler just loops through this array.
+
+The handler propagates changes to the state, mode, or currently selected file
+back to the main loop by updating a struct which the interrupt handler and main
+loop both have a reference to.
+The main loop is responsible for updating the LCD display, because updating it
+in the interrupt handler would block for too long.
+Primarily, it busy waits until it is signalled to start playing music.
+
+When the playback state changes to start playing a song, the file of whichever
+song is currently selected is opened, and a file stream is created.
+The audio playback method is passed the filestream, along with a playback mode,
+and a reference to the same struct used by the interrupt handler.
+The playback method periodically checks the struct, and stops if the playback
+mode has changed.
+This is used by the interrupt handler to abort playback mid-way through the audio
+file.
 
 \end{document}
