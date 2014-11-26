@@ -149,13 +149,13 @@ void play_audio_double_speed(struct file_stream *fs, volatile enum playback_stat
 
 	while (*state == PLAYING) {
 		stopwatch_start(&file_read);
-		int bytes_read = fs_readdbl(fs, buf);
+		int bytes_read = fs_read(fs, buf);
 		stopwatch_stop(&file_read);
 		if (bytes_read < 0) break;
 
 		write_to_7seg(fs->sector_index);
 		stopwatch_start(&samples_play);
-		for ( ; i < bytes_read; i += 4) {
+		for ( ; i < bytes_read; i += 8) {
 			read_and_play_sample(buf + i);
 		}
 		stopwatch_stop(&samples_play);
