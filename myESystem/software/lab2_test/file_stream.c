@@ -40,6 +40,10 @@ int fs_read(struct file_stream *fs, uint8_t *buf) {
 	return fs_read_incr(fs, buf, 1);
 }
 
+int fs_readdbl(struct file_stream *fs, uint8_t *buf) {
+	return fs_read_incr(fs, buf, 2);
+}
+
 int fs_readr(struct file_stream *fs, uint8_t *buf) {
 	return fs_read_incr(fs, buf, -1);
 }

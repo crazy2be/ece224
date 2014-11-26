@@ -63,8 +63,8 @@ static inline int16_t attenuate(int16_t level) {
 	return level;
 }
 
-static inline int16_t get_sample(uint8_t *p, int increment) {
-	return (int16_t) ((p[1] << 8) | p[0]);
+static inline int16_t get_sample(uint8_t *p) {
+	return *(int16_t*)(p);// ((p[1] << 8) | p[0]);
 }
 
 static struct stopwatch sample_wait_stopwatch = {};
@@ -75,13 +75,11 @@ inline void play_sample(int16_t sample) {
     IOWR(AUDIO_0_BASE, 0, (uint16_t) sample);
 }
 
-inline void read_and_play_sample(uint8_t *buf, int increment, int duplicates) {
-    int16_t left = attenuate(get_sample(buf, increment));
-    int16_t right = attenuate(get_sample(buf + 2, increment));
-    for (int j = 0; j < duplicates; j++) {
-        play_sample(left);
-        play_sample(right);
-    }
+inline void read_and_play_sample(uint8_t *buf) {
+    int16_t left = attenuate(get_sample(buf));
+    int16_t right = attenuate(get_sample(buf + 2));
+	play_sample(left);
+	play_sample(right);
 }
 
 #include "ring_buffer.h"
@@ -101,8 +99,8 @@ void play_audio_delay(struct file_stream *fs, volatile enum playback_state *stat
 		int bytes_read = fs_read(fs, buf);
 		for (; i < BPB_BytsPerSec; i += 2 * sizeof(int16_t)) {
 			if (i < bytes_read) {
-				int16_t left = attenuate(get_sample(buf + i, 1));
-				int16_t right = attenuate(get_sample(buf + i + 2, 1));
+				int16_t left = attenuate(get_sample(buf + i));
+				int16_t right = attenuate(get_sample(buf + i + 2));
 				play_sample(left);
 				ring_buffer_put(right_buf, right);
 			} else {
@@ -133,13 +131,42 @@ void play_audio_reverse(struct file_stream *fs, volatile enum playback_state *st
 			write_to_7seg(fs->sector_index);
 
 			for (int j = bytes_read - 4; j >= i; j -= 4) {
-				read_and_play_sample(buf + j, 1, 1);
+				read_and_play_sample(buf + j);
 			}
 			i = 0;
 		}
 }
+void play_audio_double_speed(struct file_stream *fs, volatile enum playback_state *state) {
+	uint8_t buf[BPB_BytsPerSec];
+	int i = 12 + 24 + 8; // initially skip header
 
-void play_audio_normal(struct file_stream *fs, int increment, int duplicates, volatile enum playback_state *state) {
+	timer_init();
+	struct stopwatch sw = {};
+	stopwatch_start(&sw);
+	struct stopwatch file_read = {};
+	struct stopwatch samples_play = {};
+	stopwatch_reset(&sample_wait_stopwatch);
+
+	while (*state == PLAYING) {
+		stopwatch_start(&file_read);
+		int bytes_read = fs_readdbl(fs, buf);
+		stopwatch_stop(&file_read);
+		if (bytes_read < 0) break;
+
+		write_to_7seg(fs->sector_index);
+		stopwatch_start(&samples_play);
+		for ( ; i < bytes_read; i += 4) {
+			read_and_play_sample(buf + i);
+		}
+		stopwatch_stop(&samples_play);
+		i = 0;
+		stopwatch_lap(&sw);
+	}
+	stopwatch_print(&sw);
+	stopwatch_print(&file_read);
+	stopwatch_print(&samples_play);
+}
+void play_audio_generic(struct file_stream *fs, int duplicates, volatile enum playback_state *state) {
 	uint8_t buf[BPB_BytsPerSec];
 	int bytes_read;
 	int i = 12 + 24 + 8; // initially skip header
@@ -159,8 +186,10 @@ void play_audio_normal(struct file_stream *fs, int increment, int duplicates, vo
 
 		write_to_7seg(fs->sector_index);
 		stopwatch_start(&samples_play);
-		for ( ; i < bytes_read; i += 4 * increment) {
-			read_and_play_sample(buf + i, increment, duplicates);
+		for ( ; i < bytes_read; i += 4) {
+		    for (int j = 0; j < duplicates; j++) {
+		    	read_and_play_sample(buf + i);
+		    }
 		}
 		stopwatch_stop(&samples_play);
 		i = 0;
@@ -180,13 +209,13 @@ void play_audio(struct file_stream *fs, enum speed speed, volatile enum playback
 	I2C_Send(0x00, 0, 1); //Write 0 to Reset LSB
 	switch (speed) {
 	case NORMAL:
-		play_audio_normal(fs, 1, 1, state);
+		play_audio_generic(fs, 1, state);
 		break;
 	case DOUBLE:
-		play_audio_normal(fs, 2, 1, state);
+		play_audio_double_speed(fs, state);
 		break;
 	case HALF:
-		play_audio_normal(fs, 1, 2, state);
+		play_audio_generic(fs, 2, state);
 		break;
 	case REVERSE:
 		play_audio_reverse(fs, state);
