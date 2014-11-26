@@ -56,24 +56,11 @@ void button_interrupt_handler(void *context, alt_u32 id) {
     }
 }
 
-void switch_interrupt_handler(void *context, alt_u32 id) {
-	struct playback_data *data = (struct playback_data*) context;
-    if (data->state != DONE) {
-    	return;
-    }
-    data->display_clean = false;
-}
-
 void init_button_interrupts(struct playback_data *data) {
 	IOWR_ALTERA_AVALON_PIO_IRQ_MASK(BUTTON_PIO_BASE, 0xf);
 	IOWR_ALTERA_AVALON_PIO_EDGE_CAP(BUTTON_PIO_BASE, 0x0);
 
 	alt_irq_register(BUTTON_PIO_IRQ, (void*) data, button_interrupt_handler);
-
-	// TODO: Fix switch interrupts if we have time.
-	IOWR_ALTERA_AVALON_PIO_IRQ_MASK(SWITCH_PIO_BASE, 0xf);
-	IOWR_ALTERA_AVALON_PIO_EDGE_CAP(BUTTON_PIO_BASE, 0x0);
-	alt_irq_register(SWITCH_PIO_IRQ, (void*) data, switch_interrupt_handler);
 }
 
 enum speed get_speed_from_switches() {

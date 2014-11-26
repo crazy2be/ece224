@@ -264,7 +264,13 @@ void init(struct playback_data *data) {
 	exit(1);
 }
 void loop(volatile struct playback_data *data) {
+	enum speed old_mode = get_speed_from_switches();
 	for (;;) {
+		enum speed mode = get_speed_from_switches();
+		if (mode != old_mode) {
+			data->display_clean = false;
+			old_mode = mode;
+		}
 		if (data->state == START) {
 			data->state = PLAYING;
 			struct file_stream fs;
