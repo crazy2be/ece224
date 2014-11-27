@@ -35,7 +35,7 @@ of time, the handler cannot actually read the next song name off the card.
 The initialization process read all of the song files' information into an
 array beforehand.
 This allows the interrupt handler to just loop through this array.
-Similarily, actually updating the LCD display would take too long, so the
+Similarly, actually updating the LCD display would take too long, so the
 handler only marks the display as needing to be updated later.
 Both of these operations can be completed very rapidly, which limits the amount
 of time spent in the interrupt handler.
@@ -46,7 +46,7 @@ loop both have a reference to.
 The main loop is responsible for updating the LCD display, interacting with
 the file system, and playing the actual audio.
 When none of these operations are currently being performed,
-it busy waits until it is signalled by the interrupt handler.
+it busy waits until it is signaled by the interrupt handler.
 
 When the playback state changes to signal the start of a song,
 the file of whichever song is currently selected is opened,
@@ -104,7 +104,7 @@ audio.
 Ideally, this would be accomplished with control techniques such as threads, or
 coroutines.
 This would allow interleaving the computations while still maintaining logically
-seperate control flow for the playback and filesystem code.
+separate control flow for the playback and filesystem code.
 Unfortunately, coroutines aren't supported by C, and there is no OS on the board
 to support threads.
 
@@ -128,7 +128,7 @@ This would still leave some gaps in playback, but would at least maintain
 the correct audio channels.
 From the datasheet for the audio codec, it appears that such control information
 is exposed on the \texttt{DACLCK} line.
-Although this value is currently not read, te could create a new parallel IO pin
+Although this value is currently not read, we could create a new parallel IO pin
 to read this value, and make it accessible to our software.
 
 Ultimately, we used neither of the solutions mentioned above, because the lab
