@@ -8,7 +8,10 @@
 
 \doublespacing
 
-\section{Design} % TODO title?
+\section{Design}
+
+%% Peter's section
+% An  overview  of  your  complete  system  design,  using  block  diagrams,  pseudocode,  prose,  or  a  mixture  ofsome or all of these.  (This section should focus on the parts of the design that were completed by you, andshould not be a rewording of what is given in the lab manual.)
 
 The music player software is designed in a modular pattern.
 The most important sections of these are overviewed below.
@@ -167,5 +170,52 @@ However, we only implemented stream oriented methods partially in this lab,
 because full support was not required or useful.
 We only supported reading exactly one sector at a time, since reading a fraction
 of a sector wasn't useful when playing audio.
+
+% A  discussion  of  the  issues  associated  with  one  aspect  of  your  hardware  design  or  the  software  interfacingpart  of  your  design,  for  example,  the  choice  of  interrupt  priorities  or  issues  with  respect  to  interfacing  tothe buttons, switches or LCD display.
+% An indication of one hardware or software interfacing design decision you made given the above issues, andat least one alternative which you discarded.
+
+
+%% Justin's section
+% Hmm.... I just realized that maybe I'm not supposed to do all of these?
+
+% A description of the testing and debugging strategy you used for one part of your hardware or software interfacing design and at least one alternative strategy that you discarded. Indicate any intermediate stages used in your design.
+% I was supposed to write this section, as it relates to the sections about
+% hardware/software interfacing this section -PR 
+
+% For debugging, we initially just used printf. This technique was quite useful
+% for determining if a section of code was running at all, i.e. to make sure our
+% init code was running properly. This came in handy when the board we were
+% initially using was fried- it would run our code, but get stuck in the SD card
+% driver initialization, because a input never went low. Quickly isolating the
+% line that was causing the issue allowed us to switch to another computer and
+% continue developing the lab. However, this didn't work very effectively when
+% code was running very quickly- for example, when our sample playing code was
+% not stopping at the end of a file properly, and would just keep playing
+% beyond that. Printing inside our sample playing loop would have made the code
+% run so slowly that we would not have been able to debug it effectively.
+% Instead, we started displaying the loop counter values on the LEDs. This worked
+% fairly well, but it was difficult to figure out the value quickly (important
+% in this case, as the values were changing quickly), and the range of values
+% that could be displayed was not very big. For these reasons, we eventually
+% transitioned to using the seven-segment to show values we cared about, in
+% hexadecimal.
+
+% A discussion of the issues that impacted on the audio playback performance for each of the playback modes.
+Normal, reverse, and slow modes played smoothly immediately without additional
+code or complexities required, since we had followed the suggestions in the
+lab manual of reading the cluster chain beforehand. Delay mode, however,
+presented some significant challanges.
+
+% A discussion of the issues associated with writing effcient software so as to meet the performance requirements associated with the system.
+
+% An indication of one software design decision you made given the above two performance issues, and at least one alternative which you discarded.
+
+% A description of the testing and debugging strategy you used for one part of your  software with regards to the audio playback, and at least one alternative strategy that you discarded. Indicate any intermediate stages used in your software design.
+
+% A  brief  discussion  of  a  possible  future  extension  to  the  lab.   Given  more  choice  for  a  final  project  (andpossibly 4-5 weeks in which to do it) and the same equipment, what would you have rather done?
+
+
+%% Reflection
+%% TODO!!!!!!!!
 
 \end{document}

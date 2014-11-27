@@ -11,12 +11,12 @@
 #define SD_DAT_IN   IOWR(SD_DAT_BASE, 1, 0)
 #define SD_DAT_OUT  IOWR(SD_DAT_BASE, 1, 1)
 //  SD Card Output High/Low
-#define SD_CMD_LOW  IOWR(SD_CMD_BASE, 0, 0)
-#define SD_CMD_HIGH IOWR(SD_CMD_BASE, 0, 1)
-#define SD_DAT_LOW  IOWR(SD_DAT_BASE, 0, 0)
-#define SD_DAT_HIGH IOWR(SD_DAT_BASE, 0, 1)
-#define SD_CLK_LOW  IOWR(SD_CLK_BASE, 0, 0)
-#define SD_CLK_HIGH IOWR(SD_CLK_BASE, 0, 1)
+#define SET_COMMAND_LOW  IOWR(SD_CMD_BASE, 0, 0)
+#define SET_COMMAND_HIGH IOWR(SD_CMD_BASE, 0, 1)
+#define SET_DATA_LOW     IOWR(SD_DAT_BASE, 0, 0)
+#define SET_DATA_HIGH    IOWR(SD_DAT_BASE, 0, 1)
+#define SET_CLOCK_LOW    IOWR(SD_CLK_BASE, 0, 0)
+#define SET_CLOCK_HIGH   IOWR(SD_CLK_BASE, 0, 1)
 //  SD Card Input Read
 #define SD_TEST_CMD IORD(SD_CMD_BASE, 0)
 #define SD_TEST_DAT IORD(SD_DAT_BASE, 0)
@@ -69,35 +69,35 @@ const uint8_t acmd51[5] = { 0x73, 0x00, 0x00, 0x00, 0x00 };
 
 static void Ncr(void) {
 	SD_CMD_IN;
-	SD_CLK_LOW;
-	SD_CLK_HIGH;
-	SD_CLK_LOW;
-	SD_CLK_HIGH;
+	SET_CLOCK_LOW;
+	SET_CLOCK_HIGH;
+	SET_CLOCK_LOW;
+	SET_CLOCK_HIGH;
 }
 
 static void Ncc(void) {
-	int i;
-	for (i = 0; i < 8; i++) {
-		SD_CLK_LOW;
-		SD_CLK_HIGH;
+	for (int i = 0; i < 8; i++) {
+		SET_CLOCK_LOW;
+		SET_CLOCK_HIGH;
 	}
 }
 
 uint8_t SD_card_init(void) {
-	uint8_t x, y;
+	uint8_t y;
     uint8_t cmd_buffer[5];
     uint8_t RCA[2];
 
 	SD_CMD_OUT;
 	SD_DAT_IN;
-	SD_CLK_HIGH;
-	SD_CMD_HIGH;
-	SD_DAT_LOW;
-	for (x = 0; x < 40; x++)
+	SET_CLOCK_HIGH;
+	SET_COMMAND_HIGH;
+	SET_DATA_LOW;
+	for (int x = 0; x < 40; x++) {
 		Ncr();
+	}
 	y = send_cmd(cmd0);
 	do {
-		for (x = 0; x < 40; x++) {}
+		for (int x = 0; x < 40; x++) {}
 		Ncc();
 		y = send_cmd(cmd55);
 		Ncr();
@@ -153,17 +153,16 @@ uint8_t SD_read_lba(uint8_t *buff, uint32_t lba, uint32_t seccnt) {
 	Ncr();
 
 	while (1) {
-		SD_CLK_LOW;
-		SD_CLK_HIGH;
+		SET_CLOCK_LOW;
+		SET_CLOCK_HIGH;
 		if (!(SD_TEST_DAT))
 			break;
 	}
-	//uint8_t c = 0;
 	for (int i = 0; i < 512; i++) {
 		uint8_t c = 0;
 		for (int j = 0; j < 8; j++) {
-			SD_CLK_LOW;
-			SD_CLK_HIGH;
+			SET_CLOCK_LOW;
+			SET_CLOCK_HIGH;
 			c <<= 1;
 			if (SD_TEST_DAT)
 				c |= 0x01;
@@ -172,8 +171,8 @@ uint8_t SD_read_lba(uint8_t *buff, uint32_t lba, uint32_t seccnt) {
 		buff++;
 	}
 	for (int i = 0; i < 16; i++) {
-		SD_CLK_LOW;
-		SD_CLK_HIGH;
+		SET_CLOCK_LOW;
+		SET_CLOCK_HIGH;
 	}
 	return 0;
 }
@@ -182,8 +181,8 @@ static uint8_t response_R(uint8_t s) {
 	uint8_t a = 0, b = 0, c = 0, r = 0, crc = 0;
 	uint8_t i, j = 6, k;
 	while (1) {
-		SD_CLK_LOW;
-		SD_CLK_HIGH;
+		SET_CLOCK_LOW;
+		SET_CLOCK_HIGH;
 		if (!(SD_TEST_CMD))
 			break;
 		if (crc++ > 100)
@@ -198,13 +197,13 @@ static uint8_t response_R(uint8_t s) {
 		if (k > 0) //for crc culcar
 			b = response_buffer[k - 1];
 		for (i = 0; i < 8; i++) {
-			SD_CLK_LOW;
+			SET_CLOCK_LOW;
 			if (a > 0)
 				c <<= 1;
 			else
 				i++;
 			a++;
-			SD_CLK_HIGH;
+			SET_CLOCK_HIGH;
 			if (SD_TEST_CMD)
 				c |= 0x01;
 			if (k > 0) {
@@ -235,13 +234,13 @@ static uint8_t send_cmd(uint8_t *in) {
 	for (i = 0; i < 5; i++) {
 		b = in[i];
 		for (j = 0; j < 8; j++) {
-			SD_CLK_LOW;
+			SET_CLOCK_LOW;
 			if (b & 0x80)
-				SD_CMD_HIGH;
+				SET_COMMAND_HIGH;
 			else
-				SD_CMD_LOW;
+				SET_COMMAND_LOW;
 			crc <<= 1;
-			SD_CLK_HIGH;
+			SET_CLOCK_HIGH;
 			if ((crc ^ b) & 0x80)
 				crc ^= 0x09;
 			b <<= 1;
@@ -251,12 +250,12 @@ static uint8_t send_cmd(uint8_t *in) {
 	crc = ((crc << 1) | 0x01);
 	b = crc;
 	for (j = 0; j < 8; j++) {
-		SD_CLK_LOW;
+		SET_CLOCK_LOW;
 		if (crc & 0x80)
-			SD_CMD_HIGH;
+			SET_COMMAND_HIGH;
 		else
-			SD_CMD_LOW;
-		SD_CLK_HIGH;
+			SET_COMMAND_LOW;
+		SET_CLOCK_HIGH;
 		crc <<= 1;
 	}
 	return b;
