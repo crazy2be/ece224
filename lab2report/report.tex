@@ -85,8 +85,31 @@ presented some significant challanges.
 % An indication of one software design decision you made given the above two performance issues, and at least one alternative which you discarded.
 
 % A description of the testing and debugging strategy you used for one part of your  software with regards to the audio playback, and at least one alternative strategy that you discarded. Indicate any intermediate stages used in your software design.
+The first strategy we tried was just randomly changing things. Unsurprisingly,
+this did not work particularilly well. Debugging issues for audio playback
+was not easy to do with our more traditional debugging methods, because often
+the problem would not be a logical error in the program, but rather just be
+that we were using a technique which was too slow. In order to pinpoint issues
+that were contributing to potential slowness, we wrote a stopwatch which used
+the 10us onboard timer to allow timing of code sections. This allowed us to
+figure out which sections were taking the most time, optimize those sections,
+and provided us a way to know if our changes were actually improving the speed
+of the relevent code sections- because improvements to the code's speed did
+not necesarilly lead to perceptable improvements in audio.
 
 % A  brief  discussion  of  a  possible  future  extension  to  the  lab.   Given  more  choice  for  a  final  project  (andpossibly 4-5 weeks in which to do it) and the same equipment, what would you have rather done?
+There were a few things I would have liked to try as possible future extensions
+to this lab:
+\begin{enumerate}
+\item Show the progress of the current song on the LCD display, or on the LEDs.
+\item Make 2x speed actually play the audio properly. This could be pretty
+	challanging, but optimizing the raw sd card block reading code could
+	probably get pretty far in this direction. We could also increase the
+	clock speed of the processor used on the board, or introduce some special-
+	purpose instructions for reading the sd card data to allow it to complete
+	in fewer clock cycles.
+\item Make an equilizer visualization, either on the LCD or the LEDs.
+\end{enumerate}
 
 
 %% Reflection
