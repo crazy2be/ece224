@@ -1,10 +1,14 @@
 \documentclass[12pt]{article}
 \usepackage{setspace}
+\usepackage{tikz}
+\usetikzlibrary{arrows}
 \usepackage[margin=1in]{geometry}
 
 \begin{document}
 
 \doublespacing
+
+\section{Design} % TODO title?
 
 The music player software is designed in a modular pattern.
 The most important sections of these are overviewed below.
@@ -45,5 +49,123 @@ The playback method periodically checks the struct, and stops if the playback
 mode has changed.
 This is used by the interrupt handler to abort playback mid-way through the audio
 file.
+We can model the state changes as a finite state machine.
+
+\begin{tikzpicture}[->,node distance=4cm,main/.style={circle,fill=blue!20,draw,minimum size=2cm,align=left}]
+    \node[main] (playing) {Playing};
+    % \node[main] (start) [below left of=blank] {Start};
+    \node[main] (waiting) [left of=playing] {Waiting};
+    \path[align=left]
+        (playing) edge [bend left] node [below] { Song finished } (waiting)
+                  edge [bend right] node [above] { SW0 } (waiting)
+                  edge [loop right] node { Song not finished } (playing)
+        (waiting) edge node [above] { SW1 } (playing)
+                  edge [loop left] node { No button press } (waiting)
+    ;
+\end{tikzpicture}
+
+\section{Software Interfacing Issues}
+
+One of the main problems that we had difficulty with was ensuring that the
+left and right audio channels were played on the correct speakers.
+
+The audio device constantly plays audio, consuming audio data from
+a FIFO buffer.
+The samples are played alternately on the left and right channels of
+the audio device.
+If the buffer is ever allowed to empty, it implicitly plays a sample with zero
+amplitude.
+Unfortunately, if a non-deterministic number of samples are consumed from the
+buffer, we no longer know whether the next sample enqueued on the buffer will
+be played on the left or right channel.
+Whenever a blocking operation (usually disk IO) takes too long, the FIFO will
+empty, and this bug will be triggered.
+There are two specific places where the bug emerges: when reading sectors when
+playing double-speed audio, and when reading in the cluster chain of a file.
+
+% TODO diagram?
+
+Essentially, there are two solutions to this problem.
+The first possible solution is to never have a blocking operation ``long enough"
+to allow the FIFO to empty.
+One solution to this issue would be to interleave blocking operations with playing
+audio.
+Ideally, this would be accomplished with control techniques such as threads, or
+coroutines.
+This would allow interleaving the computations while still maintaining logically
+seperate control flow for the playback and filesystem code.
+Unfortunately, coroutines aren't supported by C, and there is no OS on the board
+to support threads.
+
+Therefore, the only alternative is to actually mix the filesystem and audio code.
+The cluster chain read method would need to be altered to fill up the audio FIFO
+with pairs of dummy samples.
+A modified \texttt{SD\_read\_lba} method would need to be created, which plays
+each 16-bit sample as it is read, instead of buffering the entire sector into
+memory.
+This kind of code structure would be very poorly structure and modular by its
+very definition.
+We therefore did not use this solution.
+
+The other possible solution that we could conceive was to allow the FIFO to
+empty, but to realize which channel was currently being read in on the device.
+We could then resynchronize each time we start playing audio.
+If the FIFO is empty, then we would wait until the FIFO is playing a signal on
+the left channel, then begin playing music again.
+This would still leave some gaps in playback, but would at least maintain
+the correct audio channels.
+From the datasheet for the audio codec, it appears that such control information
+is exposed on the \texttt{DACLCK} line.
+Although this value is currently not read, te could create a new parallel IO pin
+to read this value, and make it accessible to our software.
+
+Ultimately, we used neither of the solutions mentioned above, because the lab
+instructor advised us that fixing this issue was beyond the scope of the lab.
+
+To test audio synchronization, we repeatedly played audio signals with distinct
+left and right channels, and checked if the channels changed which speaker they
+were playing on over time.
+This has the advantage of being a full end-to-end test of the desired
+functionality.
+In theory , this methodology can only test for the presence of the bug, and not
+its absence.
+However, when playing at double speed, the channels would switch very frequently,
+making this a reliable way to check for this bug.
+We would observe the bug immediately when plyaing at double speed, so if we
+did fix the bug, it would be immediately obvious.
+
+Another testing strategy we tried was adding timing logic in the playback code
+to find which code was consuming the most amount of time.
+This is useful from a debugging perspective, in that it reveals the hotspots in
+the code, and allows us to locate long-running, blocking routines that are
+triggering the bug.
+Unfortunately, adding timing logic adds additional work to the program, which
+itself changes the timing of the program.
+This created new problems with the playback, such as ``crackly" audio.
+For this reason, while this technique gives valuable information, it is not
+effective at debugging -- it \emph{creates} bugs.
+
+\section{Contribution}
+Peter Raboud:
+I was responsible for writing most of the playback code (except for the delay mode),
+the file stream code, and the button interrupt code.
+I also wrote the first half of this report.
+
+The most valuable learning experience from this lab was a practical introduction
+in how the FAT file system works.
+In previous courses, we usually treat files as a stream.
+For efficiency, reads are buffered, but the buffer size can be anything we want.
+However, working with the SD card / FAT file system at the low level demonstrates
+that files are structured into sectors.
+There isn't an efficient way of accessing data in the middle of the sector; that
+is, without accessing all of the data before it, and discarding it.
+If we want to treat files as streams, we would have to build this functionality
+on top of the sector oriented operations supported natively.
+The stream-oriented module we wrote kept track of the sectors, how much data was
+read, and automatically advanced to the next sector after each read.
+However, we only implemented stream oriented methods partially in this lab,
+because full support was not required or useful.
+We only supported reading exactly one sector at a time, since reading a fraction
+of a sector wasn't useful when playing audio.
 
 \end{document}
