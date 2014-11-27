@@ -1,3 +1,4 @@
+
 \documentclass[12pt]{article}
 \usepackage{setspace}
 \usepackage{tikz}
@@ -9,8 +10,6 @@
 \doublespacing
 
 \section{Design}
-
-%% Peter's section
 % An  overview  of  your  complete  system  design,  using  block  diagrams,  pseudocode,  prose,  or  a  mixture  ofsome or all of these.  (This section should focus on the parts of the design that were completed by you, andshould not be a rewording of what is given in the lab manual.)
 
 The music player software is designed in a modular pattern.
@@ -68,6 +67,8 @@ We can model the state changes as a finite state machine.
 \end{tikzpicture}
 
 \section{Software Interfacing Issues}
+% A  discussion  of  the  issues  associated  with  one  aspect  of  your  hardware  design  or  the  software  interfacingpart  of  your  design,  for  example,  the  choice  of  interrupt  priorities  or  issues  with  respect  to  interfacing  tothe buttons, switches or LCD display.
+% An indication of one hardware or software interfacing design decision you made given the above issues, andat least one alternative which you discarded.
 
 One of the main problems that we had difficulty with was ensuring that the
 left and right audio channels were played on the correct speakers.
@@ -104,6 +105,7 @@ Therefore, the only alternative is to actually mix the filesystem and audio code
 The cluster chain read method would need to be altered to fill up the audio FIFO
 with pairs of dummy samples.
 A modified \texttt{SD\_read\_lba} method would need to be created, which plays
+
 each 16-bit sample as it is read, instead of buffering the entire sector into
 memory.
 This kind of code structure would be very poorly structure and modular by its
@@ -125,16 +127,40 @@ to read this value, and make it accessible to our software.
 Ultimately, we used neither of the solutions mentioned above, because the lab
 instructor advised us that fixing this issue was beyond the scope of the lab.
 
+\subsection{Testing \& Debugging}
+% A description of the testing and debugging strategy you used for one part of
+% your hardware or software interfacing design and at least one alternative
+% strategy that you discarded. Indicate any intermediate stages used in your
+% design.
+For debugging interfacing issues, we initially just used printf.
+This technique was quite useful
+for determining if a section of code was running at all, i.e. to make sure our
+init code was running properly. This came in handy when the board we were
+initially using was fried- it would run our code, but get stuck in the SD card
+driver initialization, because a input never went low. Quickly isolating the
+line that was causing the issue allowed us to switch to another computer and
+continue developing the lab. However, this didn't work very effectively when
+code was running very quickly- for example, when our sample playing code was
+not stopping at the end of a file properly, and would just keep playing
+beyond that. Printing inside our sample playing loop would have made the code
+run so slowly that we would not have been able to debug it effectively.
+Instead, we started displaying the loop counter values on the LEDs. This worked
+fairly well, but it was difficult to figure out the value quickly (important
+in this case, as the values were changing quickly), and the range of values
+that could be displayed was not very big. For these reasons, we eventually
+transitioned to using the seven-segment to show values we cared about, in
+hexadecimal.
+
 To test audio synchronization, we repeatedly played audio signals with distinct
 left and right channels, and checked if the channels changed which speaker they
 were playing on over time.
 This has the advantage of being a full end-to-end test of the desired
 functionality.
-In theory , this methodology can only test for the presence of the bug, and not
+In theory, this methodology can only test for the presence of the bug, and not
 its absence.
 However, when playing at double speed, the channels would switch very frequently,
 making this a reliable way to check for this bug.
-We would observe the bug immediately when plyaing at double speed, so if we
+We would observe the bug immediately when playing at double speed, so if we
 did fix the bug, it would be immediately obvious.
 
 Another testing strategy we tried was adding timing logic in the playback code
@@ -148,36 +174,7 @@ This created new problems with the playback, such as ``crackly" audio.
 For this reason, while this technique gives valuable information, it is not
 effective at debugging -- it \emph{creates} bugs.
 
-
-% A  discussion  of  the  issues  associated  with  one  aspect  of  your  hardware  design  or  the  software  interfacingpart  of  your  design,  for  example,  the  choice  of  interrupt  priorities  or  issues  with  respect  to  interfacing  tothe buttons, switches or LCD display.
-% An indication of one hardware or software interfacing design decision you made given the above issues, andat least one alternative which you discarded.
-
-
-%% Justin's section
-% Hmm.... I just realized that maybe I'm not supposed to do all of these?
-
-% A description of the testing and debugging strategy you used for one part of your hardware or software interfacing design and at least one alternative strategy that you discarded. Indicate any intermediate stages used in your design.
-% I was supposed to write this section, as it relates to the sections about
-% hardware/software interfacing this section -PR 
-
-% For debugging, we initially just used printf. This technique was quite useful
-% for determining if a section of code was running at all, i.e. to make sure our
-% init code was running properly. This came in handy when the board we were
-% initially using was fried- it would run our code, but get stuck in the SD card
-% driver initialization, because a input never went low. Quickly isolating the
-% line that was causing the issue allowed us to switch to another computer and
-% continue developing the lab. However, this didn't work very effectively when
-% code was running very quickly- for example, when our sample playing code was
-% not stopping at the end of a file properly, and would just keep playing
-% beyond that. Printing inside our sample playing loop would have made the code
-% run so slowly that we would not have been able to debug it effectively.
-% Instead, we started displaying the loop counter values on the LEDs. This worked
-% fairly well, but it was difficult to figure out the value quickly (important
-% in this case, as the values were changing quickly), and the range of values
-% that could be displayed was not very big. For these reasons, we eventually
-% transitioned to using the seven-segment to show values we cared about, in
-% hexadecimal.
-
+\section{Playback Performance}
 % A discussion of the issues that impacted on the audio playback performance for each of the playback modes.
 Normal, reverse, and slow modes played smoothly immediately without additional
 code or complexities required, since we had followed the suggestions in the
@@ -196,15 +193,35 @@ speed mode was expected to sound crappy, we stopped working on it at this
 point. Delay mode was easy to get "working", but took several iterations to
 get acceptable performance and audio quality.
 
-% A discussion of the issues associated with writing effcient software so as to meet the performance requirements associated with the system.
+% A discussion of the issues associated with writing effcient software so as to
+% meet the performance requirements associated with the system.
+% An indication of one software design decision you made given the above two
+% performance issues, and at least one alternative which you discarded.
+One of the first attempts we made at delay mode simply used two file "streams",
+with each reading from different parts of the file. While this was simple and
+elegant in code, it did not yield acceptable performance, having many of the
+same problems as the double-speed mode, since we were effectively trying to
+read twice as many blocks in the same period of time. Thus, despite it's
+perfect beauty, we had to discard this technique. The second technique we tried
+was to use a ring buffer in order to buffer one second of samples, thus
+reducing the number of disk reads to the same as normal speed mode, at the
+expense of ram. Initially, this was also much too slow to be workable, until,
+after a few hours of debugging, we finally asked a TA for assistance. It turned
+out that the CPU we use for this lab does not have a hardware divide module,
+so the modulus operation that our ring buffer was using had to be emulated in
+software, taking an unacceptably long time.
 
-% An indication of one software design decision you made given the above two performance issues, and at least one alternative which you discarded.
 
-% A description of the testing and debugging strategy you used for one part of your  software with regards to the audio playback, and at least one alternative strategy that you discarded. Indicate any intermediate stages used in your software design.
-The first strategy we tried was just randomly changing things. Unsurprisingly,
-this did not work particularly well. Debugging issues for audio playback
-was not easy to do with our more traditional debugging methods, because often
-the problem would not be a logical error in the program, but rather just be
+% A description of the testing and debugging strategy you used for one part of
+% your software with regards to the audio playback, and at least one
+% alternative strategy that you discarded. Indicate any intermediate stages
+% used in your software design.
+\subsection{Testing \& Debugging}
+In order to debug issues with playback performance, the first strategy we
+tried was just randomly changing things. Unsurprisingly, this did not work
+particularly well. Debugging issues for audio playback was not easy to do
+with our more traditional debugging methods, because often the problem would
+not be a logical error in the program, but rather just be
 that we were using a technique which was too slow. In order to pinpoint issues
 that were contributing to potential slowness, we wrote a stopwatch which used
 the 10us onboard timer to allow timing of code sections. This allowed us to
@@ -215,6 +232,7 @@ not necessarily lead to perceptible improvements in audio, until we crossed
 the threshold of actually being able to play all the samples on time.
 
 % A  brief  discussion  of  a  possible  future  extension  to  the  lab.   Given  more  choice  for  a  final  project  (andpossibly 4-5 weeks in which to do it) and the same equipment, what would you have rather done?
+\section{Possible Future Extensions}
 There were a few things I would have liked to try as possible future extensions
 to this lab:
 \begin{enumerate}
@@ -258,10 +276,10 @@ based debugging, and implementing delay mode. I also wrote the second half of
 this report.
 
 The most valuable thing I learned is that the FAT filesystem is quite complex
-to work with due to it's legacy and compatability hacks, despite the fact that
+to work with due to it's legacy and compatibility hacks, despite the fact that
 the underlying data structures are very simple (i.e. a singly-linked list).
 Reading the provided code to figure out how it works and how to interface with
-it was quite challanging as well, because the provided code had some bugs
+it was quite challenging as well, because the provided code had some bugs
 (which just happen to not matter in the particular filesystem on the provided
 SD cards), and because the control flow in many places relied on the use of
 global variables rather than function parameters.
