@@ -148,28 +148,6 @@ This created new problems with the playback, such as ``crackly" audio.
 For this reason, while this technique gives valuable information, it is not
 effective at debugging -- it \emph{creates} bugs.
 
-\section{Contribution}
-Peter Raboud:
-I was responsible for writing most of the playback code (except for the delay mode),
-the file stream code, and the button interrupt code.
-I also wrote the first half of this report.
-
-The most valuable learning experience from this lab was a practical introduction
-in how the FAT file system works.
-In previous courses, we usually treat files as a stream.
-For efficiency, reads are buffered, but the buffer size can be anything we want.
-However, working with the SD card / FAT file system at the low level demonstrates
-that files are structured into sectors.
-There isn't an efficient way of accessing data in the middle of the sector; that
-is, without accessing all of the data before it, and discarding it.
-If we want to treat files as streams, we would have to build this functionality
-on top of the sector oriented operations supported natively.
-The stream-oriented module we wrote kept track of the sectors, how much data was
-read, and automatically advanced to the next sector after each read.
-However, we only implemented stream oriented methods partially in this lab,
-because full support was not required or useful.
-We only supported reading exactly one sector at a time, since reading a fraction
-of a sector wasn't useful when playing audio.
 
 % A  discussion  of  the  issues  associated  with  one  aspect  of  your  hardware  design  or  the  software  interfacingpart  of  your  design,  for  example,  the  choice  of  interrupt  priorities  or  issues  with  respect  to  interfacing  tothe buttons, switches or LCD display.
 % An indication of one hardware or software interfacing design decision you made given the above issues, andat least one alternative which you discarded.
@@ -203,8 +181,20 @@ of a sector wasn't useful when playing audio.
 % A discussion of the issues that impacted on the audio playback performance for each of the playback modes.
 Normal, reverse, and slow modes played smoothly immediately without additional
 code or complexities required, since we had followed the suggestions in the
-lab manual of reading the cluster chain beforehand. Delay mode, however,
-presented some significant challanges.
+lab manual of reading the cluster chain beforehand. We were not able to get
+double speed mode playing with acceptable performance, because the time spent
+reading SD card blocks was simply too long to be able to play every sample on
+time. We considered trying to optimize the assembly output for this routine,
+in case the compiler was generating suboptimal assembly, but we ran out of
+time. We also considered interleaving the SD card code with the audio playing
+code (i.e. create a routine which reads 16 bits, plays them, skips 16 bits,
+etc, until the end of the file is reached). We thought this could gain some
+efficiency because it would not be waiting for the decoder FIFO to have space,
+but when we measured, only ~10\% of the time spent playing samples was spent
+waiting for the FIFO to have space. Given that the lab manual said double-
+speed mode was expected to sound crappy, we stopped working on it at this
+point. Delay mode was easy to get "working", but took several iterations to
+get acceptable performance and audio quality.
 
 % A discussion of the issues associated with writing effcient software so as to meet the performance requirements associated with the system.
 
@@ -212,7 +202,7 @@ presented some significant challanges.
 
 % A description of the testing and debugging strategy you used for one part of your  software with regards to the audio playback, and at least one alternative strategy that you discarded. Indicate any intermediate stages used in your software design.
 The first strategy we tried was just randomly changing things. Unsurprisingly,
-this did not work particularilly well. Debugging issues for audio playback
+this did not work particularly well. Debugging issues for audio playback
 was not easy to do with our more traditional debugging methods, because often
 the problem would not be a logical error in the program, but rather just be
 that we were using a technique which was too slow. In order to pinpoint issues
@@ -220,8 +210,9 @@ that were contributing to potential slowness, we wrote a stopwatch which used
 the 10us onboard timer to allow timing of code sections. This allowed us to
 figure out which sections were taking the most time, optimize those sections,
 and provided us a way to know if our changes were actually improving the speed
-of the relevent code sections- because improvements to the code's speed did
-not necesarilly lead to perceptable improvements in audio.
+of the relevant code sections- because improvements to the code's speed did
+not necessarily lead to perceptible improvements in audio, until we crossed
+the threshold of actually being able to play all the samples on time.
 
 % A  brief  discussion  of  a  possible  future  extension  to  the  lab.   Given  more  choice  for  a  final  project  (andpossibly 4-5 weeks in which to do it) and the same equipment, what would you have rather done?
 There were a few things I would have liked to try as possible future extensions
@@ -229,16 +220,56 @@ to this lab:
 \begin{enumerate}
 \item Show the progress of the current song on the LCD display, or on the LEDs.
 \item Make 2x speed actually play the audio properly. This could be pretty
-	challanging, but optimizing the raw sd card block reading code could
+	challenging, but optimizing the raw sd card block reading code could
 	probably get pretty far in this direction. We could also increase the
 	clock speed of the processor used on the board, or introduce some special-
 	purpose instructions for reading the sd card data to allow it to complete
 	in fewer clock cycles.
-\item Make an equilizer visualization, either on the LCD or the LEDs.
+\item Make an equalizer visualization, either on the LCD or the LEDs.
 \end{enumerate}
 
+\section{Contribution}
+Peter Raboud:
+I was responsible for writing most of the playback code (except for the delay mode),
+the file stream code, and the button interrupt code.
+I also wrote the first half of this report.
 
-%% Reflection
-%% TODO!!!!!!!!
+The most valuable learning experience from this lab was a practical introduction
+in how the FAT file system works.
+In previous courses, we usually treat files as a stream.
+For efficiency, reads are buffered, but the buffer size can be anything we want.
+However, working with the SD card / FAT file system at the low level demonstrates
+that files are structured into sectors.
+There isn't an efficient way of accessing data in the middle of the sector; that
+is, without accessing all of the data before it, and discarding it.
+If we want to treat files as streams, we would have to build this functionality
+on top of the sector oriented operations supported natively.
+The stream-oriented module we wrote kept track of the sectors, how much data was
+read, and automatically advanced to the next sector after each read.
+However, we only implemented stream oriented methods partially in this lab,
+because full support was not required or useful.
+We only supported reading exactly one sector at a time, since reading a fraction
+of a sector wasn't useful when playing audio.
+
+Justin McGirr:
+I was responsible for dissecting the FAT filesystem code to try and figure out
+how things worked, writing the timer interfacing code to allow for stopwatch
+based debugging, and implementing delay mode. I also wrote the second half of
+this report.
+
+The most valuable thing I learned is that the FAT filesystem is quite complex
+to work with due to it's legacy and compatability hacks, despite the fact that
+the underlying data structures are very simple (i.e. a singly-linked list).
+Reading the provided code to figure out how it works and how to interface with
+it was quite challanging as well, because the provided code had some bugs
+(which just happen to not matter in the particular filesystem on the provided
+SD cards), and because the control flow in many places relied on the use of
+global variables rather than function parameters.
+
+I also learned that there exist CPU architectures without hardware divide
+(i.e. the CPU we used for this lab), which makes \% (mod) operations very
+slow. This caused some significant and hard-to-debug problems when implementing
+delay mode, as the ring buffer implementation I wrote made use of the mod
+operator extensively when adding and removing data.
 
 \end{document}
