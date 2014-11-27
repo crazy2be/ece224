@@ -34,20 +34,27 @@ playback mode, or playback state (ie: playing/stopped).
 Note that because the interrupt handler can only block for a very short period
 of time, the handler cannot actually read the next song name off the card.
 The initialization process read all of the song files' information into an
-array at the start.
-The interrupt handler just loops through this array.
+array beforehand.
+This allows the interrupt handler to just loop through this array.
+Similarily, actually updating the LCD display would take too long, so the
+handler only marks the display as needing to be updated later.
+Both of these operations can be completed very rapidly, which limits the amount
+of time spent in the interrupt handler.
 
 The handler propagates changes to the state, mode, or currently selected file
 back to the main loop by updating a struct which the interrupt handler and main
 loop both have a reference to.
-The main loop is responsible for updating the LCD display, because updating it
-in the interrupt handler would block for too long.
-Primarily, it busy waits until it is signalled to start playing music.
+The main loop is responsible for updating the LCD display, interacting with
+the file system, and playing the actual audio.
+When none of these operations are currently being performed,
+it busy waits until it is signalled by the interrupt handler.
 
-When the playback state changes to start playing a song, the file of whichever
-song is currently selected is opened, and a file stream is created.
-The audio playback method is passed the filestream, along with a playback mode,
-and a reference to the same struct used by the interrupt handler.
+When the playback state changes to signal the start of a song,
+the file of whichever song is currently selected is opened,
+and a file stream is created.
+The audio playback method is called, and is passed the filestream,
+along with a playback mode, and a reference to the same struct used by the
+interrupt handler.
 The playback method periodically checks the struct, and stops if the playback
 mode has changed.
 This is used by the interrupt handler to abort playback mid-way through the audio
@@ -179,6 +186,7 @@ effective at debugging -- it \emph{creates} bugs.
 % hexadecimal.
 
 % A discussion of the issues that impacted on the audio playback performance for each of the playback modes.
+\section{Performance}
 Normal, reverse, and slow modes played smoothly immediately without additional
 code or complexities required, since we had followed the suggestions in the
 lab manual of reading the cluster chain beforehand. We were not able to get
@@ -229,7 +237,7 @@ to this lab:
 \end{enumerate}
 
 \section{Contribution}
-Peter Raboud:
+\subsection{Peter Raboud}
 I was responsible for writing most of the playback code (except for the delay mode),
 the file stream code, and the button interrupt code.
 I also wrote the first half of this report.
@@ -251,7 +259,7 @@ because full support was not required or useful.
 We only supported reading exactly one sector at a time, since reading a fraction
 of a sector wasn't useful when playing audio.
 
-Justin McGirr:
+\subsection{Justin McGirr}
 I was responsible for dissecting the FAT filesystem code to try and figure out
 how things worked, writing the timer interfacing code to allow for stopwatch
 based debugging, and implementing delay mode. I also wrote the second half of
